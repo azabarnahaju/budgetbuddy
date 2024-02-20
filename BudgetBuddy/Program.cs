@@ -1,4 +1,5 @@
-using BudgetBuddy.Services.Repositories.User;
+using BudgetBuddy.Services.Repositories.AccountServices;
+using BudgetBuddy.Services.Repositories.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 

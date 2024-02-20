@@ -1,6 +1,5 @@
-﻿using BudgetBuddy.Model;
-using BudgetBuddy.Services.Repositories.User;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using BudgetBuddy.Model.UserModels;
+using BudgetBuddy.Services.Repositories.UserServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Controllers;
