@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetBuddy.Controllers;
 
 [ApiController]
-[Route("[constroller]")]
+[Route("[controller]")]
 public class AchievementController : ControllerBase
 {
     private readonly ILogger<AchievementController> _logger;
@@ -18,7 +18,7 @@ public class AchievementController : ControllerBase
         _achievementRepository = achievementRepository;
     }
 
-    [HttpGet("/")]
+    [HttpGet]
     public ActionResult<IEnumerable<Achievement>> GetAll()
     {
         try
@@ -32,7 +32,7 @@ public class AchievementController : ControllerBase
         }
     }
 
-    [HttpGet("/{achievementId}")]
+    [HttpGet("/Achievement/{achievementId}")]
     public ActionResult<Achievement> Get(int achievementId)
     {
         try
@@ -50,7 +50,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpPost("/add")]
+    [HttpPost("/Achievement/add")]
     public ActionResult<Achievement> Add(IEnumerable<Achievement> achievements)
     {
         try
@@ -69,7 +69,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("/delete/{achievementId}")]
+    [HttpDelete("delete/{achievementId}")]
     public ActionResult<string> Delete(int achievementId)
     {
         try
@@ -85,7 +85,7 @@ public class AchievementController : ControllerBase
     }
 
     // admin functionality
-    [HttpPatch("/update")]
+    [HttpPatch("update")]
     public ActionResult<Achievement> Update(Achievement achievement)
     {
         try
