@@ -132,4 +132,20 @@ public class UserController : ControllerBase
         }
         return Unauthorized(new {error = "Not logged in"});
     }
+    
+    [HttpPost("Logout")]
+    public async Task<IActionResult> OnGetAsync()
+    {
+        try
+        {
+            await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok(new {message = "Successfully logged out."});
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(new {error = "Error while signing out." });
+        }
+    }
 }
