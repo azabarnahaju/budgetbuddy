@@ -47,7 +47,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("/delete/{userId}")]
-    public ActionResult<User> Delete(int userId)
+    public ActionResult<string> Delete(int userId)
     {
         try
         {
