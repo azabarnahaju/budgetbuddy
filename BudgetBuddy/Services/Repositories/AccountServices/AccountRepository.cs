@@ -1,3 +1,4 @@
+using System.Data;
 using BudgetBuddy.Model.AccountModels;
 
 namespace BudgetBuddy.Services.Repositories.AccountServices;
@@ -47,8 +48,15 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
+            if (_accounts.Any(acc => acc.Id == account.Id))
+                throw new InvalidConstraintException("Account already exists.");
             _accounts.Add(account);
             return account;
+        }
+        catch (InvalidConstraintException e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
         catch (Exception e)
         {

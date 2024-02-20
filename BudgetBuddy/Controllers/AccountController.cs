@@ -17,7 +17,7 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("/{accountId}")]
+    [HttpGet("{accountId}")]
     public ActionResult<Account> Get(int accountId)
     {
         try

@@ -17,7 +17,7 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpGet("/{userId}")]
+    [HttpGet("{userId}")]
     public ActionResult<User> Get(int userId)
     {
         try
