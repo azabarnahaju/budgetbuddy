@@ -5,8 +5,7 @@ public interface IAchievementRepository
 {
     IEnumerable<Achievement> GetAllAchievements();
     Achievement GetAchievement(int id);
-    void AddAchievement(IEnumerable<Achievement> achievements);
-    void AddAchievement(Achievement achievement);
+    IEnumerable<Achievement> AddAchievement(IEnumerable<Achievement> achievements);
     void DeleteAchievement(int id);
-    void UpdateAchievement(Achievement achievement);
+    Achievement UpdateAchievement(Achievement achievement);
 }

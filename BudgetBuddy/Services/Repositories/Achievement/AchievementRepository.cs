@@ -17,14 +17,16 @@ public class AchievementRepository : IAchievementRepository
             : _achievements.First(a => a.Id == id);
     }
 
-    public void AddAchievement(IEnumerable<Achievement> achievements)
+    public IEnumerable<Achievement> AddAchievement(IEnumerable<Achievement> achievements)
     {
+        foreach (var achievement in achievements)
+        {
+            if (_achievements.Any(a => a.Id == achievement.Id)) 
+                throw new Exception($"Achievement with ID {achievement.Id} already exists.");
+        }
+        
         _achievements.AddRange(achievements);
-    }
-
-    public void AddAchievement(Achievement achievement)
-    {
-        _achievements.Add(achievement);
+        return achievements;
     }
 
     public void DeleteAchievement(int id)
@@ -34,10 +36,11 @@ public class AchievementRepository : IAchievementRepository
         _achievements = _achievements.Where(a => a.Id != id).ToList();
     }
     
-    public void UpdateAchievement(Achievement achievement)
+    public Achievement UpdateAchievement(Achievement achievement)
     {
         if (_achievements.FirstOrDefault(a => a.Id == achievement.Id) is null) throw new Exception("Achievement not found.");
 
         _achievements = _achievements.Select(a => a.Id == achievement.Id ? achievement : a).ToList();
+        return _achievements.First(a => a.Id == achievement.Id);
     }
 }
