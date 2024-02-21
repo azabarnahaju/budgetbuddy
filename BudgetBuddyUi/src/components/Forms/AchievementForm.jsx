@@ -13,8 +13,14 @@ const AchievementForm = () => {
     e.preventDefault();
     achievementId && navigate(`/achievement/${achievementId}`);
   };
+
+  const navigateToCreateAchievement = () => {
+    navigate("/achievement/create");
+  }
+
   return (
-    <div className="mb-3">
+    <div className="mb-3  form-container">
+      <h1>Achievement</h1>
       <form onSubmit={handleNavigateToAchievement}>
         <label className="form-label mb-3" htmlFor="achievement">Achievement id</label>
         <input
@@ -25,9 +31,18 @@ const AchievementForm = () => {
           id="achievement"
           placeholder="Enter the achievement id"
         />
-        <button className="btn btn-dark ms-4" type="submit">
-          Get achievement by id
-        </button>
+        <div>
+          <div className="mb-5">
+            <button className="btn btn-info ms-4" type="submit">
+              Get achievement by id
+            </button>
+          </div>
+          <div className="mb-5">
+            <button onClick={navigateToCreateAchievement} className="btn btn-success ms-4">
+              + Create achievement
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

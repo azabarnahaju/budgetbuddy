@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import { fetchData } from "../../service/connectionService";
 import Loading from "../Loading/Loading";
 import SnackBar from "../Snackbar/Snackbar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Account = () => {
   const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState({});
   const { id } = useParams();
+  const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
@@ -52,6 +53,10 @@ const Account = () => {
     return <Loading />;
   }
 
+  const handleBack = () => {
+    navigate("/");
+  }
+
   return (
     <div>
       <SnackBar
@@ -82,6 +87,7 @@ const Account = () => {
       ) : (
         <h4>Account not found</h4>
       )}
+      <button onClick={handleBack} className="btn btn-lg btn-dark">Back</button>
     </div>
   );
 };

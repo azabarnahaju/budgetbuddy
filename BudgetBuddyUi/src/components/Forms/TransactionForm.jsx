@@ -13,8 +13,14 @@ const TransactionForm = () => {
     e.preventDefault();
     transactionId && navigate(`/transaction/${transactionId}`);
   };
+
+  const navigateToCreateTransaction = () => {
+    navigate("/transaction/create");
+  }
+
   return (
-    <div className="mb-3">
+    <div className="mb-3 form-container">
+      <h1>Transaction</h1>
       <form onSubmit={handleNavigateToTransaction}>
         <label className="form-label mb-3" htmlFor="transaction">Transaction id</label>
         <input
@@ -25,9 +31,18 @@ const TransactionForm = () => {
           id="transaction"
           placeholder="Enter the transaction id"
         />
-        <button className="btn btn-dark ms-4" type="submit">
-          Get transaction by id
-        </button>
+        <div>
+          <div className="mb-5">
+            <button className="btn btn-info ms-4" type="submit">
+              Get transaction by id
+            </button>
+          </div>
+          <div className="mb-5">
+            <button onClick={navigateToCreateTransaction} className="btn btn-success ms-4">
+              + Create transaction
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

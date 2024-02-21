@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import { fetchData } from "../../service/connectionService";
 import Loading from "../Loading/Loading";
 import SnackBar from "../Snackbar/Snackbar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Achievement = () => {
   const [loading, setLoading] = useState(true);
   const [achievement, setAchievement] = useState({});
   const { id } = useParams();
+  const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
@@ -53,6 +54,10 @@ const Achievement = () => {
     setLoading(false);
   };
 
+  const handleBack = () => {
+    navigate("/");
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -81,6 +86,7 @@ const Achievement = () => {
       ) : (
         <h4>Achievement not found</h4>
       )}
+      <button onClick={handleBack} className="btn btn-lg btn-dark">Back</button>
     </div>
   );
 };
