@@ -1,8 +1,8 @@
-using BudgetBuddy.Model.AccountModels;
-using BudgetBuddy.Services.Repositories.AccountServices;
-using Microsoft.AspNetCore.Mvc;
-
 namespace BudgetBuddy.Controllers;
+
+using Model;
+using Services.Repositories.Account;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]

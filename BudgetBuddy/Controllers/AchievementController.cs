@@ -1,9 +1,8 @@
-﻿using BudgetBuddy.Model;
-using BudgetBuddy.Services.Repositories.Achievement;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace BudgetBuddy.Controllers;
 
-namespace BudgetBuddy.Controllers;
+using Model;
+using Services.Repositories.Achievement;
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]

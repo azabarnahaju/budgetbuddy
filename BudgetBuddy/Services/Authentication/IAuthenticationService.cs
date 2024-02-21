@@ -1,6 +1,6 @@
-﻿using BudgetBuddy.Model;
+﻿namespace BudgetBuddy.Services.Authentication;
 
-namespace BudgetBuddy.Services.Authentication;
+using Model;
 
 public interface IAuthenticationService
 {

@@ -1,8 +1,8 @@
 using BudgetBuddy.Services.Authentication;
+using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using BudgetBuddy.Services.Repositories.AccountServices;
 
 var builder = WebApplication.CreateBuilder(args);
 

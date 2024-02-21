@@ -1,5 +1,5 @@
-using BudgetBuddy.Model.Enums;
+namespace BudgetBuddy.Model;
 
-namespace BudgetBuddy.Model.AccountModels;
+using Enums;
 
 public record Transaction(int Id, DateTime Date, decimal Amount, ExpenseCategory Tag, ExpenseType Type, int AccountId);

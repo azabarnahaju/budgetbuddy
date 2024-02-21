@@ -1,5 +1,6 @@
 ﻿namespace BudgetBuddy.Services.Repositories.Achievement;
-using BudgetBuddy.Model;
+
+using Model;
 
 public class AchievementRepository : IAchievementRepository
 {

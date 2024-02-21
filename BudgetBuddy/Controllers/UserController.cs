@@ -1,13 +1,12 @@
+namespace BudgetBuddy.Controllers;
+
 using System.Security.Claims;
-using BudgetBuddy.Model;
-using BudgetBuddy.Services.Repositories.User;
+using Model;
+using Services.Repositories.User;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using IAuthenticationService = BudgetBuddy.Services.Authentication.IAuthenticationService;
-
-namespace BudgetBuddy.Controllers;
+using IAuthenticationService = Services.Authentication.IAuthenticationService;
 
 [ApiController]
 [Route("[controller]")]

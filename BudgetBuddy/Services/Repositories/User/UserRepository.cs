@@ -1,5 +1,6 @@
 ﻿namespace BudgetBuddy.Services.Repositories.User;
-using BudgetBuddy.Model;
+
+using Model;
 
 public class UserRepository : IUserRepository
 {

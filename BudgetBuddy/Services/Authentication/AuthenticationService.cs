@@ -1,8 +1,7 @@
-﻿using System.Net.Security;
-using BudgetBuddy.Model;
-using BudgetBuddy.Services.Repositories.User;
+﻿namespace BudgetBuddy.Services.Authentication;
 
-namespace BudgetBuddy.Services.Authentication;
+using Model;
+using Repositories.User;
 
 public class AuthenticationService : IAuthenticationService
 {
