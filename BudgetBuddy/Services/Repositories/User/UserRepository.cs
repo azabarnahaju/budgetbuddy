@@ -12,12 +12,12 @@ public class UserRepository : IUserRepository
 
     public User GetUser(string email)
     {
-        return _users.All(user => user.Email != email) ? throw new Exception("User not found") : _users.First(user => user.Email == email);
+        return _users.All(user => user.Email != email) ? throw new InvalidDataException("User not found") : _users.First(user => user.Email == email);
     }
 
     public User GetUser(int id)
     {
-        return _users.All(user => user.Id != id) ? throw new Exception("User not found") : _users.First(user => user.Id == id);
+        return _users.All(user => user.Id != id) ? throw new InvalidDataException("User not found") : _users.First(user => user.Id == id);
     }
 
     public User AddUser(User user)
