@@ -1,6 +1,9 @@
 namespace BudgetBuddy.Model.Enums;
 
-public enum ExpenseCategory
+using System.Text.Json.Serialization;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum TransactionCategoryTag
 {
     Food,
     Groceries,
@@ -16,10 +19,11 @@ public enum ExpenseCategory
     PersonalCare,
     Travel,
     Insurance,
+    Income,
     Gifts,
     CharitableDonations,
     PetCare,
     HomeImprovement,
     Subscriptions,
-    Miscellaneous
+    Other
 }
