@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.User;
 using Microsoft.AspNetCore.Authentication;
@@ -24,7 +24,7 @@ public class UserController : ControllerBase
         _authenticationService = authenticationService;
     }
 
-    [HttpGet("/User/{userId}")]
+    [HttpGet("{userId}")]
     public ActionResult<User> Get(int userId)
     {
         try

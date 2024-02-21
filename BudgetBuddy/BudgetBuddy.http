@@ -1,0 +1,4 @@
+@BudgetBuddy_HostAddress = http://localhost:5071
+
+GET {{BudgetBuddy_HostAddress}}/budgetbuddy/
+Accept: application/json
