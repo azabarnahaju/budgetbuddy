@@ -6,6 +6,7 @@ import Achievement from "./components/Achievement/Achievement";
 import TransactionCreator from "./components/Create/TransactionCreator/TransactionCreator";
 import AchievementCreator from "./components/Create/AchievementCreator/AchievementCreator";
 import AccountCreator from "./components/Create/AccountCreator/AccountCreator";
+import Authentication from "./components/Authentication/Authentication/Authentication";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/account/create" element={<AccountCreator />} />
         <Route path="/transaction/create" element={<TransactionCreator />} />
         <Route path="/achievement/create" element={<AchievementCreator />} />
+        <Route path="/authentication" element={<Authentication />} />
       </Routes>
     </div>
   );

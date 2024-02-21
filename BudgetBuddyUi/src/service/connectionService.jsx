@@ -1,4 +1,4 @@
-const baseUrl = "https://localhost:7204";
+import { baseUrl } from "../utils/urls";
 
 export const fetchData = async (body, path, method) => {
   try {
