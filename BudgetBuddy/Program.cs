@@ -1,3 +1,4 @@
+using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IAchievementRepository, AchievementRepository>();
 
 var app = builder.Build();
 
