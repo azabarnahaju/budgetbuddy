@@ -2,6 +2,7 @@ using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
+using BudgetBuddy.Services.Repositories.FinancialRecord;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IFinancialRecordRepository, FinancialRecordRepository>();
 builder.Services.AddSingleton<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
