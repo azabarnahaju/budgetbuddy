@@ -1,6 +1,6 @@
 namespace BudgetBuddy.Model.Enums;
 
-public enum ExpenseType
+public enum TransactionType
 {
     Income,
     Expense
