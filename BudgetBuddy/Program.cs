@@ -1,3 +1,4 @@
+using BudgetBuddy.Model;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
@@ -17,7 +18,7 @@ builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
 builder.Services.AddSingleton<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
+builder.Services.AddSingleton<IAccountRepository>(provider => new AccountRepository(new List<Account>()));
 builder.Services.AddAuthentication(options => { 
     options.DefaultScheme = "Cookies"; 
 }).AddCookie("Cookies", options => {
