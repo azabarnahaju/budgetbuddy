@@ -60,10 +60,17 @@ const Home = () => {
           <AchievementForm />
           <TransactionForm />
         </div>
-        <div className="my-8 col-md-1">
-          <button onClick={handleLogging} className="btn btn-lg btn-info">
-            {currentUser ? "Logout" : "Login"}
-          </button>
+        <div className="my-8 col-md-2 d-flex justify-content">
+          <div className="h-stack">
+            {currentUser && (
+              <h4 className="welcome-msg display-6">Hello {currentUser.userName}!</h4>
+            )}
+          </div>
+          <div className="mt-3 mx-5">
+            <button onClick={handleLogging} className="btn btn-lg btn-info">
+              {currentUser ? "Logout" : "Login"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

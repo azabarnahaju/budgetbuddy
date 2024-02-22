@@ -33,11 +33,11 @@ public class TransactionControllerTest
         
         // Act
         var result = _controller.AddTransaction(It.IsAny<Transaction>());
-        var badRequestResult = result.Result as BadRequestObjectResult;
+        var resultMessage = (BadRequestObjectResult?)result.Result;
         
         // Assert
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
-        Assert.That(badRequestResult.Value, Is.EqualTo("Transaction already exists."));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Transaction already exists."));
     }
     
     [Test]
@@ -65,11 +65,11 @@ public class TransactionControllerTest
         
         // Act
         var result = _controller.GetAll();
-        var badRequestResult = result.Result as BadRequestObjectResult;
+        var resultMessage = (BadRequestObjectResult?)result.Result;
         
         // Assert
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
-        Assert.That(badRequestResult.Value, Is.EqualTo("Error getting transactions"));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Error getting transactions"));
     }
     
     
@@ -98,11 +98,11 @@ public class TransactionControllerTest
         
         // Act
         var result = _controller.GetTransaction(It.IsAny<int>());
-        var notFoundResult = result.Result as NotFoundObjectResult;
+        var resultMessage = (NotFoundObjectResult?)result.Result;
         
         // Assert
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
-        Assert.That(notFoundResult.Value, Is.EqualTo("Transaction not found."));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Transaction not found."));
     }
     
     [Test]
@@ -131,11 +131,11 @@ public class TransactionControllerTest
         
         // Act
         var result = _controller.UpdateTransaction(It.IsAny<Transaction>());
-        var notFoundResult = result.Result as NotFoundObjectResult;
+        var resultMessage = (NotFoundObjectResult?)result.Result;
     
         // Assert
         Assert.IsInstanceOf<NotFoundObjectResult>(result.Result);
-        Assert.That(notFoundResult.Value, Is.EqualTo("Error updating transaction"));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Error updating transaction"));
     }
 
     [Test]
@@ -163,11 +163,11 @@ public class TransactionControllerTest
         
         //Act
         var result = _controller.DeleteTransaction(It.IsAny<int>());
-        var notFoundResult = result.Result as NotFoundObjectResult;
+        var resultMessage = (NotFoundObjectResult?)result.Result;
         
         //Assert
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
-        Assert.That(notFoundResult.Value, Is.EqualTo("Error deleting transaction"));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Error deleting transaction"));
     }
 
     [Test]
@@ -194,11 +194,11 @@ public class TransactionControllerTest
         
         //Act
         var result = _controller.FilterTransactions(It.IsAny<TransactionType>());
-        var notFoundResult = result.Result as NotFoundObjectResult;
+        var resultMessage = (NotFoundObjectResult?)result.Result;
         
         //Assert
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
-        Assert.That(notFoundResult.Value, Is.EqualTo($"Error filtering transactions by { It.IsAny<TransactionType>() }"));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo($"Error filtering transactions by { It.IsAny<TransactionType>() }"));
     }
 
     [Test]
@@ -227,11 +227,11 @@ public class TransactionControllerTest
         
         //Act
         var result = _controller.FinancialTransactions(It.IsAny<TransactionCategoryTag>());
-        var notFoundResult = result.Result as NotFoundObjectResult;
+        var resultMessage = (NotFoundObjectResult?)result.Result;
         
         //Assert
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
-        Assert.That(notFoundResult.Value, Is.EqualTo($"Error filtering transactions by { It.IsAny<TransactionCategoryTag>() } tag."));
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo($"Error filtering transactions by { It.IsAny<TransactionCategoryTag>() } tag."));
     }
 
     [Test]
