@@ -5,7 +5,11 @@ using Model;
 
 public class AccountRepository : IAccountRepository
 {
-    private readonly List<Account> _accounts = new ();
+    private readonly List<Account> _accounts;
+    public AccountRepository(List<Account> accounts)
+    {
+        _accounts = accounts;
+    }
 
     public List<Account> GetAll()
     {
