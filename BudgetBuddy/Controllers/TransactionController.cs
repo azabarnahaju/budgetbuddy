@@ -20,7 +20,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPost("add")]
-    public ActionResult AddTransaction(Transaction transaction)
+    public ActionResult<Transaction> AddTransaction(Transaction transaction)
     {
         try
         {
@@ -30,12 +30,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Transaction already exists.");
-            return NotFound("Transaction already exists.");
+            return BadRequest("Transaction already exists.");
         }
     }
 
     [HttpGet("transactions")]
-    public ActionResult GetAll()
+    public ActionResult<Transaction> GetAll()
     {
         try
         {
@@ -44,9 +44,10 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting transactions");
-            return NotFound("Error getting transactions");
+            return BadRequest("Error getting transactions");
         }
     }
+    
     [HttpGet("transactions/{id}")]
     public ActionResult<Transaction> GetTransaction(int id)
     {
@@ -62,7 +63,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPatch("update")]
-    public ActionResult UpdateTransaction(Transaction transaction)
+    public ActionResult<Transaction> UpdateTransaction(Transaction transaction)
     {
         try
         {
@@ -76,7 +77,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpDelete("delete/{id}")]
-    public ActionResult DeleteTransaction(int id)
+    public ActionResult<Transaction> DeleteTransaction(int id)
     {
         try
         {
@@ -91,7 +92,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("filterByType/{transactionType}")]
-    public ActionResult FilterTransactions([Required]TransactionType transactionType)
+    public ActionResult<Transaction> FilterTransactions([Required]TransactionType transactionType)
     {
         try
         {
@@ -105,7 +106,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpGet("filterByTag/{tag}")]
-    public ActionResult FinancialTransactions([Required]TransactionCategoryTag tag)
+    public ActionResult<Transaction> FinancialTransactions([Required]TransactionCategoryTag tag)
     {
         try
         {
