@@ -180,12 +180,6 @@ public class AchievementControllerTest
         Assert.That(messageValue, Is.EqualTo("Updating message was successful."));
         Assert.That(dataValue, Is.EqualTo(achievement));
     }
-
-    private object GetResponseData(ActionResult<Achievement> response)
-    {
-        var okObjectResult = (OkObjectResult)response.Result;
-        return okObjectResult.Value;
-    }
     
     private object GetMessageFromResult(object responseData)
     {
