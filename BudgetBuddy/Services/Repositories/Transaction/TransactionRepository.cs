@@ -5,7 +5,8 @@ using Model;
 
 public class TransactionRepository : ITransactionRepository
 {
-    private IList<Transaction> _transactions = new List<Transaction>();
+    
+    public IList<Transaction> _transactions { get; set; } = new List<Transaction>();
     private ILogger<TransactionRepository> _logger;
 
     public TransactionRepository(ILogger<TransactionRepository> logger)

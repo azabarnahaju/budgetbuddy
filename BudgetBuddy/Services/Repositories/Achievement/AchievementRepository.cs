@@ -4,7 +4,12 @@ using Model;
 
 public class AchievementRepository : IAchievementRepository
 {
-    private List<Achievement> _achievements = new List<Achievement>();
+    private List<Achievement> _achievements;
+
+    public AchievementRepository(List<Achievement> achievements)
+    {
+        _achievements = achievements;
+    }
 
     public IEnumerable<Achievement> GetAllAchievements()
     {
@@ -25,6 +30,9 @@ public class AchievementRepository : IAchievementRepository
             if (_achievements.Any(a => a.Id == achievement.Id)) 
                 throw new Exception($"Achievement with ID {achievement.Id} already exists.");
         }
+
+        if (achievements.Select(achievement => achievement.Id).Distinct().Count() != achievements.Count())
+            throw new Exception("You're trying to add duplicate achievements.");
         
         _achievements.AddRange(achievements);
         return achievements;

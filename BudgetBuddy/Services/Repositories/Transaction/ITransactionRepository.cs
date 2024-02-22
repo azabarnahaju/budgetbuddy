@@ -5,6 +5,7 @@ using Model;
 
 public interface ITransactionRepository
 {
+    IList<Transaction> _transactions { get; set; }
     IEnumerable<Transaction> GetAllTransactions();
     Transaction GetTransaction(int id);
     void AddTransaction(Transaction transaction);

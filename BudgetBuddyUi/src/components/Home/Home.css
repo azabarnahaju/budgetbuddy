@@ -1,0 +1,10 @@
+.form-container {
+  border: solid 2px black;
+  border-radius: 15px;
+  padding: 2rem;
+}
+
+.welcome-msg {
+  width: 15rem;
+  margin-top: 1rem;
+}

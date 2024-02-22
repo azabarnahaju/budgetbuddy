@@ -4,7 +4,12 @@ using Model;
 
 public class UserRepository : IUserRepository
 {
-    private IList<User> _users = new List<User>();
+    private IList<User> _users;
+
+    public UserRepository(IList<User> users)
+    {
+        _users = users;
+    }
     
     public IEnumerable<User> GetAllUsers()
     {

@@ -20,7 +20,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPost("add")]
-    public ActionResult AddTransaction(Transaction transaction)
+    public ActionResult<Transaction> AddTransaction(Transaction transaction)
     {
         try
         {
@@ -30,12 +30,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Transaction already exists.");
-            return NotFound("Transaction already exists.");
+            return BadRequest(new { message = "Transaction already exists." });
         }
     }
 
     [HttpGet("transactions")]
-    public ActionResult GetAll()
+    public ActionResult<Transaction> GetAll()
     {
         try
         {
@@ -44,9 +44,10 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting transactions");
-            return NotFound("Error getting transactions");
+            return BadRequest(new { message = "Error getting transactions" });
         }
     }
+    
     [HttpGet("transactions/{id}")]
     public ActionResult<Transaction> GetTransaction(int id)
     {
@@ -57,12 +58,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Transaction not found.");
-            return NotFound("Transaction not found.");
+            return NotFound(new { message = "Transaction not found." });
         }
     }
     
     [HttpPatch("update")]
-    public ActionResult UpdateTransaction(Transaction transaction)
+    public ActionResult<Transaction> UpdateTransaction(Transaction transaction)
     {
         try
         {
@@ -71,12 +72,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error updating transaction");
-            return NotFound("Error updating transaction");
+            return NotFound(new { message = "Error updating transaction" });
         }
     }
     
     [HttpDelete("delete/{id}")]
-    public ActionResult DeleteTransaction(int id)
+    public ActionResult<Transaction> DeleteTransaction(int id)
     {
         try
         {
@@ -86,12 +87,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error deleting transaction");
-            return NotFound("Error deleting transaction");
+            return NotFound(new { message = "Error deleting transaction" });
         }
     }
 
     [HttpGet("filterByType/{transactionType}")]
-    public ActionResult FilterTransactions([Required]TransactionType transactionType)
+    public ActionResult<Transaction> FilterTransactions([Required]TransactionType transactionType)
     {
         try
         {
@@ -100,12 +101,12 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, $"Error filtering transactions by {transactionType}");
-            return NotFound($"Error filtering transactions by {transactionType}");
+            return NotFound(new { message = $"Error filtering transactions by {transactionType}" });
         }
     }
     
     [HttpGet("filterByTag/{tag}")]
-    public ActionResult FinancialTransactions([Required]TransactionCategoryTag tag)
+    public ActionResult<Transaction> FinancialTransactions([Required]TransactionCategoryTag tag)
     {
         try
         {
@@ -114,7 +115,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, $"Error filtering transactions by {tag} tag.");
-            return NotFound($"Error filtering transactions by {tag} tag.");
+            return NotFound(new { message = $"Error filtering transactions by {tag} tag." });
         }
     }
 }
