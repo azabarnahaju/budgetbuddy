@@ -30,7 +30,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Transaction already exists.");
-            return BadRequest("Transaction already exists.");
+            return BadRequest(new { message = "Transaction already exists." });
         }
     }
 
@@ -44,7 +44,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting transactions");
-            return BadRequest("Error getting transactions");
+            return BadRequest(new { message = "Error getting transactions" });
         }
     }
     
@@ -58,7 +58,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Transaction not found.");
-            return NotFound("Transaction not found.");
+            return NotFound(new { message = "Transaction not found." });
         }
     }
     
@@ -72,7 +72,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error updating transaction");
-            return NotFound("Error updating transaction");
+            return NotFound(new { message = "Error updating transaction" });
         }
     }
     
@@ -87,7 +87,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error deleting transaction");
-            return NotFound("Error deleting transaction");
+            return NotFound(new { message = "Error deleting transaction" });
         }
     }
 
@@ -101,7 +101,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, $"Error filtering transactions by {transactionType}");
-            return NotFound($"Error filtering transactions by {transactionType}");
+            return NotFound(new { message = $"Error filtering transactions by {transactionType}" });
         }
     }
     
@@ -115,7 +115,7 @@ public class TransactionController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, $"Error filtering transactions by {tag} tag.");
-            return NotFound($"Error filtering transactions by {tag} tag.");
+            return NotFound(new { message = $"Error filtering transactions by {tag} tag." });
         }
     }
 }
