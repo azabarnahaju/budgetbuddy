@@ -55,7 +55,7 @@ const Home = () => {
         setOpen={() => setSnackbar({ ...snackbar, open: false })}
       />
       <div className="row justify-content-between">
-        <div className="col-md-5 mx-2">
+        <div className="col-md-6 mx-2">
           <AccountForm />
           <AchievementForm />
           <TransactionForm />

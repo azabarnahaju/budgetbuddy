@@ -1,8 +1,9 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { tags, types } from "../../../utils/categories";
 
 const sampleTransaction = {
@@ -18,12 +19,53 @@ const sampleTransaction = {
 const TransactionCreator = () => {
   const [transaction, setTransaction] = useState(sampleTransaction);
   const [loading, setLoading] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
     type: "",
   });
+
+  useEffect(() => {
+    if (id) {
+      fetchTransactionData();
+    }
+  }, []);
+
+  const fetchTransactionData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData(
+        null,
+        `/Transaction/transactions/${id}`,
+        "GET"
+      );
+      if (response.ok) {
+        setTransaction(response.data.data);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "success",
+        });
+      } else {
+        setTransaction(sampleTransaction);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setTransaction(sampleTransaction);
+      setLocalSnackbar({
+        open: true,
+        message: "Server not responding.",
+        type: "error",
+      });
+    }
+    setLoading(false);
+  };
 
   const handleTransactionChange = (e) => {
     const key = e.target.name;
@@ -39,7 +81,11 @@ const TransactionCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetchData(transaction, "/Transaction/add", "POST");
+      const response = await fetchData(
+        transaction,
+        id ? "/Transaction/update" : "/Transaction/add",
+        id ? "PATCH" : "POST"
+      );
       if (response.ok) {
         setLocalSnackbar({
           open: true,
@@ -74,7 +120,7 @@ const TransactionCreator = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <h1>Create new transaction:</h1>
+      <h1>{id ? "Update transaction" : "Create new transaction:"}</h1>
       <form onSubmit={handleCreateTransaction}>
         <label className="form-label mb-3" htmlFor="id">
           Transaction id
