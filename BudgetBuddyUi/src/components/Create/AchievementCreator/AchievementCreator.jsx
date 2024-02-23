@@ -1,8 +1,9 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const sampleAchievement = {
   id: 0,
@@ -14,12 +15,49 @@ const sampleAchievement = {
 const AchievementCreator = () => {
   const [achievement, setAchievement] = useState(sampleAchievement);
   const [loading, setLoading] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
     type: "",
   });
+
+  useEffect(() => {
+    if (id) {
+      fetchAchievementData();
+    }
+  }, []);
+
+  const fetchAchievementData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData(null, `/Achievement/${id}`, "GET");
+      if (response.ok) {
+        setAchievement(response.data.data);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "success",
+        });
+      } else {
+        setAchievement(sampleAchievement);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setAchievement(sampleAchievement);
+      setLocalSnackbar({
+        open: true,
+        message: "Server not responding.",
+        type: "error",
+      });
+    }
+    setLoading(false);
+  };
 
   const handleAchievementChange = (e) => {
     const key = e.target.name;
@@ -29,13 +67,17 @@ const AchievementCreator = () => {
 
   const handleBack = () => {
     navigate("/");
-  }
+  };
 
   const handleCreateAchievement = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetchData([achievement], "/Achievement/add", "POST");
+      const response = await fetchData(
+        id ? achievement : [achievement],
+        id ? "/Achievement/update" : "/Achievement/add",
+        id ? "PATCH" : "POST"
+      );
       if (response.ok) {
         setLocalSnackbar({
           open: true,
@@ -70,7 +112,7 @@ const AchievementCreator = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <h1>Create new achievement:</h1>
+      <h1>{id ? "Update achievement" : "Create new achievement:"}</h1>
       <form onSubmit={handleCreateAchievement}>
         <label className="form-label mb-3" htmlFor="id">
           Achievement id

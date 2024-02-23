@@ -1,8 +1,9 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const currentUser = 1;
 
@@ -19,12 +20,49 @@ const sampleAccount = {
 const AccountCreator = () => {
   const [account, setAccount] = useState(sampleAccount);
   const [loading, setLoading] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
     type: "",
   });
+
+  useEffect(() => {
+    if (id) {
+      fetchAccountData();
+    }
+  }, []);
+
+  const fetchAccountData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData(null, `/Account/${id}`, "GET");
+      if (response.ok) {
+        setAccount(response.data.data);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "success",
+        });
+      } else {
+        setAccount(sampleAccount);
+        setLocalSnackbar({
+          open: true,
+          message: response.message,
+          type: "error",
+        });
+      }
+    } catch (error) {
+      setAccount(sampleAccount);
+      setLocalSnackbar({
+        open: true,
+        message: "Server not responding.",
+        type: "error",
+      });
+    }
+    setLoading(false);
+  };
 
   const handleAccountChange = (e) => {
     const key = e.target.name;
@@ -34,13 +72,17 @@ const AccountCreator = () => {
 
   const handleBack = () => {
     navigate("/");
-  }
+  };
 
   const handleCreateAccount = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetchData(account, "/Account", "POST");
+      const response = await fetchData(
+        account,
+        "/Account",
+        id ? "PATCH" : "POST"
+      );
       if (response.ok) {
         setLocalSnackbar({
           open: true,
@@ -75,7 +117,7 @@ const AccountCreator = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <h1>Create new account:</h1>
+      <h1>{id ? "Update account" : "Create new account:"}</h1>
       <form onSubmit={handleCreateAccount}>
         <label className="form-label mb-3" htmlFor="id">
           Account id

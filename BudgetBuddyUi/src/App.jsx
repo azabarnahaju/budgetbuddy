@@ -19,6 +19,9 @@ const App = () => {
         <Route path="/account/create" element={<AccountCreator />} />
         <Route path="/transaction/create" element={<TransactionCreator />} />
         <Route path="/achievement/create" element={<AchievementCreator />} />
+        <Route path="account/update/:id" element={<AccountCreator />} />
+        <Route path="transaction/update/:id" element={<TransactionCreator />} />
+        <Route path="achievement/update/:id" element={<AchievementCreator />} />
         <Route path="/authentication" element={<Authentication />} />
       </Routes>
     </div>
