@@ -24,7 +24,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            _transactionRepository.AddTransaction(transaction);
+             _transactionRepository.AddTransaction(transaction);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)
@@ -35,11 +35,12 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("transactions")]
-    public ActionResult<Transaction> GetAll()
+    public async Task<ActionResult<Transaction>> GetAll()
     {
         try
         {
-            return Ok(new { message = "Transactions retrieved.", data = _transactionRepository.GetAllTransactions() });
+            var transactions = await _transactionRepository.GetAllTransactions();
+            return Ok(new { message = "Transactions retrieved.", data = transactions });
         }
         catch (Exception e)
         {
@@ -49,11 +50,12 @@ public class TransactionController : ControllerBase
     }
     
     [HttpGet("transactions/{id}")]
-    public ActionResult<Transaction> GetTransaction(int id)
+    public async Task<ActionResult<Transaction>> GetTransaction(int id)
     {
         try
         {
-            return Ok(new { message = "Transaction retrieved.", data = _transactionRepository.GetTransaction(id) });
+            var transaction = await _transactionRepository.GetTransaction(id);
+            return Ok(new { message = "Transaction retrieved.", data = transaction });
         }
         catch (Exception e)
         {
@@ -63,11 +65,12 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPatch("update")]
-    public ActionResult<Transaction> UpdateTransaction(Transaction transaction)
+    public async Task<ActionResult<Transaction>> UpdateTransaction(Transaction transaction)
     {
         try
         {
-            return Ok(new { message = "Transaction updated.", data = _transactionRepository.UpdateTransaction(transaction) });
+            var transactionToUpdate = await _transactionRepository.UpdateTransaction(transaction); 
+            return Ok(new { message = "Transaction updated.", data = transactionToUpdate });
         }
         catch (Exception e)
         {
@@ -92,11 +95,12 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("filterByType/{transactionType}")]
-    public ActionResult<Transaction> FilterTransactions([Required]TransactionType transactionType)
+    public async Task<ActionResult<Transaction>> FilterTransactions([Required]TransactionType transactionType)
     {
         try
         {
-            return Ok(new { message = $"Transactions filtered by {transactionType}.", data = _transactionRepository.FilterTransactions(transactionType) });
+            var filteredTransactions = await _transactionRepository.FilterTransactions(transactionType);
+            return Ok(new { message = $"Transactions filtered by {transactionType}.", data = filteredTransactions });
         }
         catch (Exception e)
         {
@@ -106,11 +110,12 @@ public class TransactionController : ControllerBase
     }
     
     [HttpGet("filterByTag/{tag}")]
-    public ActionResult<Transaction> FinancialTransactions([Required]TransactionCategoryTag tag)
+    public async Task<ActionResult<Transaction>> FinancialTransactions([Required]TransactionCategoryTag tag)
     {
         try
         {
-            return Ok(new { message = $"Transactions filtered by {tag}.", data = _transactionRepository.FinancialTransactions(tag) });
+            var filteredTransactions = await _transactionRepository.FinancialTransactions(tag);
+            return Ok(new { message = $"Transactions filtered by {tag}.", data = filteredTransactions });
         }
         catch (Exception e)
         {
