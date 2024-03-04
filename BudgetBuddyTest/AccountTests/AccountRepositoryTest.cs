@@ -1,161 +1,268 @@
-﻿using System.Data;
+﻿using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.Account;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BudgetBuddyTest.AccountTests;
 
 public class AccountRepositoryTest
 {
-    [Test]
-    public void GetAll_ReturnsCorrectNumberOfAccounts()
-    {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var repository = new AccountRepository(accounts);
-        
-        // Act
-        var result = repository.GetAll();
-        
-        // Assert
-        Assert.That(result.Count, Is.EqualTo(accounts.Count));
-    }
+    private DbContextOptions<BudgetBuddyContext> _contextOptions;
+    private BudgetBuddyContext _context;
     
-    [Test]
-    public void GetAll_ReturnsAllAccounts()
+    [SetUp]
+    public void Setup()
     {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var repository = new AccountRepository(accounts);
-        
-        // Act
-        var result = repository.GetAll();
-        
-        // Assert
-        Assert.That(result, Is.EquivalentTo(accounts));
-    }
-    
-    [Test]
-    public void GetById_ReturnsCorrectAccount()
-    {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var repository = new AccountRepository(accounts);
-        var expectedAccount = accounts.First();
-        
-        // Act
-        var result = repository.GetById(expectedAccount.Id);
-        
-        // Assert
-        Assert.That(result, Is.EqualTo(expectedAccount));
-    }
-    
-    [Test]
-    public void GetById_InvalidIdThrowsException()
-    {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var repository = new AccountRepository(accounts);
-    
-        // Act & Assert
-        Assert.Throws<KeyNotFoundException>(() => repository.GetById(7));
+        _contextOptions = new DbContextOptionsBuilder<BudgetBuddyContext>()
+            .UseInMemoryDatabase("BloggingControllerTest")
+            .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            .Options;
+
+        _context = new BudgetBuddyContext(_contextOptions);
+
+        _context.Database.EnsureDeleted();
+        _context.Database.EnsureCreated();
+
+        _context.AddRange(_accounts);
+            
+        _context.SaveChanges();
     }
 
     [Test]
-    public void CreateAccount_Succeeds()
+    public async Task GetAccountSuccess()
     {
-        // Arrange
-        var account = new Account(7, DateTime.Now, 100m, "sample", "simple", 1, new List<Transaction>());
-        var repository = new AccountRepository(new List<Account>());
+        var accountRepository = new AccountRepository(_context);
+        var result = await accountRepository.GetAll();
         
-        // Act
-        repository.CreateAccount(account);
-        var result = repository.GetById(account.Id);
-        
-        // Assert
-        Assert.That(result, Is.EqualTo(account));
+        Assert.That(result.Count, Is.EqualTo(6));
+        Assert.That(result, Is.EquivalentTo(_accounts));
     }
     
     [Test]
-    public void CreateAccount_WithDuplicateId_ThrowsException()
+    public async Task GetAccountByIdSuccess()
     {
-        // Arrange
-        var accountId = 5;
-        var account = new Account(accountId, DateTime.Now, 100m, "sample", "simple", 1, new List<Transaction>());
-        var repository = new AccountRepository(GetTestAccounts());
+        var accountRepository = new AccountRepository(_context);
+        var result = await accountRepository.GetById(1);
+        
+        Assert.That(result, Is.EqualTo(_accounts[0]));
+    }
+    
+    [Test]
+    public async Task WrongIdFailToGetAccountById()
+    {
+        var accountRepository = new AccountRepository(_context);
+        var accountId = 77; 
+        
+        Exception exception = null;
+        try
+        {
+            await accountRepository.GetById(accountId);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            exception = ex;
+        }
+        Assert.That(exception, Is.Not.Null);
+        Assert.That(exception, Is.InstanceOf<KeyNotFoundException>());
+        Assert.That(exception.Message, Is.EqualTo("Account not found."));
+    }
+    
+    [Test]
+    public async Task CreateAccountSuccess()
+    {
+        var accountToCreate = new Account
+        {
+            Id = 152,
+            Date = new DateTime(2022, 02, 02),
+            Balance = 5.656m,
+            Name = "sample1",
+            Type = "simple1",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        };
+        var accountRepository = new AccountRepository(_context);
+        var result = await accountRepository.CreateAccount(accountToCreate);
+        
+        Assert.That(result, Is.EqualTo(accountToCreate));
+    }
+    
+    [Test]
+    public async Task SameIdFailToCreateAccount()
+    {
+        var accountToCreate = new Account
+        {
+            Id = 1,
+            Date = new DateTime(2022, 02, 02),
+            Balance = 5.656m,
+            Name = "sample1",
+            Type = "simple1",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        };
+        var accountRepository = new AccountRepository(_context);
 
-        // Act & Assert
-        Assert.Throws<InvalidConstraintException>(() => repository.CreateAccount(account));
+        Exception exception = null;
+        try
+        {
+            await accountRepository.CreateAccount(accountToCreate);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+        Assert.That(exception, Is.Not.Null);
+        Assert.That(exception, Is.InstanceOf<Exception>());
+        Assert.That(exception.Message, Is.EqualTo("Cannot create new account."));
     }
     
     [Test]
-    public void UpdateAccount_Succeeds()
+    public async Task UpdateAccountSuccess()
     {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var updatedAccount = new Account(1, DateTime.Now, 100m, "sample", "simple", 1, new List<Transaction>());
-        var repository = new AccountRepository(accounts);
+        var accountRepository = new AccountRepository(_context);
+        var updatedAccount = new Account
+        {
+            Id = 1,
+            Date = new DateTime(2023, 02, 02),
+            Balance = 5.656m,
+            Name = "sample1",
+            Type = "simple2",
+            UserId = 5,
+            Transactions = new List<Transaction>()
+        };
+        var result = await accountRepository.UpdateAccount(updatedAccount);
         
-        // Act
-        repository.UpdateAccount(updatedAccount);
-        var result = repository.GetById(updatedAccount.Id);
-        
-        // Assert
         Assert.That(result, Is.EqualTo(updatedAccount));
     }
     
     [Test]
-    public void UpdateAccount_FailsInvalidId()
+    public async Task WrongIdFailToUpdateAccount()
     {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var updatedAccount = new Account(7, DateTime.Now, 100m, "sample", "simple", 1, new List<Transaction>());
-        var repository = new AccountRepository(accounts);
-        
-        // Act & Assert
-        Assert.Throws<KeyNotFoundException>(() => repository.UpdateAccount(updatedAccount));
-    }
-    
-    [Test]
-    public void DeleteAccount_Succeeds()
-    {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var idToDelete = 1;
-        var expectedAccounts = accounts.Where(acc => acc.Id != idToDelete).ToList();
-        var repository = new AccountRepository(accounts);
-        
-        // Act
-        repository.DeleteAccount(idToDelete);
-        var result = repository.GetAll();
-        
-        // Assert
-        Assert.That(result, Is.EquivalentTo(expectedAccounts));
-    }
-    
-    [Test]
-    public void DeleteAccount_FailsInvalidId()
-    {
-        // Arrange
-        var accounts = GetTestAccounts();
-        var idToDelete = 7;
-        var expectedAccounts = accounts.Where(acc => acc.Id != idToDelete).ToList();
-        var repository = new AccountRepository(accounts);
-        
-        // Act & Assert
-        Assert.Throws<KeyNotFoundException>(() => repository.DeleteAccount(idToDelete));
-    }
-
-    private static List<Account> GetTestAccounts()
-    {
-        return new List<Account>
+        var accountRepository = new AccountRepository(_context);
+        var updatedAccount = new Account
         {
-            new(1, new DateTime(2022, 02, 02), 5.656m, "sample1", "simple1", 1, new List<Transaction>()),
-            new(2, new DateTime(2022, 03, 02), 54.656m, "sample1", "simple2", 12, new List<Transaction>()),
-            new(3, new DateTime(2022, 04, 02), 3.656m, "sample2", "simple3", 2, new List<Transaction>()),
-            new(4, new DateTime(2022, 05, 02), 112.656m, "sample3", "simple4", 1, new List<Transaction>()),
-            new(5, new DateTime(2022, 06, 02), 53.656m, "sample4", "simple5", 3, new List<Transaction>()),
-            new(6, new DateTime(2022, 07, 02), 756.656m, "sample5", "simple6", 1, new List<Transaction>())
+            Id = 19,
+            Date = new DateTime(2023, 02, 02),
+            Balance = 5.656m,
+            Name = "sample1",
+            Type = "simple2",
+            UserId = 5,
+            Transactions = new List<Transaction>()
         };
+        
+        Exception exception = null;
+        try
+        {
+            await accountRepository.UpdateAccount(updatedAccount);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            exception = ex;
+        }
+        Assert.That(exception, Is.Not.Null);
+        Assert.That(exception, Is.InstanceOf<KeyNotFoundException>());
+        Assert.That(exception.Message, Is.EqualTo("Failed to update. Account not found."));
     }
-}
 
+    [Test]
+    public async Task DeleteAccountSuccess()
+    {
+        var accountRepository = new AccountRepository(_context);
+        var accountId = 1;
+        Exception exception = null;
+        try
+        {
+            await accountRepository.DeleteAccount(accountId);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+
+        Assert.That(exception, Is.Null);
+    }
+    
+    [Test]
+    public async Task WrongIdFailToDeleteAccount()
+    {
+        var accountRepository = new AccountRepository(_context);
+        var accountId = 21;
+        Exception exception = null;
+        try
+        {
+            await accountRepository.DeleteAccount(accountId);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+
+        Assert.That(exception, Is.Not.Null);
+        Assert.That(exception, Is.InstanceOf<KeyNotFoundException>());
+        Assert.That(exception.Message, Is.EqualTo("Failed to delete. Account not found."));
+    }
+    
+    private readonly List<Account> _accounts = new()
+    {
+        new Account
+        {
+            Id = 1,
+            Date = new DateTime(2022, 02, 02),
+            Balance = 5.656m,
+            Name = "sample1",
+            Type = "simple1",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        },
+        new Account
+        {
+            Id = 2,
+            Date = new DateTime(2022, 03, 12),
+            Balance = 5.656m,
+            Name = "sample2",
+            Type = "simple2",
+            UserId = 2,
+            Transactions = new List<Transaction>()
+        },
+        new Account
+        {
+            Id = 3,
+            Date = new DateTime(2022, 04, 17),
+            Balance = 5.656m,
+            Name = "sample3",
+            Type = "simple3",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        },
+        new Account
+        {
+            Id = 4,
+            Date = new DateTime(2022, 05, 14),
+            Balance = 5.656m,
+            Name = "sample4",
+            Type = "simple4",
+            UserId = 2,
+            Transactions = new List<Transaction>()
+        },
+        new Account
+        {
+            Id = 5,
+            Date = new DateTime(2022, 06, 07),
+            Balance = 5.656m,
+            Name = "sample5",
+            Type = "simple5",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        },
+        new Account
+        {
+            Id = 6,
+            Date = new DateTime(2022, 07, 08),
+            Balance = 5.656m,
+            Name = "sample6",
+            Type = "simple6",
+            UserId = 1,
+            Transactions = new List<Transaction>()
+        }
+    };
+}
