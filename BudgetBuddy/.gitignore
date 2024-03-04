@@ -10,10 +10,11 @@ CHECKLIST.md
 *.userosscache
 *.sln.docstates
 .vscode/
-
+.env
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+
 
 # Build results
 [Dd]ebug/
@@ -323,3 +324,4 @@ _UpgradeReport_Files/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
