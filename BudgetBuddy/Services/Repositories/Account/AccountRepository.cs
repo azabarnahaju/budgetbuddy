@@ -56,6 +56,7 @@ public class AccountRepository : IAccountRepository
         try
         {
             await _budgetBuddyContext.Accounts.AddAsync(account);
+            await _budgetBuddyContext.SaveChangesAsync();
             return account;
         }
         catch (InvalidConstraintException e)
