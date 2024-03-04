@@ -1,3 +1,6 @@
+using BudgetBuddy.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace BudgetBuddy.Services.Repositories.Account;
 
 using System.Data;
@@ -5,17 +8,17 @@ using Model;
 
 public class AccountRepository : IAccountRepository
 {
-    private readonly List<Account> _accounts;
-    public AccountRepository(List<Account> accounts)
+    private readonly BudgetBuddyContext _budgetBuddyContext;
+    public AccountRepository(BudgetBuddyContext database)
     {
-        _accounts = accounts;
+        _budgetBuddyContext = database;
     }
 
-    public List<Account> GetAll()
+    public async Task<List<Account>> GetAll()
     {
         try
         {
-            return _accounts;
+            return await _budgetBuddyContext.Accounts.ToListAsync();
         }
         catch (Exception e)
         {
@@ -24,11 +27,11 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public Account GetById(int id)
+    public async Task<Account> GetById(int id)
     {
         try
         {
-            Account? result = _accounts.Find(acc => acc.Id == id);
+            var result = await _budgetBuddyContext.Accounts.FirstOrDefaultAsync(acc => acc.Id == id);
             if (result == null)
             {
                 throw new KeyNotFoundException("Account not found.");
@@ -48,13 +51,11 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public Account CreateAccount(Account account)
+    public async Task<Account> CreateAccount(Account account)
     {
         try
         {
-            if (_accounts.Any(acc => acc.Id == account.Id))
-                throw new InvalidConstraintException("Account already exists.");
-            _accounts.Add(account);
+            await _budgetBuddyContext.Accounts.AddAsync(account);
             return account;
         }
         catch (InvalidConstraintException e)
@@ -69,18 +70,21 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public Account UpdateAccount(Account account)
+    public async Task<Account> UpdateAccount(Account account)
     {
         try
         {
-            int accountId = _accounts.FindIndex(acc => acc.Id == account.Id);
-            if (accountId < 0)
+            var existingAccount = await _budgetBuddyContext.Accounts.FirstOrDefaultAsync(c => c.Id == account.Id);
+
+            if (existingAccount == null)
             {
                 throw new KeyNotFoundException("Failed to update. Account not found.");
             }
+            
+            _budgetBuddyContext.Entry(existingAccount).CurrentValues.SetValues(account);
+            await _budgetBuddyContext.SaveChangesAsync();
 
-            _accounts[accountId] = account;
-            return account;
+            return existingAccount;
         }
         catch (KeyNotFoundException e)
         {
@@ -94,17 +98,19 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public void DeleteAccount(int id)
+    public async Task DeleteAccount(int id)
     {
         try
         {
-            Account? account = _accounts.Find(acc => acc.Id == id);
-            if (account == null)
-            {
-                throw new KeyNotFoundException("Account not found.");
-            }
+            var accountToDelete = await _budgetBuddyContext.Accounts.FirstOrDefaultAsync(c => c.Id == id);
 
-            _accounts.Remove(account);
+            if (accountToDelete == null)
+            {
+                throw new KeyNotFoundException("Failed to delete. Account not found.");
+            }
+            
+            _budgetBuddyContext.Accounts.Remove(accountToDelete);
+            await _budgetBuddyContext.SaveChangesAsync();
         }
         catch (KeyNotFoundException e)
         {
