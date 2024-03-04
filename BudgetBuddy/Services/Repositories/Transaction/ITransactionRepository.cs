@@ -5,13 +5,12 @@ using Model;
 
 public interface ITransactionRepository
 {
-    IList<Transaction> _transactions { get; set; }
-    IEnumerable<Transaction> GetAllTransactions();
-    Transaction GetTransaction(int id);
+    Task<IEnumerable<Transaction>> GetAllTransactions();
+    Task<Transaction> GetTransaction(int id);
     void AddTransaction(Transaction transaction);
-    Transaction UpdateTransaction(Transaction transaction);
+    Task<Transaction> UpdateTransaction(Transaction transaction);
     void DeleteTransaction(int id);
 
-    IEnumerable<Transaction> FilterTransactions(TransactionType transactionType);
-    IEnumerable<Transaction> FinancialTransactions(TransactionCategoryTag tag);
+    Task<IEnumerable<Transaction>> FilterTransactions(TransactionType transactionType);
+    Task<IEnumerable<Transaction>> FinancialTransactions(TransactionCategoryTag tag);
 }
