@@ -32,7 +32,7 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
-    options.UseSqlServer(connectionstring);
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddAuthentication(options => { 
