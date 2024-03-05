@@ -4,9 +4,9 @@ using Model;
 
 public interface IAchievementRepository
 {
-    IEnumerable<Achievement> GetAllAchievements();
-    Achievement GetAchievement(int id);
-    IEnumerable<Achievement> AddAchievement(IEnumerable<Achievement> achievements);
-    void DeleteAchievement(int id);
-    Achievement UpdateAchievement(Achievement achievement);
+    Task<IEnumerable<Achievement>> GetAllAchievements();
+    Task<Achievement> GetAchievement(int id);
+    Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<Achievement> achievements);
+    Task DeleteAchievement(int id);
+    Task<Achievement> UpdateAchievement(Achievement achievement);
 }
