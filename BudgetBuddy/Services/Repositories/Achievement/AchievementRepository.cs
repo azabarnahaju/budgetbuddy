@@ -1,55 +1,66 @@
-﻿namespace BudgetBuddy.Services.Repositories.Achievement;
+﻿using BudgetBuddy.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace BudgetBuddy.Services.Repositories.Achievement;
 
 using Model;
 
 public class AchievementRepository : IAchievementRepository
 {
-    private List<Achievement> _achievements;
+    private readonly BudgetBuddyContext _database;
 
-    public AchievementRepository(List<Achievement> achievements)
+    public AchievementRepository(BudgetBuddyContext database)
     {
-        _achievements = achievements;
+        _database = database;
     }
 
-    public IEnumerable<Achievement> GetAllAchievements()
+    public async Task<IEnumerable<Achievement>> GetAllAchievements()
     {
-        return _achievements;
+        return await _database.Achievements.ToListAsync();
     }
 
-    public Achievement GetAchievement(int id)
+    public async Task<Achievement> GetAchievement(int id)
     {
-        return _achievements.All(a => a.Id != id)
+        return await _database.Achievements.AllAsync(a => a.Id != id)
             ? throw new Exception("Achievement could not be found.")
-            : _achievements.First(a => a.Id == id);
+            : await _database.Achievements.FirstAsync(a => a.Id == id);
     }
 
-    public IEnumerable<Achievement> AddAchievement(IEnumerable<Achievement> achievements)
+    public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<Achievement> achievements)
     {
         foreach (var achievement in achievements)
         {
-            if (_achievements.Any(a => a.Id == achievement.Id)) 
+            if (await _database.Achievements.AnyAsync(a => a.Id == achievement.Id)) 
                 throw new Exception($"Achievement with ID {achievement.Id} already exists.");
         }
-
+        
         if (achievements.Select(achievement => achievement.Id).Distinct().Count() != achievements.Count())
             throw new Exception("You're trying to add duplicate achievements.");
         
-        _achievements.AddRange(achievements);
+        _database.Achievements.AddRange(achievements);
+        await _database.SaveChangesAsync();
+        
         return achievements;
     }
 
-    public void DeleteAchievement(int id)
+    public async Task DeleteAchievement(int id)
     {
-        if (_achievements.Count == 0 || _achievements.All(a => a.Id != id)) throw new Exception("Achievement is not found.");
-
-        _achievements = _achievements.Where(a => a.Id != id).ToList();
+        if (!await _database.Achievements.AnyAsync() || await _database.Achievements.AllAsync(a => a.Id != id)) 
+            throw new Exception("Achievement is not found.");
+        
+        _database.Achievements.Remove(await GetAchievement(id));
+        await _database.SaveChangesAsync();
     }
     
-    public Achievement UpdateAchievement(Achievement achievement)
+    public async Task<Achievement> UpdateAchievement(Achievement achievement)
     {
-        if (_achievements.FirstOrDefault(a => a.Id == achievement.Id) is null) throw new Exception("Achievement not found.");
+        var achievementInDb = await _database.Achievements.FirstOrDefaultAsync(a => a.Id == achievement.Id);
+        if (achievementInDb is null) 
+            throw new Exception("Achievement not found.");
 
-        _achievements = _achievements.Select(a => a.Id == achievement.Id ? achievement : a).ToList();
-        return _achievements.First(a => a.Id == achievement.Id);
+        _database.Achievements.Entry(achievementInDb).CurrentValues.SetValues(achievement);
+        await _database.SaveChangesAsync();
+        
+        return await _database.Achievements.FirstAsync(a => a.Id == achievement.Id);
     }
 }

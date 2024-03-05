@@ -16,20 +16,19 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
-builder.Services.AddSingleton<IAchievementRepository>(provider => new AchievementRepository(new List<Achievement>()));
+builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionstring);
 });
 
 builder.Services.AddAuthentication(options => { 

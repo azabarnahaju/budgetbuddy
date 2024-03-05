@@ -14,19 +14,7 @@ public class BudgetBuddyContext : DbContext
 
     public BudgetBuddyContext(DbContextOptions<BudgetBuddyContext> options) : base(options)
     {
-        // Env.Load();
-        // _connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-        //
-        // if (string.IsNullOrEmpty(_connectionString))
-        // {
-        //     throw new InvalidOperationException("DB_CONNECTION_STRING is not defined in the .env file.");
-        // }
     }
-    
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     optionsBuilder.UseSqlServer(_connectionString);
-    // }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

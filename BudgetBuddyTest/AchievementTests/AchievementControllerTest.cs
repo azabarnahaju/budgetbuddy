@@ -24,11 +24,11 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void GetAll_ReturnsNotFoundWhenRepositoryThrowsException()
+    public async Task GetAll_ReturnsNotFoundWhenRepositoryThrowsException()
     {
         _achievementRepositoryMock.Setup(x => x.GetAllAchievements()).Throws(new Exception());
         
-        var result = _controller.GetAll();
+        var result = await _controller.GetAll();
         
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
         
@@ -41,12 +41,12 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void GetAll_ReturnsOkIfRepositoryReturnsValidData()
+    public async Task GetAll_ReturnsOkIfRepositoryReturnsValidData()
     {
         var achievements = new List<Achievement> { new Achievement()};
-        _achievementRepositoryMock.Setup(x => x.GetAllAchievements()).Returns(achievements);
+        _achievementRepositoryMock.Setup(x => x.GetAllAchievements()).ReturnsAsync(achievements);
 
-        var result = _controller.GetAll();
+        var result = await _controller.GetAll();
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 
@@ -61,22 +61,22 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void Get_ReturnsNotFoundWhenRepositoryThrowsException()
+    public async Task Get_ReturnsNotFoundWhenRepositoryThrowsException()
     {
         _achievementRepositoryMock.Setup(x => x.GetAchievement(It.IsAny<int>())).Throws(new Exception());
         
-        var result = _controller.Get(It.IsAny<int>());
+        var result = await _controller.Get(It.IsAny<int>());
         
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
     }
     
     [Test]
-    public void Get_ReturnsOkIfRepositoryReturnsValidData()
+    public async Task Get_ReturnsOkIfRepositoryReturnsValidData()
     {
         var achievement = new Achievement();
-        _achievementRepositoryMock.Setup(x => x.GetAchievement(It.IsAny<int>())).Returns(achievement);
+        _achievementRepositoryMock.Setup(x => x.GetAchievement(It.IsAny<int>())).ReturnsAsync(achievement);
 
-        var result = _controller.Get(It.IsAny<int>());
+        var result = await _controller.Get(It.IsAny<int>());
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 
@@ -91,22 +91,22 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void Add_ReturnsNotFoundWhenRepositoryThrowsException()
+    public async Task Add_ReturnsNotFoundWhenRepositoryThrowsException()
     {
         _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<Achievement>>())).Throws(new Exception());
         
-        var result = _controller.Add(It.IsAny<IEnumerable<Achievement>>());
+        var result = await _controller.Add(It.IsAny<IEnumerable<Achievement>>());
         
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
     }
     
     [Test]
-    public void Add_ReturnsOkIfRepositoryReturnsValidData()
+    public async Task Add_ReturnsOkIfRepositoryReturnsValidData()
     {
         var achievements = new List<Achievement>();
-        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<Achievement>>())).Returns(achievements);
+        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<Achievement>>())).ReturnsAsync(achievements);
 
-        var result = _controller.Add(achievements);
+        var result = await _controller.Add(achievements);
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 
@@ -121,21 +121,21 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void Delete_ReturnsNotFoundWhenRepositoryThrowsException()
+    public async Task Delete_ReturnsNotFoundWhenRepositoryThrowsException()
     {
         _achievementRepositoryMock.Setup(x => x.DeleteAchievement(It.IsAny<int>())).Throws(new Exception());
         
-        var result = _controller.Delete(It.IsAny<int>());
+        var result = await _controller.Delete(It.IsAny<int>());
         
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
     }
     
     [Test]
-    public void Delete_ReturnsOkIfRepositoryReturnsValidData()
+    public async Task Delete_ReturnsOkIfRepositoryReturnsValidData()
     {
         _achievementRepositoryMock.Setup(x => x.DeleteAchievement(It.IsAny<int>()));
 
-        var result = _controller.Delete(It.IsAny<int>());
+        var result = await _controller.Delete(It.IsAny<int>());
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 
@@ -152,22 +152,22 @@ public class AchievementControllerTest
     }
 
     [Test]
-    public void Update_ReturnsNotFoundWhenRepositoryThrowsException()
+    public async Task Update_ReturnsNotFoundWhenRepositoryThrowsException()
     {
         _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<Achievement>())).Throws(new Exception());
         
-        var result = _controller.Update(It.IsAny<Achievement>());
+        var result = await _controller.Update(It.IsAny<Achievement>());
         
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
     }
     
     [Test]
-    public void Update_ReturnsOkIfRepositoryReturnsValidData()
+    public async Task Update_ReturnsOkIfRepositoryReturnsValidData()
     {
         var achievement = new Achievement();
-        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<Achievement>())).Returns(achievement);
+        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<Achievement>())).ReturnsAsync(achievement);
 
-        var result = _controller.Update(achievement);
+        var result = await _controller.Update(achievement);
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 

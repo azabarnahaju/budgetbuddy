@@ -18,11 +18,11 @@ public class AchievementController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Achievement>> GetAll()
+    public async Task<ActionResult<IEnumerable<Achievement>>> GetAll()
     {
         try
         {
-            return Ok(new { message = "Achievements found successfully.", data = _achievementRepository.GetAllAchievements() });
+            return Ok(new { message = "Achievements found successfully.", data = await _achievementRepository.GetAllAchievements() });
         }
         catch (Exception e)
         {
@@ -32,13 +32,13 @@ public class AchievementController : ControllerBase
     }
 
     [HttpGet("/Achievement/{achievementId}")]
-    public ActionResult<Achievement> Get(int achievementId)
+    public async Task<ActionResult<Achievement>> Get(int achievementId)
     {
         try
         {
             return Ok(new
             {
-                message = "Achievement found successfully.", data = _achievementRepository.GetAchievement(achievementId)
+                message = "Achievement found successfully.", data = await _achievementRepository.GetAchievement(achievementId)
             });
         }
         catch (Exception e)
@@ -50,14 +50,14 @@ public class AchievementController : ControllerBase
     
     // admin functionality
     [HttpPost("/Achievement/add")]
-    public ActionResult<Achievement> Add(IEnumerable<Achievement> achievements)
+    public async Task<ActionResult<Achievement>> Add(IEnumerable<Achievement> achievements)
     {
         try
         {
             return Ok(new
             {
                 message = "Achievement(s) successfully added.",
-                data = _achievementRepository.AddAchievement(achievements)
+                data = await _achievementRepository.AddAchievement(achievements)
             });
         }
         catch (Exception e)
@@ -69,11 +69,11 @@ public class AchievementController : ControllerBase
     
     // admin functionality
     [HttpDelete("delete/{achievementId}")]
-    public ActionResult<string> Delete(int achievementId)
+    public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
         {
-            _achievementRepository.DeleteAchievement(achievementId);
+            await _achievementRepository.DeleteAchievement(achievementId);
             return Ok(new { message = "Deleting achievement was successful." });
         }
         catch (Exception e)
@@ -85,14 +85,14 @@ public class AchievementController : ControllerBase
 
     // admin functionality
     [HttpPatch("update")]
-    public ActionResult<Achievement> Update(Achievement achievement)
+    public async Task<ActionResult<Achievement>> Update(Achievement achievement)
     {
         try
         {
             return Ok(new
             {
                 message = "Updating message was successful.",
-                data = _achievementRepository.UpdateAchievement(achievement)
+                data = await _achievementRepository.UpdateAchievement(achievement)
             });
         }
         catch (Exception e)
