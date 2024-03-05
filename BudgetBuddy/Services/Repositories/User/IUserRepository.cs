@@ -4,10 +4,10 @@ using Model;
 
 public interface IUserRepository
 {
-    IEnumerable<Model.User> GetAllUsers();
-    User GetUser(string email);
-    User GetUser(int id);
-    User AddUser(Model.User user);
-    User UpdateUser(Model.User user);
-    void DeleteUser(int id);
+    Task<IEnumerable<User>> GetAllUsers();
+    Task<User> GetUser(string email);
+    Task<User> GetUser(int id);
+    Task<User> AddUser(Model.User user);
+    Task<User> UpdateUser(Model.User user);
+    Task DeleteUser(int id);
 }

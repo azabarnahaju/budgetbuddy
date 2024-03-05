@@ -9,9 +9,9 @@ using Model;
 public class AccountRepository : IAccountRepository
 {
     private readonly BudgetBuddyContext _budgetBuddyContext;
-    public AccountRepository(BudgetBuddyContext database)
+    public AccountRepository(BudgetBuddyContext budgetBuddyContext)
     {
-        _budgetBuddyContext = database;
+        _budgetBuddyContext = budgetBuddyContext;
     }
 
     public async Task<List<Account>> GetAll()
@@ -55,9 +55,9 @@ public class AccountRepository : IAccountRepository
     {
         try
         {
-            await _budgetBuddyContext.Accounts.AddAsync(account);
+            var newAccount = await _budgetBuddyContext.Accounts.AddAsync(account);
             await _budgetBuddyContext.SaveChangesAsync();
-            return account;
+            return newAccount.Entity;
         }
         catch (Exception e)
         {

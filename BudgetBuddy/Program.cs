@@ -22,11 +22,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IUserRepository>(provider => new UserRepository(new List<User>()));
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
 builder.Services.AddSingleton<IAchievementRepository>(provider => new AchievementRepository(new List<Achievement>()));
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
     options.UseSqlServer(connectionString);

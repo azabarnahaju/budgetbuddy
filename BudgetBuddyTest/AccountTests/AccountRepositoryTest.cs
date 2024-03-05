@@ -169,6 +169,7 @@ public class AccountRepositoryTest
     {
         var accountRepository = new AccountRepository(_context);
         var accountId = 1;
+        
         Exception exception = null;
         try
         {
@@ -187,6 +188,7 @@ public class AccountRepositoryTest
     {
         var accountRepository = new AccountRepository(_context);
         var accountId = 21;
+        
         Exception exception = null;
         try
         {
