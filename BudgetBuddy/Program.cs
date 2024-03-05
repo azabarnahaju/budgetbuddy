@@ -5,16 +5,20 @@ using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
+Env.Load();
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,8 +26,11 @@ builder.Services.AddSingleton<IUserRepository>(provider => new UserRepository(ne
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
 builder.Services.AddSingleton<IAchievementRepository>(provider => new AchievementRepository(new List<Achievement>()));
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-builder.Services.AddSingleton<IAccountRepository>(provider => new AccountRepository(new List<Account>()));
-builder.Services.AddDbContext<BudgetBuddyContext>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddDbContext<BudgetBuddyContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
 
 builder.Services.AddAuthentication(options => { 
     options.DefaultScheme = "Cookies"; 
