@@ -5,7 +5,6 @@ using BudgetBuddy.Services.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework.Internal;
 
 namespace BudgetBuddyTest.UserTests;
 
@@ -32,21 +31,24 @@ public class UserControllerTest
 
         var result = _controller.Get(It.IsAny<int>());
 
-        Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
+        Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result.Result);
     }
     
     [Test]
     public void Get_ReturnsOkIfRepositoryReturnsValidData()
     {
         var user = new User();
-        _userRepositoryMock.Setup(x => x.GetUser(It.IsAny<int>())).Returns(user);
+        _userRepositoryMock.Setup(x => x.GetUser(It.IsAny<int>())).ReturnsAsync(user);
 
         var result = _controller.Get(It.IsAny<int>());
 
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        Assert.IsInstanceOf<ActionResult<User>>(result.Result);
 
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
+
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        var responseData = okObjectResult.Value;
 
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);
@@ -59,28 +61,31 @@ public class UserControllerTest
     public void Update_ReturnsBadRequestWhenRepositoryThrowsException()
     {
         _userRepositoryMock.Setup(x => x.UpdateUser(It.IsAny<User>())).Throws(new Exception());
-
+    
         var result = _controller.Update(It.IsAny<User>());
-
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+    
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
     public void Update_ReturnsOkIfRepositoryReturnsValidData()
     {
         var user = new User();
-        _userRepositoryMock.Setup(x => x.UpdateUser(It.IsAny<User>())).Returns(user);
-
+        _userRepositoryMock.Setup(x => x.UpdateUser(It.IsAny<User>())).ReturnsAsync(user);
+    
         var result = _controller.Update(It.IsAny<User>());
+    
+        Assert.IsInstanceOf<ActionResult<User>>(result.Result);
 
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
 
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
-
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        var responseData = okObjectResult.Value;
+    
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);
-
+    
         Assert.That(messageValue, Is.EqualTo("Updating user was successful."));
         Assert.That(dataValue, Is.EqualTo(user));
     }
@@ -89,26 +94,29 @@ public class UserControllerTest
     public void Delete_ReturnsBadRequestWhenRepositoryThrowsException()
     {
         _userRepositoryMock.Setup(x => x.DeleteUser(It.IsAny<int>())).Throws(new Exception());
-
+    
         var result = _controller.Delete(It.IsAny<int>());
-
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+    
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
     public void Delete_ReturnsOkIfRepositoryProcessWasSuccessful()
     {
         _userRepositoryMock.Setup(x => x.DeleteUser(It.IsAny<int>()));
-
+    
         var result = _controller.Delete(It.IsAny<int>());
+    
+        Assert.IsInstanceOf<ActionResult<string>>(result.Result);
 
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
 
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
-
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        var responseData = okObjectResult.Value;
+    
         var messageValue = GetMessageFromResult(responseData);
-
+    
         Assert.That(messageValue, Is.EqualTo("User deleted successfully."));
     }
     
@@ -116,25 +124,28 @@ public class UserControllerTest
     public void Register_ReturnsBadRequestWhenRepositoryThrowsException()
     {
         _userRepositoryMock.Setup(x => x.AddUser(It.IsAny<User>())).Throws(new Exception());
-
+    
         var result = _controller.Register(It.IsAny<User>());
-
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+    
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
     public void Register_ReturnsOkIfRepositoryReturnsValidData()
     {
         var user = new User();
-        _userRepositoryMock.Setup(x => x.AddUser(It.IsAny<User>())).Returns(user);
-
+        _userRepositoryMock.Setup(x => x.AddUser(It.IsAny<User>())).ReturnsAsync(user);
+    
         var result = _controller.Register(It.IsAny<User>());
+    
+        Assert.IsInstanceOf<ActionResult<User>>(result.Result);
 
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
 
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
-
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        var responseData = okObjectResult.Value;
+    
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);
         
@@ -147,7 +158,7 @@ public class UserControllerTest
         var messageProperty = responseData.GetType().GetProperty("message");
         return messageProperty.GetValue(responseData);
     }
-
+    
     private object GetDataFromResult(object responseData)
     {
         var dataProperty = responseData.GetType().GetProperty("data");

@@ -11,23 +11,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
+Env.Load();
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+
 var builder = WebApplication.CreateBuilder(args);
 
-Env.Load();
-var connectionstring = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IUserRepository>(provider => new UserRepository(new List<User>()));
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-builder.Services.AddSingleton<IAccountRepository>(provider => new AccountRepository(new List<Account>()));
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
     options.UseSqlServer(connectionstring);

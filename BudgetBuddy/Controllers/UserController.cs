@@ -24,11 +24,11 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    public ActionResult<User> Get(int userId)
+    public async Task<ActionResult<User>> Get(int userId)
     {
         try
         {
-            return Ok(new { message = "User data successfully retrieved.", data = _userRepository.GetUser(userId) });
+            return Ok(new { message = "User data successfully retrieved.", data = await _userRepository.GetUser(userId) });
         }
         catch (Exception e)
         {
@@ -38,11 +38,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPatch("/User/update")]
-    public ActionResult<User> Update(User user)
+    public async Task<ActionResult<User>> Update(User user)
     {
         try
         {
-            return Ok(new { message = "Updating user was successful.", data = _userRepository.UpdateUser(user) });
+            return Ok(new { message = "Updating user was successful.", data = await _userRepository.UpdateUser(user) });
         }
         catch (Exception e)
         {
@@ -52,11 +52,11 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{userId}")]
-    public ActionResult<string> Delete(int userId)
+    public async Task<ActionResult<string>> Delete(int userId)
     {
         try
         {
-            _userRepository.DeleteUser(userId);
+            await _userRepository.DeleteUser(userId);
             return Ok(new { message = "User deleted successfully." });
         }
         catch (Exception e)
@@ -67,11 +67,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("/Register")]
-    public ActionResult<User> Register(User user)
+    public async Task<ActionResult<User>> Register(User user)
     {
         try
         {
-            return Ok(new {message = "Registration successful.", data = _userRepository.AddUser(user)});
+            return Ok(new {message = "Registration successful.", data = await _userRepository.AddUser(user)});
         }
         catch (Exception e)
         {
@@ -85,10 +85,10 @@ public class UserController : ControllerBase
     {
         try
         {
-            var success = _authenticationService.Authenticate(authParams);
+            var success = await _authenticationService.Authenticate(authParams);
             if (!success) throw new Exception("Invalid login credentials.");
     
-            var user = _userRepository.GetUser(authParams.Email);
+            var user = await _userRepository.GetUser(authParams.Email);
             
             var claims = new List<Claim>()
             {
@@ -121,7 +121,7 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("AmISignedIn")]
-    public IActionResult SignedIn()
+    public async Task<IActionResult> SignedIn()
     {
         bool isAuthenticated = HttpContext.User.Identity.IsAuthenticated;
         if (isAuthenticated)
