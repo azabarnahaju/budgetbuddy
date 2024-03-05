@@ -13,7 +13,11 @@ public class Achievement
 
         var other = (Achievement)obj;
 
-        return other.Id == this.Id && other.Name == this.Name && other.Description == this.Description &&
-               other.Users == this.Users;
+        return other.Id == this.Id && other.Name == this.Name && other.Description == this.Description;
+    }
+    
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, Description, Users);
     }
 }
