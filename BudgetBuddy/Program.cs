@@ -5,11 +5,16 @@ using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
+var connectionstring = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 // Add services to the container.
 
@@ -20,10 +25,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IUserRepository>(provider => new UserRepository(new List<User>()));
 builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
-builder.Services.AddSingleton<IAchievementRepository>(provider => new AchievementRepository(new List<Achievement>()));
+builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton<IAccountRepository>(provider => new AccountRepository(new List<Account>()));
-builder.Services.AddDbContext<BudgetBuddyContext>();
+builder.Services.AddDbContext<BudgetBuddyContext>(options =>
+{
+    options.UseSqlServer(connectionstring);
+});
 
 builder.Services.AddAuthentication(options => { 
     options.DefaultScheme = "Cookies"; 
