@@ -5,29 +5,35 @@ using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
-var builder = WebApplication.CreateBuilder(args);
+Env.Load();
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
     });
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<IUserRepository>(provider => new UserRepository(new List<User>()));
-builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
-builder.Services.AddTransient<IAchievementRepository>(provider => new AchievementRepository(new List<Achievement>()));
+builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
+builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
-builder.Services.AddTransient<IAccountRepository>(provider => new AccountRepository(new List<Account>()));
-builder.Services.AddDbContext<BudgetBuddyContext>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddDbContext<BudgetBuddyContext>(options =>
+{
+    options.UseSqlServer(connectionstring);
+});
 
 builder.Services.AddAuthentication(options => { 
     options.DefaultScheme = "Cookies"; 

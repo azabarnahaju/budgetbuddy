@@ -28,21 +28,24 @@ public class AccountControllerTest
         
         var result = _controller.Get(1);
         
-        Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
+        Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result.Result);
     }
 
     [Test]
     public void GetReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account (1, new DateTime(2022, 02, 02), 5.656m, "sample1", "simple1", 1, new List<Transaction>());
-        _accountRepositoryMock.Setup(x => x.GetById(1)).Returns(account);
+        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.GetById(1)).ReturnsAsync(account);
     
         var result = _controller.Get(1);
         
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
-    
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
+        Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
+
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
+
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        var responseData = okObjectResult.Value;
     
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);
@@ -59,21 +62,24 @@ public class AccountControllerTest
         
         var result = _controller.CreateAccount(It.IsAny<Account>());
         
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
     public void CreateAccountReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account (1, new DateTime(2022, 02, 02), 5.656m, "sample1", "simple1", 1, new List<Transaction>());
-        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>())).Returns(account);
+        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>())).ReturnsAsync(account);
     
         var result = _controller.CreateAccount(account);
         
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
     
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        
+        var responseData = okObjectResult.Value;
     
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);
@@ -89,27 +95,26 @@ public class AccountControllerTest
         
         var result = _controller.DeleteAccount(It.IsAny<int>());
         
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
-    public void DeleteReturnsOkIfRepositoryReturnsValidData()
+    public async Task DeleteReturnsOkIfRepositoryReturnsValidData()
     {
         _accountRepositoryMock.Setup(x => x.DeleteAccount(It.IsAny<int>()));
-    
-        var result = _controller.DeleteAccount(It.IsAny<int>());
         
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
-    
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
-    
+        var result = await _controller.DeleteAccount(It.IsAny<int>());
+        
+        Assert.IsInstanceOf<OkObjectResult>(result.Result);
+        
+        var okResult = (OkObjectResult)result.Result;
+        Assert.AreEqual(200, okResult.StatusCode);
+        
+        var responseData = okResult.Value;
         var messageProperty = responseData.GetType().GetProperty("message");
-        
         Assert.NotNull(messageProperty);
-    
-        var messageValue = messageProperty.GetValue(responseData);
         
+        var messageValue = messageProperty.GetValue(responseData);
         Assert.That(messageValue, Is.EqualTo("Account deleted successfully"));
     }
     
@@ -120,21 +125,24 @@ public class AccountControllerTest
         
         var result = _controller.UpdateAccount(It.IsAny<Account>());
         
-        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
     
     [Test]
     public void Update_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account (1, new DateTime(2022, 02, 02), 5.656m, "sample1", "simple1", 1, new List<Transaction>());
-        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<Account>())).Returns(account);
+        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<Account>())).ReturnsAsync(account);
     
         var result = _controller.UpdateAccount(account);
         
-        Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
+        Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
     
-        var objectResult = (OkObjectResult)result.Result;
-        var responseData = objectResult.Value;
+        var objectResult = result.Result;
+        Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
+        var okObjectResult = (OkObjectResult)objectResult.Result;
+        
+        var responseData = okObjectResult.Value;
     
         var messageValue = GetMessageFromResult(responseData);
         var dataValue = GetDataFromResult(responseData);

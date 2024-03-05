@@ -1,51 +1,146 @@
-﻿namespace BudgetBuddy.Services.Repositories.User;
+﻿using BudgetBuddy.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace BudgetBuddy.Services.Repositories.User;
 
 using Model;
 
 public class UserRepository : IUserRepository
 {
-    private IList<User> _users;
+    private readonly BudgetBuddyContext _budgetBuddyContext;
 
-    public UserRepository(IList<User> users)
+    public UserRepository(BudgetBuddyContext budgetBuddyContext)
     {
-        _users = users;
+        _budgetBuddyContext = budgetBuddyContext;
     }
     
-    public IEnumerable<User> GetAllUsers()
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        return _users;
+        try
+        {
+            return await _budgetBuddyContext.Users.ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Cannot get users.");
+        }
     }
 
-    public User GetUser(string email)
+    public async Task<User> GetUser(string email)
     {
-        return _users.All(user => user.Email != email) ? throw new InvalidDataException("User not found") : _users.First(user => user.Email == email);
+        try
+        {
+            var result = await _budgetBuddyContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (result == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+
+            return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An unexpected error occured, cannot get user");
+        }
     }
 
-    public User GetUser(int id)
+    public async Task<User> GetUser(int id)
     {
-        return _users.All(user => user.Id != id) ? throw new InvalidDataException("User not found") : _users.First(user => user.Id == id);
+        try
+        {
+            var result = await _budgetBuddyContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (result == null)
+            {
+                throw new KeyNotFoundException("User not found.");
+            }
+
+            return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An unexpected error occured, cannot get user");
+        }
     }
 
-    public User AddUser(User user)
+    public async Task<User> AddUser(User user)
     {
-        if (_users.Any(u => u.Id == user.Id)) throw new Exception("User already exists.");
-
-        _users.Add(user);
-        return user;
+        try
+        {
+            var newUser = await _budgetBuddyContext.Users.AddAsync(user);
+            await _budgetBuddyContext.SaveChangesAsync();
+            return newUser.Entity;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Cannot create new user.");
+        }
     }
 
-    public User UpdateUser(User user)
+    public async Task<User> UpdateUser(User user)
     {
-        if (_users.FirstOrDefault(u => u.Id == user.Id) is null) throw new Exception("User not found.");
+        try
+        {
+            var existingUser = await _budgetBuddyContext.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
 
-        _users = _users.Select(u => user.Id == u.Id ? user : u).ToList();
-        return _users.First(u => u.Id == user.Id);
+            if (existingUser == null)
+            {
+                throw new KeyNotFoundException("Failed to update. User not found.");
+            }
+            
+            _budgetBuddyContext.Entry(existingUser).CurrentValues.SetValues(user);
+            await _budgetBuddyContext.SaveChangesAsync();
+
+            return existingUser;
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An unexpected error occured. User not updated.");
+        }
     }
 
-    public void DeleteUser(int id)
+    public async Task DeleteUser(int id)
     {
-        if (_users.Count == 0 || _users.All(u => u.Id != id)) throw new Exception("User is not found.");
+        try
+        {
+            var userToDelete = await _budgetBuddyContext.Users.FirstOrDefaultAsync(u => u.Id == id);
 
-        _users = _users.Where(u => u.Id != id).ToList();
+            if (userToDelete == null)
+            {
+                throw new KeyNotFoundException("Failed to delete. User not found.");
+            }
+            
+            _budgetBuddyContext.Users.Remove(userToDelete);
+            await _budgetBuddyContext.SaveChangesAsync();
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("User not deleted. An unexpected error occured.");
+        }
     }
 }

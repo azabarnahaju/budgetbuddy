@@ -18,11 +18,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("{accountId}")]
-    public ActionResult<Account> Get(int accountId)
+    public async Task<ActionResult<Account>> Get(int accountId)
     {
         try
         {
-            var result = _accountRepository.GetById(accountId);
+            var result = await _accountRepository.GetById(accountId);
             return Ok(new { message = "Account retrieved successfully", data = result });
         }
         catch (Exception e)
@@ -33,11 +33,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Account> CreateAccount(Account account)
+    public async Task<ActionResult<Account>> CreateAccount(Account account)
     {
         try
         {
-            var result = _accountRepository.CreateAccount(account);
+            var result = await _accountRepository.CreateAccount(account);
             return Ok(new { message = "Account created successfully", data = result });
         }
         catch (Exception e)
@@ -48,11 +48,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPatch]
-    public ActionResult<Account> UpdateAccount(Account account)
+    public async Task<ActionResult<Account>> UpdateAccount(Account account)
     {
         try
         {
-            var result = _accountRepository.UpdateAccount(account);
+            var result = await _accountRepository.UpdateAccount(account);
             return Ok(new { message = "Account updated successfully", data = result });
         }
         catch (Exception e)
@@ -63,11 +63,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpDelete("{accountId}")]
-    public ActionResult<bool> DeleteAccount(int accountId)
+    public async Task<ActionResult<bool>> DeleteAccount(int accountId)
     {
         try
         {
-            _accountRepository.DeleteAccount(accountId);
+            await _accountRepository.DeleteAccount(accountId);
             return Ok(new { message = "Account deleted successfully", data = true });
         }
         catch (Exception e)
