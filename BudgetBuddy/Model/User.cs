@@ -8,4 +8,25 @@ public class User
     public string Email { get; init; }
     public string Password { get; init; }
     public List<Achievement> Achievements { get; init; }
+    
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        
+        User other = (User)obj;
+
+        return Id == other.Id &&
+               RegistrationDate == other.RegistrationDate &&
+               Username == other.Username &&
+               Email == other.Email &&
+               Password == other.Password;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, RegistrationDate, Username, Email, Password);
+    }
 }

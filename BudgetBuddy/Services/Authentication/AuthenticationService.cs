@@ -14,11 +14,11 @@ public class AuthenticationService : IAuthenticationService
         _userRepository = userRepository;
     }
     
-    public bool Authenticate(AuthParams authParams)
+    public async Task<bool> Authenticate(AuthParams authParams)
     {
         try
         {
-            var user = _userRepository.GetUser(authParams.Email);
+            var user = await _userRepository.GetUser(authParams.Email);
             return user.Password == authParams.Password;
         }
         catch (InvalidDataException e)
