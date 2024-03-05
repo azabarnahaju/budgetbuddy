@@ -55,7 +55,7 @@ public class TransactionRepository : ITransactionRepository
             throw new Exception("Transaction not found.");
         }
         
-        _budgetBuddyContext.Transactions.Update(transaction);
+        _budgetBuddyContext.Entry(transactionToUpdate).CurrentValues.SetValues(transaction);
         await _budgetBuddyContext.SaveChangesAsync();
         return transaction;
     }
