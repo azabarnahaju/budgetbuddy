@@ -4,5 +4,5 @@ using Model;
 
 public interface IAuthenticationService
 {
-    bool Authenticate(AuthParams authParams);
+    Task<bool> Authenticate(AuthParams authParams);
 }

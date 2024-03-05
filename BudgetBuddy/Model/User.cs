@@ -9,18 +9,24 @@ public class User
     public string Password { get; init; }
     public List<Achievement> Achievements { get; init; }
     
-    public override bool Equals(object? obj)
+    public override bool Equals(object obj)
     {
-        if (obj is not User || obj is null) return false;
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        
+        User other = (User)obj;
 
-        var other = (User)obj;
-
-        return other.Id == this.Id && other.Username == this.Username && other.RegistrationDate == this.RegistrationDate && other.Email == this.Email 
-               && other.Password == this.Password;
+        return Id == other.Id &&
+               RegistrationDate == other.RegistrationDate &&
+               Username == other.Username &&
+               Email == other.Email &&
+               Password == other.Password;
     }
-    
+
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Username, RegistrationDate, Email, Password, Achievements);
+        return HashCode.Combine(Id, RegistrationDate, Username, Email, Password);
     }
 }

@@ -12,4 +12,26 @@ public class Account
     public string Type { get; init; } 
     public int UserId { get; init; } 
     public List<Transaction> Transactions { get; init; } 
+    
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        
+        Account other = (Account)obj;
+
+        return Id == other.Id &&
+               Date == other.Date &&
+               Balance == other.Balance &&
+               Name == other.Name &&
+               Type == other.Type &&
+               UserId == other.UserId;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Date, Balance, Name, Type, UserId);
+    }
 }
