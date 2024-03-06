@@ -1,11 +1,8 @@
 ﻿using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.Achievement;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace BudgetBuddyTest.AchievementTests;
 
