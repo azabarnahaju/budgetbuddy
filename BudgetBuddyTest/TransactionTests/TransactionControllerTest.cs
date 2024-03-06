@@ -58,13 +58,13 @@ public class TransactionControllerTest
     //GetAll
     
     [Test]
-    public void GetAll_ReturnsNotFoundResultIfTransactionDataProviderFails()
+    public async Task GetAll_ReturnsNotFoundResultIfTransactionDataProviderFails()
     {
         // Arrange
         _transactionDataProviderMock.Setup(x => x.GetAllTransactions()).Throws(new Exception());
         
         // Act
-        var result = _controller.GetAll();
+        var result = await _controller.GetAll();
         var resultMessage = (BadRequestObjectResult?)result.Result;
         
         // Assert
@@ -74,30 +74,31 @@ public class TransactionControllerTest
     
     
     [Test]
-    public void GetAll_ReturnsOkResultIfTransactionDataIsValid()
+    public async Task GetAll_ReturnsOkResultIfTransactionDataIsValid()
     {
         // Arrange
-        _transactionDataProviderMock.Setup(x => x.GetAllTransactions()).Returns(new List<Transaction>());
+        _transactionDataProviderMock.Setup(x => x.GetAllTransactions()).ReturnsAsync(new List<Transaction>());
         
         // Act
-        var result = _controller.GetAll();
+        var result = await _controller.GetAll();
         var resultMessage = (OkObjectResult?)result.Result;
         
         // Assert
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
         Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Transactions retrieved."));
+        Assert.That(GetDataFromResult(resultMessage.Value), Is.EqualTo(new List<Transaction>()));
     }
     
     //GetTransaction
 
     [Test]
-    public void GetTransaction_ReturnsNotFoundResultIfTransactionDataProviderFails()
+    public async Task GetTransaction_ReturnsNotFoundResultIfTransactionDataProviderFails()
     {
         // Arrange
         _transactionDataProviderMock.Setup(x => x.GetTransaction(It.IsAny<int>())).Throws(new Exception());
         
         // Act
-        var result = _controller.GetTransaction(It.IsAny<int>());
+        var result = await _controller.GetTransaction(It.IsAny<int>());
         var resultMessage = (NotFoundObjectResult?)result.Result;
         
         // Assert
@@ -106,13 +107,13 @@ public class TransactionControllerTest
     }
     
     [Test]
-    public void GetTransaction_ReturnsOkResultIfTransactionDataIsValid()
+    public async Task GetTransaction_ReturnsOkResultIfTransactionDataIsValid()
     {
         //Arrange
-        _transactionDataProviderMock.Setup(x => x.GetTransaction(It.IsAny<int>())).Returns(It.IsAny<Transaction>());
+        _transactionDataProviderMock.Setup(x => x.GetTransaction(It.IsAny<int>())).ReturnsAsync(It.IsAny<Transaction>());
         
         //Act
-        var result = _controller.GetTransaction(It.IsAny<int>());
+        var result = await _controller.GetTransaction(It.IsAny<int>());
         var resultMessage = (OkObjectResult?)result.Result;
         
         //Assert
@@ -123,14 +124,14 @@ public class TransactionControllerTest
     //UpdateTransaction
 
     [Test]
-    public void UpdateTransaction_ReturnsNotFoundIfProviderFails()
+    public async Task UpdateTransaction_ReturnsNotFoundIfProviderFails()
     {
         // Arrange
         _transactionDataProviderMock.Setup(x => x.UpdateTransaction(It.IsAny<Transaction>())).Throws(
             new Exception());
         
         // Act
-        var result = _controller.UpdateTransaction(It.IsAny<Transaction>());
+        var result = await _controller.UpdateTransaction(It.IsAny<Transaction>());
         var resultMessage = (NotFoundObjectResult?)result.Result;
     
         // Assert
@@ -139,18 +140,19 @@ public class TransactionControllerTest
     }
 
     [Test]
-    public void UpdateTransaction_ReturnsOkResultIfTransactionDataIsValid()
+    public async Task UpdateTransaction_ReturnsOkResultIfTransactionDataIsValid()
     {
         //Arrange
         _transactionDataProviderMock.Setup(x => x.UpdateTransaction(It.IsAny<Transaction>()));
         
         //Act
-        var result = _controller.UpdateTransaction(It.IsAny<Transaction>());
+        var result = await _controller.UpdateTransaction(It.IsAny<Transaction>());
         var resultMessage = (OkObjectResult?)result.Result;
         
         //Assert
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
         Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Transaction updated."));
+        Assert.That(GetDataFromResult(resultMessage.Value), Is.EqualTo(It.IsAny<Transaction>()));
     }
     
     //DeleteTransaction
@@ -187,13 +189,13 @@ public class TransactionControllerTest
     
     //FilterByType
     [Test]
-    public void FilterTransactions_ReturnsNotFoundIfProviderFails()
+    public async Task FilterTransactions_ReturnsNotFoundIfProviderFails()
     {
         //Arrange
         _transactionDataProviderMock.Setup(x => x.FilterTransactions(It.IsAny<TransactionType>())).Throws(new Exception());
         
         //Act
-        var result = _controller.FilterTransactions(It.IsAny<TransactionType>());
+        var result = await _controller.FilterTransactions(It.IsAny<TransactionType>());
         var resultMessage = (NotFoundObjectResult?)result.Result;
         
         //Assert
@@ -202,31 +204,32 @@ public class TransactionControllerTest
     }
 
     [Test]
-    public void FilterTransactions_ReturnsOkIfTransactionsDataIsValid()
+    public async Task FilterTransactions_ReturnsOkIfTransactionsDataIsValid()
     {
         //Arrange
         _transactionDataProviderMock.Setup(x => x.FilterTransactions(It.IsAny<TransactionType>()))
-            .Returns(new List<Transaction>());
+            .ReturnsAsync(new List<Transaction>());
         
         //Act
-        var result = _controller.FilterTransactions(It.IsAny<TransactionType>());
+        var result = await _controller.FilterTransactions(It.IsAny<TransactionType>());
         var resultMessage = (OkObjectResult?)result.Result;
         
         //Assert
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
         Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo($"Transactions filtered by { It.IsAny<TransactionType>() }."));
+        Assert.That(GetDataFromResult(resultMessage.Value), Is.EqualTo(new List<Transaction>()));
     }
     
     //FinancialTransactions
     [Test]
-    public void FinancialTransactions_ReturnsNotFoundIfProviderFails()
+    public async Task FinancialTransactions_ReturnsNotFoundIfProviderFails()
     {
         //Arrange
         _transactionDataProviderMock.Setup(x => x.FinancialTransactions(It.IsAny<TransactionCategoryTag>())).Throws(
             new Exception());
         
         //Act
-        var result = _controller.FinancialTransactions(It.IsAny<TransactionCategoryTag>());
+        var result = await _controller.FinancialTransactions(It.IsAny<TransactionCategoryTag>());
         var resultMessage = (NotFoundObjectResult?)result.Result;
         
         //Assert
@@ -235,14 +238,14 @@ public class TransactionControllerTest
     }
 
     [Test]
-    public void FinancialTransactions_ReturnsOkIfFinancialTransactionsDataIsValid()
+    public async Task FinancialTransactions_ReturnsOkIfFinancialTransactionsDataIsValid()
     {
         //Arrange
         _transactionDataProviderMock.Setup(x => x.FinancialTransactions(It.IsAny<TransactionCategoryTag>()))
-            .Returns(new List<Transaction>());
+            .ReturnsAsync(new List<Transaction>());
         
         //Act
-        var result = _controller.FinancialTransactions(It.IsAny<TransactionCategoryTag>());
+        var result = await _controller.FinancialTransactions(It.IsAny<TransactionCategoryTag>());
         var resultMessage = (OkObjectResult?)result.Result;
         
         //Assert
