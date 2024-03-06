@@ -1,5 +1,4 @@
 using BudgetBuddy.Data;
-using BudgetBuddy.Model;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
@@ -24,10 +23,9 @@ builder.Services.AddControllers()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
+builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
-builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
