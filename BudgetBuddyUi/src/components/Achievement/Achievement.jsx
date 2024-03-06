@@ -76,11 +76,11 @@ const Achievement = () => {
           <h4>Description: {achievement.description}</h4>
           <h4>User ids:</h4>
           <div>
-            {achievement.users.map((id) => (
+            {achievement.users ? achievement.users.map((id) => (
               <div className="mx-5" key={id}>
                 <h6>Id: {id}</h6>
               </div>
-            ))}
+            )) : <div>No users found.</div>}
           </div>
         </div>
       ) : (
