@@ -7,12 +7,10 @@ using Model;
 
 public class TransactionRepository : ITransactionRepository
 {
-    private readonly ILogger<TransactionRepository> _logger;
     private readonly BudgetBuddyContext _budgetBuddyContext;
 
-    public TransactionRepository(ILogger<TransactionRepository> logger, BudgetBuddyContext budgetBuddyContext)
+    public TransactionRepository(BudgetBuddyContext budgetBuddyContext)
     {
-        _logger = logger;
         _budgetBuddyContext = budgetBuddyContext;
     }
 
@@ -48,16 +46,16 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<Transaction> UpdateTransaction(Transaction transaction)
     {
-        var transactionToUpdate = await _budgetBuddyContext.Transactions.FirstOrDefaultAsync(r => r.Id == transaction.Id);
-
+        var transactionToUpdate = await _budgetBuddyContext.Transactions.FirstOrDefaultAsync(a => a.Id == transaction.Id);
         if (transactionToUpdate is null)
         {
             throw new Exception("Transaction not found.");
         }
-        
-        _budgetBuddyContext.Entry(transactionToUpdate).CurrentValues.SetValues(transaction);
+
+        _budgetBuddyContext.Transactions.Entry(transactionToUpdate).CurrentValues.SetValues(transaction);
         await _budgetBuddyContext.SaveChangesAsync();
-        return transaction;
+        
+        return await _budgetBuddyContext.Transactions.FirstAsync(a => a.Id == transaction.Id) ?? throw new Exception("Transaction not found.");
     }
 
     public void DeleteTransaction(int id)
