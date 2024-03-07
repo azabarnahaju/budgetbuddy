@@ -6,14 +6,23 @@ import Loading from "../../Loading/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import { tags, types } from "../../../utils/categories";
 
+const sampleAccount = {
+  date: "2024-03-06T09:10:04.409Z",
+  balance: 0,
+  name: "string",
+  type: "string",
+  userId: 0,
+  transactions: [],
+};
+
 const sampleTransaction = {
-  id: 0,
   date: new Date(),
   name: "",
   amount: 0,
   tag: "",
   type: "",
   accountId: 1,
+  account: sampleAccount,
 };
 
 const TransactionCreator = () => {
@@ -81,6 +90,9 @@ const TransactionCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      if (id && !transaction.account){
+        transaction.account = sampleAccount;
+      }
       const response = await fetchData(
         transaction,
         id ? "/Transaction/update" : "/Transaction/add",
@@ -122,19 +134,6 @@ const TransactionCreator = () => {
       />
       <h1>{id ? "Update transaction" : "Create new transaction:"}</h1>
       <form onSubmit={handleCreateTransaction}>
-        <label className="form-label mb-3" htmlFor="id">
-          Transaction id
-        </label>
-        <input
-          onChange={handleTransactionChange}
-          className="form-control mb-3"
-          value={transaction.id}
-          required
-          type="number"
-          id="id"
-          name="id"
-          placeholder="Enter the transaction id"
-        />
         <label className="form-label mb-3" htmlFor="name">
           Name
         </label>

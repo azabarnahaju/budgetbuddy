@@ -8,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 const currentUser = 1;
 
 const sampleAccount = {
-  id: 0,
   balance: 0,
   date: new Date(),
   name: "",
@@ -78,6 +77,9 @@ const AccountCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      if (id && !account.transactions) {
+        account.transactions = [];
+      }
       const response = await fetchData(
         account,
         "/Account",
@@ -119,19 +121,6 @@ const AccountCreator = () => {
       />
       <h1>{id ? "Update account" : "Create new account:"}</h1>
       <form onSubmit={handleCreateAccount}>
-        <label className="form-label mb-3" htmlFor="id">
-          Account id
-        </label>
-        <input
-          onChange={handleAccountChange}
-          className="form-control mb-3"
-          value={account.id}
-          required
-          type="number"
-          id="id"
-          name="id"
-          placeholder="Enter the account id"
-        />
         <label className="form-label mb-3" htmlFor="balance">
           Balance
         </label>

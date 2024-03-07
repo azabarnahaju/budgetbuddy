@@ -6,7 +6,6 @@ import Loading from "../../Loading/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 
 const sampleAchievement = {
-  id: 0,
   name: "",
   description: "",
   users: [],
@@ -73,6 +72,9 @@ const AchievementCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      if (id && !achievement.users) {
+        achievement.users = [];
+      }
       const response = await fetchData(
         id ? achievement : [achievement],
         id ? "/Achievement/update" : "/Achievement/add",
@@ -114,19 +116,6 @@ const AchievementCreator = () => {
       />
       <h1>{id ? "Update achievement" : "Create new achievement:"}</h1>
       <form onSubmit={handleCreateAchievement}>
-        <label className="form-label mb-3" htmlFor="id">
-          Achievement id
-        </label>
-        <input
-          onChange={handleAchievementChange}
-          className="form-control mb-3"
-          value={achievement.id}
-          required
-          type="number"
-          id="id"
-          name="id"
-          placeholder="Enter the achievement id"
-        />
         <label className="form-label mb-3" htmlFor="name">
           Name
         </label>

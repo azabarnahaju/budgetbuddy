@@ -73,7 +73,7 @@ const Account = () => {
           <h4>Type: {account.type}</h4>
           <div>
             <h4>Transactions:</h4>
-            {account.transactions.map((transaction) => (
+            {account.transactions ? account.transactions.map((transaction) => (
               <div key={transaction.accountId}>
                 <h6>Amount: {transaction.amount}</h6>
                 <h6>Date {transaction.date}</h6>
@@ -81,7 +81,7 @@ const Account = () => {
                 <h6>Tag: {transaction.tag}</h6>
                 <h6>Type: {transaction.type}</h6>
               </div>
-            ))}
+            )) : <h5>No transactions yet.</h5>}
           </div>
         </div>
       ) : (
