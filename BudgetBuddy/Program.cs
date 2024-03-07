@@ -71,6 +71,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Migrating database...");
+    logger.LogInformation("Database not ready yet; waiting...");
+    Thread.Sleep(10000);
+    serviceScope.ServiceProvider.GetRequiredService<BudgetBuddyContext>().Database.Migrate();
+    logger.LogInformation("Database migrated successfully.");
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

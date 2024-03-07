@@ -15,7 +15,7 @@ services:
     depends_on:
         - database
   database:
-    image: mcr.microsoft.com/mssql/server
+    image: mcr.microsoft.com/mssql/server:2022-latest
     env_file:
       - ./.envs/db.env
     ports:
