@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
-Env.Load();
+Env.TraversePath().Load("../.envs/server.env");
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +30,9 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
+    Console.WriteLine("Trying to connect to database...");
     options.UseSqlServer(connectionString);
+    Console.WriteLine("Connected to database!");
 });
 
 builder.Services.AddAuthentication(options => { 
@@ -100,4 +102,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run("https://localhost:7204");
+app.Run();
