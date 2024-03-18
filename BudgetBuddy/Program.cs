@@ -2,6 +2,7 @@ using BudgetBuddy.Data;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
+using BudgetBuddy.Services.Repositories.Goal;
 using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
 using DotNetEnv;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
-Env.TraversePath().Load("../.envs/server.env");
+Env.Load();
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<IGoalRepository, GoalRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<BudgetBuddyContext>(options =>
 {
@@ -71,15 +73,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Migrating database...");
-    logger.LogInformation("Database not ready yet; waiting...");
-    Thread.Sleep(10000);
-    serviceScope.ServiceProvider.GetRequiredService<BudgetBuddyContext>().Database.Migrate();
-    logger.LogInformation("Database migrated successfully.");
-}
+// using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+// {
+//     var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+//     logger.LogInformation("Migrating database...");
+//     logger.LogInformation("Database not ready yet; waiting...");
+//     Thread.Sleep(10000);
+//     serviceScope.ServiceProvider.GetRequiredService<BudgetBuddyContext>().Database.Migrate();
+//     logger.LogInformation("Database migrated successfully.");
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
