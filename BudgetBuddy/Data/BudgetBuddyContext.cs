@@ -1,5 +1,4 @@
 ﻿using BudgetBuddy.Model;
-using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Data;
@@ -10,8 +9,7 @@ public class BudgetBuddyContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
-    // private readonly string _connectionString;
-
+    public DbSet<GoalModel> GoalModel { get; set; }
     public BudgetBuddyContext(DbContextOptions<BudgetBuddyContext> options) : base(options)
     {
     }
