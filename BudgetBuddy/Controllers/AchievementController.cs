@@ -1,11 +1,13 @@
-﻿namespace BudgetBuddy.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace BudgetBuddy.Controllers;
 
 using Model;
 using Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]"), Authorize]
 public class AchievementController : ControllerBase
 {
     private readonly ILogger<AchievementController> _logger;
@@ -17,7 +19,7 @@ public class AchievementController : ControllerBase
         _achievementRepository = achievementRepository;
     }
 
-    [HttpGet]
+    [HttpGet, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Achievement>>> GetAll()
     {
         try
@@ -31,7 +33,7 @@ public class AchievementController : ControllerBase
         }
     }
 
-    [HttpGet("/Achievement/{achievementId}")]
+    [HttpGet("/Achievement/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Achievement>> Get(int achievementId)
     {
         try
@@ -49,7 +51,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpPost("/Achievement/add")]
+    [HttpPost("/Achievement/add"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<Achievement>> Add(IEnumerable<Achievement> achievements)
     {
         try
@@ -68,7 +70,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}")]
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
@@ -84,7 +86,7 @@ public class AchievementController : ControllerBase
     }
 
     // admin functionality
-    [HttpPatch("update")]
+    [HttpPatch("update"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<Achievement>> Update(Achievement achievement)
     {
         try
