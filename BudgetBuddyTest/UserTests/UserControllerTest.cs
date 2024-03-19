@@ -12,7 +12,7 @@ public class UserControllerTest
 {
     private Mock<ILogger<UserController>> _loggerMock;
     private Mock<IUserRepository> _userRepositoryMock;
-    private Mock<IAuthenticationService> _authenticationService;
+    private Mock<IAuthService> _authenticationService;
     private UserController _controller;
 
     [SetUp]
@@ -20,7 +20,7 @@ public class UserControllerTest
     {
         _loggerMock = new Mock<ILogger<UserController>>();
         _userRepositoryMock = new Mock<IUserRepository>();
-        _authenticationService = new Mock<IAuthenticationService>();
+        _authenticationService = new Mock<IAuthService>();
         _controller = new UserController(_loggerMock.Object, _userRepositoryMock.Object, _authenticationService.Object);
     }
 
