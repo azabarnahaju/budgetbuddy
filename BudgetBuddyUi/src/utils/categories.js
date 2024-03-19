@@ -22,4 +22,13 @@ export const tags = [
   "Other",
 ];
 
+export const goalTypes = [
+  "Saving",
+  "Spending",
+  "DebtRepayment",
+  "Investment",
+  "Income",
+  "CharitableGiving",
+];
+
 export const types = ["Income", "Expense"];

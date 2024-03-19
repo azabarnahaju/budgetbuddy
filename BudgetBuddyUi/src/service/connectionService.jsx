@@ -17,7 +17,6 @@ export const fetchData = async (body, path, method) => {
 
     const response = await fetch(url, options);
     const data = await response.json();
-    console.log(data);
     if (response.ok) {
       return { ok: true, message: data.message, data: data };
     } else {
