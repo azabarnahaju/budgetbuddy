@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace BudgetBuddy.Controllers;
 
 using Model;
@@ -17,7 +19,7 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{accountId}")]
+    [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> Get(int accountId)
     {
         try
@@ -32,7 +34,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> CreateAccount(Account account)
     {
         try
@@ -47,7 +49,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPatch, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> UpdateAccount(Account account)
     {
         try
@@ -62,7 +64,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpDelete("{accountId}")]
+    [HttpDelete("{accountId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<bool>> DeleteAccount(int accountId)
     {
         try

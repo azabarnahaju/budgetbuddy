@@ -1,4 +1,6 @@
-﻿namespace BudgetBuddy.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace BudgetBuddy.Controllers;
 
 using Model.Enums;
 using Services.Repositories.Transaction;
@@ -19,7 +21,7 @@ public class TransactionController : ControllerBase
         _transactionRepository = transactionRepository;
     }
     
-    [HttpPost("add")]
+    [HttpPost("add"), Authorize(Roles = "Admin, User")]
     public ActionResult<Transaction> AddTransaction(Transaction transaction)
     {
         try
@@ -34,7 +36,7 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("transactions")]
+    [HttpGet("transactions"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Transaction>> GetAll()
     {
         try
@@ -49,7 +51,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("transactions/{id}")]
+    [HttpGet("transactions/{id}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Transaction>> GetTransaction(int id)
     {
         try
@@ -64,7 +66,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpPatch("update")]
+    [HttpPatch("update"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Transaction>> UpdateTransaction(Transaction transaction)
     {
         try
@@ -79,7 +81,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{id}"), Authorize(Roles = "Admin, User")]
     public ActionResult<Transaction> DeleteTransaction(int id)
     {
         try
@@ -94,7 +96,7 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("filterByType/{transactionType}")]
+    [HttpGet("filterByType/{transactionType}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Transaction>> FilterTransactions([Required]TransactionType transactionType)
     {
         try
@@ -109,7 +111,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("filterByTag/{tag}")]
+    [HttpGet("filterByTag/{tag}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Transaction>> FinancialTransactions([Required]TransactionCategoryTag tag)
     {
         try

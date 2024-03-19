@@ -5,7 +5,7 @@ public class Achievement
     public int Id { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
-    public List<User> Users { get; init; }
+    public List<ApplicationUser> Users { get; init; }
 
     public override bool Equals(object? obj)
     {
