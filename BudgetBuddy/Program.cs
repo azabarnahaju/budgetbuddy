@@ -63,7 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var connection ="http://localhost:5173/";
+var connection ="http://localhost:8080/";
 app.UseCors(b => {
     b.WithOrigins(connection!)
         .AllowAnyHeader()
