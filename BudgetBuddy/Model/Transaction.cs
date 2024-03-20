@@ -15,5 +15,6 @@ public record Transaction
     public TransactionType Type { get; init; }
     public Account Account { get; init; } = null!;
     public int AccountId { get; init; }
+    public List<Report> Reports { get; init; }
 };
 
