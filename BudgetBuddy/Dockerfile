@@ -1,19 +1,22 @@
-﻿# Dockerfile 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["BudgetBuddy/BudgetBuddy.csproj", "BudgetBuddy/"]
+RUN dotnet restore "BudgetBuddy/BudgetBuddy.csproj"
+COPY . .
+WORKDIR "/src/BudgetBuddy"
+RUN dotnet build "BudgetBuddy.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "BudgetBuddy.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "BudgetBuddy.dll"]
 
 ENV ASPNETCORE_URLS=http://+:80

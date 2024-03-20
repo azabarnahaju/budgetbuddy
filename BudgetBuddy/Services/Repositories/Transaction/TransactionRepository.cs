@@ -33,7 +33,7 @@ public class TransactionRepository : ITransactionRepository
 
         return transaction;
     }
-    
+
     public async Task<IEnumerable<Transaction>> GetTransactionByAccount(int accountId)
     {
         var accountExist = await _budgetBuddyContext.Transactions.AnyAsync(t => t.AccountId == accountId);

@@ -1,12 +1,11 @@
-using BudgetBuddy.Contracts.ModelRequest;
-using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
-using Microsoft.AspNetCore.Authorization;
-
 namespace BudgetBuddy.Controllers;
 
 using Model;
 using Services.Repositories.Account;
 using Microsoft.AspNetCore.Mvc;
+using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]")]

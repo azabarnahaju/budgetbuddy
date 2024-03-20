@@ -6,15 +6,6 @@ import Loading from "../../Loading/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import { tags, types } from "../../../utils/categories";
 
-const sampleAccount = {
-  date: "2024-03-06T09:10:04.409Z",
-  balance: 0,
-  name: "string",
-  type: "string",
-  userId: 0,
-  transactions: [],
-};
-
 const sampleTransaction = {
   date: new Date(),
   name: "",
@@ -22,7 +13,6 @@ const sampleTransaction = {
   tag: "",
   type: "",
   accountId: 1,
-  account: sampleAccount,
 };
 
 const TransactionCreator = () => {
@@ -90,9 +80,6 @@ const TransactionCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      if (id && !transaction.account){
-        transaction.account = sampleAccount;
-      }
       const response = await fetchData(
         transaction,
         id ? "/Transaction/update" : "/Transaction/add",

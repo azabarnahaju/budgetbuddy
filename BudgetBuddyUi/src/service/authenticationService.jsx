@@ -1,22 +1,23 @@
-import { baseUrl } from "../utils/urls";
+import { fetchData } from "./connectionService";
 
+export const logoutUser = async () => {
+  try {
+    localStorage.removeItem("accessToken");
+    return true;
+  } catch (error) {
+    console.log("Failed to logout.");
+    return false;
+  }
+};
+
+// Function to check authentication status
 export const getAuth = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/User/AmISignedIn`, {
-        credentials: "include",
-      });
-      if (response.ok) {
-        const isAuthenticated = await response.json();
-        return isAuthenticated;
-      } else {
-        console.error(
-          "Failed to fetch authentication status:",
-          response.statusText
-        );
-        return false;
-      }
-    } catch (error) {
-      console.error("Error while fetching authentication status.");
-      return false;
-    }
-  };
+  try {
+    const token = localStorage.getItem("accessToken");
+    const userAuth = await fetchData({ token }, "/Auth/Validate", "POST");
+    return userAuth;
+  } catch (error) {
+    console.error("Error. Server not responding.");
+    return false;
+  }
+};

@@ -2,6 +2,8 @@ using System.Runtime.InteropServices.JavaScript;
 using BudgetBuddy.Contracts.ModelRequest;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Data;
+using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Services.Repositories.Account;
@@ -54,6 +56,7 @@ public class AccountRepository : IAccountRepository
         }
     }
 
+
     public async Task<Account> CreateAccount(AccountCreateRequest account)
     {
         try
@@ -76,6 +79,7 @@ public class AccountRepository : IAccountRepository
             throw new Exception("Cannot create new account.");
         }
     }
+
 
     public async Task<Account> UpdateAccount(AccountUpdateRequest account)
     {

@@ -1,12 +1,15 @@
+namespace BudgetBuddy.Controllers;
+
 ﻿using BudgetBuddy.Contracts.ModelRequest;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using Microsoft.AspNetCore.Authorization;
 
-namespace BudgetBuddy.Controllers;
-
 using Model;
 using Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
+using Model.CreateModels;
+using Model.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]"), Authorize]
@@ -61,7 +64,7 @@ public class AchievementController : ControllerBase
             return Ok(new
             {
                 message = "Achievement(s) successfully added.",
-                data = await _achievementRepository.AddAchievement(achievements)
+                data = await _achievementRepository.AddAchievement(achievement)
             });
         }
         catch (Exception e)
@@ -72,7 +75,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try

@@ -20,30 +20,54 @@ const Login = () => {
   });
 
   const handleLogin = async (e) => {
-    e.preventDefault();
     setLoading(true);
-    const response = await fetchData(userInfo, "/Login", "POST");
-    setLoading(false);
-    if (response.ok) {
-      setSnackbar({ open: true, message: response.message, type: "success" });
-      navigate("/");
-      return;
-    } else {
+    e.preventDefault();
+    try {
+      const response = await fetchData(
+        {
+          password: userInfo.password,
+          email: userInfo.email,
+        },
+        "/Auth/Login",
+        "POST"
+      );
+
+      if (response.ok) {
+        localStorage.setItem("accessToken", response.data.data.token);
+        setSnackbar({
+          open: true,
+          message: response.message,
+          type: "success",
+        });
+
+        navigate("/");
+        return;
+      } else {
+        setSnackbar({
+          open: true,
+          message: response.message,
+          type: "error",
+        });
+        if (response.status === 403) {
+          navigate("/activateAccount");
+        }
+      }
+    } catch (error) {
       setLocalSnackbar({
         open: true,
-        message: response.message,
+        message: "Server not responding.",
         type: "error",
       });
     }
     setUserInfo(authParams);
+    setLoading(false);
   };
 
   const handleSetUserInfo = (e) => {
     const key = e.target.name;
     const value = e.target.value;
-    setUserInfo({...userInfo, [key]: value})
-  }
-
+    setUserInfo({ ...userInfo, [key]: value });
+  };
 
   if (loading) {
     return <Loading message="Logging in..." />;

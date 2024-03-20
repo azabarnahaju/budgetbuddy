@@ -1,3 +1,4 @@
+using BudgetBuddy.Services;
 ﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,16 +12,18 @@ using Model;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]"), Authorize]
 public class TransactionController : ControllerBase
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
+    private readonly IGoalService _goalService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
+        _goalService = goalService;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
@@ -28,7 +31,8 @@ public class TransactionController : ControllerBase
     {
         try
         {
-             _transactionRepository.AddTransaction(transaction);
+            var result = await _transactionRepository.AddTransaction(transaction);
+            await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)

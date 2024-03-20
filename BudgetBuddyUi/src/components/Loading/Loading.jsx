@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import loadingGIF from "../../assets/loading.gif";
+import loadingGIF from "/loading.gif";
 
 const Loading = ({ message = "Loading..." }) => {
   return (

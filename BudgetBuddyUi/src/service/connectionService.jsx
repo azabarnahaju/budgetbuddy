@@ -3,21 +3,20 @@ import { baseUrl } from "../utils/urls";
 export const fetchData = async (body, path, method) => {
   try {
     const url = `${baseUrl}${path}`;
+    const token = localStorage.getItem("accessToken");
     const options = {
       method: method,
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     };
 
     if (body !== null) {
       options.body = JSON.stringify(body);
     }
-
     const response = await fetch(url, options);
     const data = await response.json();
-    console.log(data);
     if (response.ok) {
       return { ok: true, message: data.message, data: data };
     } else {

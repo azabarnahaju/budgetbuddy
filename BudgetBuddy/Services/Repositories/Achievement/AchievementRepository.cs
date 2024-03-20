@@ -1,3 +1,5 @@
+
+﻿using BudgetBuddy.Data;
 ﻿using BudgetBuddy.Contracts.ModelRequest;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Data;
@@ -27,6 +29,7 @@ public class AchievementRepository : IAchievementRepository
             ? throw new Exception("Achievement could not be found.")
             : await _database.Achievements.FirstAsync(a => a.Id == id);
     }
+
 
     public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements)
     {
@@ -59,6 +62,7 @@ public class AchievementRepository : IAchievementRepository
         await _database.SaveChangesAsync();
     }
     
+
     public async Task<Achievement> UpdateAchievement(AchievementUpdateRequest achievement)
     {
         var achievementInDb = await _database.Achievements.FirstOrDefaultAsync(a => a.Id == achievement.Id);

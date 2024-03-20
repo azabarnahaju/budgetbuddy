@@ -4,6 +4,7 @@ using BudgetBuddy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetBuddy.Migrations
 {
     [DbContext(typeof(BudgetBuddyContext))]
-    partial class BudgetBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20240320141450_intialCreate")]
+    partial class intialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +163,7 @@ namespace BudgetBuddy.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("BudgetBuddy.Model.Report", b =>
+            modelBuilder.Entity("BudgetBuddy.Model.GoalModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,57 +174,28 @@ namespace BudgetBuddy.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("AverageSpendingDaily")
-                        .HasPrecision(14, 2)
-                        .HasColumnType("decimal(14,2)");
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
 
-                    b.Property<decimal>("AverageSpendingTransaction")
-                        .HasPrecision(14, 2)
-                        .HasColumnType("decimal(14,2)");
-
-                    b.Property<decimal>("BiggestExpense")
-                        .HasPrecision(14, 2)
-                        .HasColumnType("decimal(14,2)");
-
-                    b.Property<string>("Categories")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("MostSpendingDay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MostSpendingTag")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReportType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SpendingByTags")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("CurrentProgress")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("SumExpense")
-                        .HasPrecision(14, 2)
-                        .HasColumnType("decimal(14,2)");
+                    b.Property<decimal>("Target")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("SumIncome")
-                        .HasPrecision(14, 2)
-                        .HasColumnType("decimal(14,2)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Reports");
+                    b.ToTable("GoalModel");
                 });
 
             modelBuilder.Entity("BudgetBuddy.Model.Transaction", b =>
@@ -392,21 +366,6 @@ namespace BudgetBuddy.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ReportTransaction", b =>
-                {
-                    b.Property<int>("ReportId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportId", "TransactionId");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("ReportTransaction");
-                });
-
             modelBuilder.Entity("AchievementApplicationUser", b =>
                 {
                     b.HasOne("BudgetBuddy.Model.Achievement", null)
@@ -431,17 +390,6 @@ namespace BudgetBuddy.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BudgetBuddy.Model.Report", b =>
-                {
-                    b.HasOne("BudgetBuddy.Model.Account", "Account")
-                        .WithMany("Reports")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BudgetBuddy.Model.Transaction", b =>
@@ -506,25 +454,8 @@ namespace BudgetBuddy.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReportTransaction", b =>
-                {
-                    b.HasOne("BudgetBuddy.Model.Report", null)
-                        .WithMany()
-                        .HasForeignKey("ReportId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BudgetBuddy.Model.Transaction", null)
-                        .WithMany()
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BudgetBuddy.Model.Account", b =>
                 {
-                    b.Navigation("Reports");
-
                     b.Navigation("Transactions");
                 });
 

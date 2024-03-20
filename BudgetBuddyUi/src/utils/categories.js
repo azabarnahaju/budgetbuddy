@@ -6,6 +6,8 @@ export const tags = [
   "Housing",
   "Utilities",
   "Entertainment",
+  "Investment",
+  "DeptRepayment",
   "Clothing",
   "HealthCare",
   "Education",
@@ -20,6 +22,14 @@ export const tags = [
   "HomeImprovement",
   "Subscriptions",
   "Other",
+];
+
+export const goalTypes = [
+  "Spending",
+  "DebtRepayment",
+  "Investment",
+  "Income",
+  "CharitableGiving",
 ];
 
 export const types = ["Income", "Expense"];
