@@ -13,11 +13,13 @@ public class GoalRepository : IGoalRepository
         _database = database;
     }
     
-    public async Task<GoalModel[]> GetAllGoalsByUserId(int userId)
+    public async Task<GoalModel[]> GetAllGoalsByAccountId(int accountId, bool? completed)
     {
         try
         {
-            var result = _database.GoalModel.Where(goal => goal.UserId == userId).ToArray();
+            var result = _database.GoalModel
+                .Where(goal => goal.AccountId == accountId)
+                .ToArray();
             if (result == null)
             {
                 throw new KeyNotFoundException("Goals not found.");

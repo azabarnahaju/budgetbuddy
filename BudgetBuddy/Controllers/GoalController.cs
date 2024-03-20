@@ -18,11 +18,11 @@ public class GoalController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    public async Task<IActionResult> GetGoalsByUserId(int userId)
+    public async Task<IActionResult> GetGoalsByAccountId(int userId)
     {
         try
         {
-            var result = await _goalRepository.GetAllGoalsByUserId(userId);
+            var result = await _goalRepository.GetAllGoalsByAccountId(userId);
             return Ok(new { message = "Goals retrieved successfully", data = result });
         }
         catch (Exception e)

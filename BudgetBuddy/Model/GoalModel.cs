@@ -6,6 +6,7 @@ public class GoalModel
 {
     public int Id { get; init; }
     public int UserId { get; set; }
+    public int AccountId { get; set; }
     public GoalType Type { get; set; }
     public decimal Target { get; set; }
     public decimal CurrentProgress { get; set; }
