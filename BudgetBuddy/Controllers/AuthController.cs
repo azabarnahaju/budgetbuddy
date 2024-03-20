@@ -2,6 +2,9 @@
 using System.Security.Claims;
 using BudgetBuddy.Contracts;
 using BudgetBuddy.Model.RequestModels;
+﻿using BudgetBuddy.Contracts;
+using BudgetBuddy.Contracts.Auth;
+using BudgetBuddy.Contracts.Registration;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

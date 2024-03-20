@@ -1,12 +1,11 @@
-using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
-using Microsoft.AspNetCore.Authorization;
-
 namespace BudgetBuddy.Controllers;
 
 using Model;
 using Services.Repositories.Account;
 using Microsoft.AspNetCore.Mvc;
+using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]")]
@@ -37,7 +36,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost, Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Account>> CreateAccount(AccountInputModel account)
+    public async Task<ActionResult<Account>> CreateAccount(AccountCreateRequest account)
     {
         try
         {
@@ -52,7 +51,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPatch, Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Account>> UpdateAccount(AccountUpdateModel account)
+    public async Task<ActionResult<Account>> UpdateAccount(AccountUpdateRequest account)
     {
         try
         {

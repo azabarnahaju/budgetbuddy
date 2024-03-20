@@ -1,5 +1,5 @@
-using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
+using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 
 namespace BudgetBuddy.Services.Repositories.Account;
 
@@ -9,7 +9,7 @@ public interface IAccountRepository
 {
     Task<List<Account>> GetAll();
     Task<Account> GetById(int id);
-    Task<Account> CreateAccount(AccountInputModel account);
-    Task<Account> UpdateAccount(AccountUpdateModel account);
+    Task<Account> CreateAccount(AccountCreateRequest account);
+    Task<Account> UpdateAccount(AccountUpdateRequest account);
     Task DeleteAccount(int id);
 }

@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices.JavaScript;
+using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model.CreateModels;
 using BudgetBuddy.Model.UpdateModels;
@@ -53,19 +56,20 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account> CreateAccount(AccountInputModel account)
+
+    public async Task<Account> CreateAccount(AccountCreateRequest account)
     {
         try
         {
-            var accoutToCreate = new Account()
+            var accountToAdd = new Account
             {
                 Balance = account.Balance,
-                Date = account.Date,
+                Date = DateTime.Now,
                 Name = account.Name,
-                UserId = account.UserId,
-                Type = account.Type
+                Type = account.Type,
+                UserId = account.UserId
             };
-            var newAccount = await _budgetBuddyContext.Accounts.AddAsync(accoutToCreate);
+            var newAccount = await _budgetBuddyContext.Accounts.AddAsync(accountToAdd);
             await _budgetBuddyContext.SaveChangesAsync();
             return newAccount.Entity;
         }
@@ -76,7 +80,8 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account> UpdateAccount(AccountUpdateModel account)
+
+    public async Task<Account> UpdateAccount(AccountUpdateRequest account)
     {
         try
         {

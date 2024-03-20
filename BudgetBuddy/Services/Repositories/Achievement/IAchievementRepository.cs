@@ -1,5 +1,5 @@
-﻿using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
+﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 
 namespace BudgetBuddy.Services.Repositories.Achievement;
 
@@ -9,7 +9,7 @@ public interface IAchievementRepository
 {
     Task<IEnumerable<Achievement>> GetAllAchievements();
     Task<Achievement> GetAchievement(int id);
-    Task<Achievement> AddAchievement(AchievementInputModel achievements);
+    Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements);
     Task DeleteAchievement(int id);
-    Task<Achievement> UpdateAchievement(AchievementUpdateModel achievement);
+    Task<Achievement> UpdateAchievement(AchievementUpdateRequest achievement);
 }

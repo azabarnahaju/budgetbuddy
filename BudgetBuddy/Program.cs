@@ -3,9 +3,12 @@ using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
 using BudgetBuddy.Services.Authentication;
+using BudgetBuddy.Services.ReportServices;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.Goal;
+using BudgetBuddy.Services.Repositories.Report;
+// using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -46,16 +49,6 @@ var authenticationSeeder = scope.ServiceProvider.GetRequiredService<Authenticati
 authenticationSeeder.AddRoles();
 authenticationSeeder.AddAdmin();
 
-// using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-// {
-//     var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-//     logger.LogInformation("Migrating database...");
-//     logger.LogInformation("Database not ready yet; waiting...");
-//     Thread.Sleep(10000);
-//     serviceScope.ServiceProvider.GetRequiredService<BudgetBuddyContext>().Database.Migrate();
-//     logger.LogInformation("Database migrated successfully.");
-// }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -83,8 +76,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
@@ -99,8 +90,10 @@ void AddServices(){
         });
 
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddTransient<IReportService, ReportService>();
     builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
     builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
+    builder.Services.AddTransient<IReportRepository, ReportRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
