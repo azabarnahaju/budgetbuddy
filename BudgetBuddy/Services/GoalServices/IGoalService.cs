@@ -1,6 +1,6 @@
 using BudgetBuddy.Model;
 
-namespace BudgetBuddy.Services;
+namespace BudgetBuddy.Services.GoalServices;
 
 public interface IGoalService
 {

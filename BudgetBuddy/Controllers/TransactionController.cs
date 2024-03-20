@@ -1,10 +1,11 @@
-using BudgetBuddy.Services;
-﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
-using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
-using Microsoft.AspNetCore.Authorization;
+using BudgetBuddy.Services.GoalServices;
 
 namespace BudgetBuddy.Controllers;
 
+using Services;
+using Contracts.ModelRequest.CreateModels;
+using Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 using Model.Enums;
 using Services.Repositories.Transaction;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +28,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
-    public ActionResult<Transaction> AddTransaction(TransactionCreateRequest transaction)
+    public async Task<ActionResult<Transaction>> AddTransaction(TransactionCreateRequest transaction)
     {
         try
         {

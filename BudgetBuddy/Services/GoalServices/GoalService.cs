@@ -2,7 +2,7 @@ using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.Repositories.Goal;
 
-namespace BudgetBuddy.Services;
+namespace BudgetBuddy.Services.GoalServices;
 
 public class GoalService : IGoalService
 {
@@ -25,7 +25,7 @@ public class GoalService : IGoalService
         }
     }
 
-    private async Task HandleGoalChange(GoalModel goal, Transaction transaction)
+    private async Task HandleGoalChange(Goal goal, Transaction transaction)
     {
         if (goal.Type == GoalType.Spending && transaction.Type == TransactionType.Expense)
         {
@@ -63,7 +63,7 @@ public class GoalService : IGoalService
         }
     }
 
-    private void CheckIfGoalCompleted(GoalModel goal)
+    private void CheckIfGoalCompleted(Goal goal)
     {
         if (goal.CurrentProgress >= goal.Target)
         {

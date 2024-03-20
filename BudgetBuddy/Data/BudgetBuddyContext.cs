@@ -14,7 +14,7 @@ public class BudgetBuddyContext : IdentityDbContext<ApplicationUser, IdentityRol
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
-    public DbSet<GoalModel> GoalModel { get; set; }
+    public DbSet<Goal> Goals { get; set; }
     public DbSet<Report> Reports { get; set; }
 
 

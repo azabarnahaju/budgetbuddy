@@ -53,6 +53,7 @@ const Login = () => {
         }
       }
     } catch (error) {
+      console.log(error)
       setLocalSnackbar({
         open: true,
         message: "Server not responding.",

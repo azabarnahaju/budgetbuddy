@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BudgetBuddy.Contracts;
-using BudgetBuddy.Model.RequestModels;
 ﻿using BudgetBuddy.Contracts;
 using BudgetBuddy.Contracts.Auth;
 using BudgetBuddy.Contracts.Registration;

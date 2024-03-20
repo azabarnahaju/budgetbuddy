@@ -1,15 +1,10 @@
-using System.Runtime.InteropServices.JavaScript;
-using BudgetBuddy.Contracts.ModelRequest;
-using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
-using BudgetBuddy.Data;
-using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
-using Microsoft.EntityFrameworkCore;
-
 namespace BudgetBuddy.Services.Repositories.Account;
 
-using System.Data;
 using Model;
+using Contracts.ModelRequest;
+using Contracts.ModelRequest.UpdateModels;
+using Data;
+using Microsoft.EntityFrameworkCore;
 
 public class AccountRepository : IAccountRepository
 {

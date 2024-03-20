@@ -1,9 +1,9 @@
-using BudgetBuddy.Data;
-using BudgetBuddy.Model;
-using BudgetBuddy.Model.CreateModels;
-using Microsoft.EntityFrameworkCore;
-
 namespace BudgetBuddy.Services.Repositories.Goal;
+
+using Contracts.ModelRequest.CreateModels;
+using Data;
+using Model;
+using Microsoft.EntityFrameworkCore;
 
 public class GoalRepository : IGoalRepository
 {
@@ -14,11 +14,11 @@ public class GoalRepository : IGoalRepository
         _database = database;
     }
     
-    public async Task<GoalModel[]> GetAllGoalsByAccountId(int accountId, bool? completed)
+    public async Task<Goal[]> GetAllGoalsByAccountId(int accountId, bool? completed)
     {
         try
         {
-            var result = _database.GoalModel
+            var result = _database.Goals
                 .Where(goal => goal.AccountId == accountId)
                 .ToArray();
             if (result == null)
@@ -40,11 +40,11 @@ public class GoalRepository : IGoalRepository
         }
     }
     
-    public async Task<GoalModel> CreateGoal(GoalInputModel goal)
+    public async Task<Goal> CreateGoal(GoalCreateRequest goal)
     {
         try
         {
-            var goalToCreate = new GoalModel()
+            var goalToCreate = new Goal()
             {
                 AccountId = goal.AccountId,
                 UserId = goal.UserId,
@@ -54,7 +54,7 @@ public class GoalRepository : IGoalRepository
                 Type = goal.Type,
                 Target = goal.Target
             };
-            var newGoal = await _database.GoalModel.AddAsync(goalToCreate);
+            var newGoal = await _database.Goals.AddAsync(goalToCreate);
             await _database.SaveChangesAsync();
             return newGoal.Entity;
         }
@@ -65,11 +65,11 @@ public class GoalRepository : IGoalRepository
         }
     }
     
-    public async Task<GoalModel> UpdateGoal(GoalModel goal)
+    public async Task<Goal> UpdateGoal(Goal goal)
     {
         try
         {
-            var existingGoal = await _database.GoalModel.FirstOrDefaultAsync(c => c.Id == goal.Id);
+            var existingGoal = await _database.Goals.FirstOrDefaultAsync(c => c.Id == goal.Id);
 
             if (existingGoal == null)
             {
@@ -97,14 +97,14 @@ public class GoalRepository : IGoalRepository
     {
         try
         {
-            var goalToDelete = await _database.GoalModel.FirstOrDefaultAsync(c => c.Id == id);
+            var goalToDelete = await _database.Goals.FirstOrDefaultAsync(c => c.Id == id);
 
             if (goalToDelete == null)
             {
                 throw new KeyNotFoundException("Failed to delete. Account not found.");
             }
             
-            _database.GoalModel.Remove(goalToDelete);
+            _database.Goals.Remove(goalToDelete);
             await _database.SaveChangesAsync();
         }
         catch (KeyNotFoundException e)

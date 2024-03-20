@@ -3,6 +3,7 @@ using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
 using BudgetBuddy.Services.Authentication;
+using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.ReportServices;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
@@ -20,7 +21,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
-Env.Load();
+Env.TraversePath().Load("../.envs/server.env");
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 var builder = WebApplication.CreateBuilder(args);

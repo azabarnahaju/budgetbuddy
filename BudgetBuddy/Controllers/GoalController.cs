@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 
 namespace BudgetBuddy.Controllers;
 
-using Model.CreateModels;
+using Microsoft.AspNetCore.Authorization;
 using Services.Repositories.Goal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +19,12 @@ public class GoalController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{userId}"), Authorize(Roles = "Admin, User")]
-    public async Task<IActionResult> GetGoalsByAccountId(int userId)
+    [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
+    public async Task<IActionResult> GetGoalsByAccountId(int accountId)
     {
         try
         {
-            var result = await _goalRepository.GetAllGoalsByAccountId(userId);
+            var result = await _goalRepository.GetAllGoalsByAccountId(accountId);
             return Ok(new { message = "Goals retrieved successfully", data = result });
         }
         catch (Exception e)
@@ -35,7 +35,7 @@ public class GoalController : ControllerBase
     }
     
     [HttpPost, Authorize(Roles = "Admin, User")]
-    public async Task<IActionResult> CreateGoal(GoalInputModel goal)
+    public async Task<IActionResult> CreateGoal(GoalCreateRequest goal)
     {
         try
         {
