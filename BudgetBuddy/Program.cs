@@ -2,6 +2,7 @@ using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.Migrations;
 using BudgetBuddy.Model;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
@@ -102,6 +103,7 @@ void AddServices(){
     builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+    builder.Services.AddScoped<IAchievementService, AchievementService>();
     builder.Services.AddScoped<AuthenticationSeeder>(provider =>
     {
         var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
