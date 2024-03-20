@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetBuddy.Controllers;
 
@@ -22,7 +24,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
-    public ActionResult<Transaction> AddTransaction(Transaction transaction)
+    public ActionResult<Transaction> AddTransaction(TransactionCreateRequest transaction)
     {
         try
         {
@@ -67,7 +69,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPatch("update"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Transaction>> UpdateTransaction(Transaction transaction)
+    public async Task<ActionResult<Transaction>> UpdateTransaction(TransactionUpdateRequest transaction)
     {
         try
         {

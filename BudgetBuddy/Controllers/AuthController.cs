@@ -1,4 +1,6 @@
 ﻿using BudgetBuddy.Contracts;
+using BudgetBuddy.Contracts.Auth;
+using BudgetBuddy.Contracts.Registration;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
