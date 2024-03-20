@@ -36,7 +36,8 @@ public class TransactionRepository : ITransactionRepository
     
     public async Task<IEnumerable<Transaction>> GetTransactionByAccount(int accountId)
     {
-        if (!await _budgetBuddyContext.Transactions.AnyAsync(t => t.AccountId == accountId))
+        var accountExist = await _budgetBuddyContext.Transactions.AnyAsync(t => t.AccountId == accountId);
+        if (!accountExist)
             throw new Exception($"No transactions found with this account ID {accountId}");
         
         return await _budgetBuddyContext.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
@@ -49,7 +50,7 @@ public class TransactionRepository : ITransactionRepository
             Name = transaction.Name,
             AccountId = transaction.AccountId,
             Amount = transaction.Amount,
-            Date = DateTime.Now,
+            Date = transaction.Date,
             Tag = transaction.Tag,
             Type = transaction.Type
         };
