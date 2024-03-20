@@ -1,12 +1,11 @@
-﻿using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
-using Microsoft.AspNetCore.Authorization;
-
-namespace BudgetBuddy.Controllers;
+﻿namespace BudgetBuddy.Controllers;
 
 using Model;
 using Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
+using Model.CreateModels;
+using Model.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]"), Authorize]
@@ -21,7 +20,7 @@ public class AchievementController : ControllerBase
         _achievementRepository = achievementRepository;
     }
 
-    [HttpGet] // Authorize(Roles = "Admin, User")
+    [HttpGet, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Achievement>>> GetAll()
     {
         try
@@ -35,7 +34,7 @@ public class AchievementController : ControllerBase
         }
     }
 
-    [HttpGet("/Achievement/{achievementId}")] //  Authorize(Roles = "Admin, User")
+    [HttpGet("/Achievement/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Achievement>> Get(int achievementId)
     {
         try
@@ -53,7 +52,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpPost("/Achievement/add")] // Authorize(Roles = "Admin")
+    [HttpPost("/Achievement/add"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Achievement>> Add(AchievementInputModel achievement)
     {
         try
@@ -72,7 +71,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}")] // Authorize(Roles = "Admin")
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
@@ -88,7 +87,7 @@ public class AchievementController : ControllerBase
     }
 
     // admin functionality
-    [HttpPatch("update")] // Authorize(Roles = "Admin")
+    [HttpPatch("update"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Achievement>> Update(AchievementUpdateModel achievement)
     {
         try

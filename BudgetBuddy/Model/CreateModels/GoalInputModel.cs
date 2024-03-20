@@ -4,7 +4,7 @@ using Enums;
 
 public class GoalInputModel
 {
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public int AccountId { get; set; }
     public GoalType Type { get; set; }
     public decimal Target { get; set; }

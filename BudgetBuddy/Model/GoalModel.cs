@@ -5,7 +5,7 @@ namespace BudgetBuddy.Model;
 public class GoalModel
 {
     public int Id { get; init; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public int AccountId { get; set; }
     public GoalType Type { get; set; }
     public decimal Target { get; set; }

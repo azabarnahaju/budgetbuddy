@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{accountId}")] // Authorize(Roles = "Admin, User")
+    [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> Get(int accountId)
     {
         try
@@ -36,7 +36,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPost] // Authorize(Roles = "Admin, User")
+    [HttpPost, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> CreateAccount(AccountInputModel account)
     {
         try
@@ -51,7 +51,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPatch] // Authorize(Roles = "Admin, User")
+    [HttpPatch, Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Account>> UpdateAccount(AccountUpdateModel account)
     {
         try
@@ -66,7 +66,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpDelete("{accountId}")] // Authorize(Roles = "Admin, User")
+    [HttpDelete("{accountId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<bool>> DeleteAccount(int accountId)
     {
         try

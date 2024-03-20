@@ -1,13 +1,13 @@
-using BudgetBuddy.Model;
-using BudgetBuddy.Model.CreateModels;
-using BudgetBuddy.Model.UpdateModels;
-using BudgetBuddy.Services.Repositories.Goal;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetBuddy.Controllers;
 
+using Model.CreateModels;
+using Services.Repositories.Goal;
+using Microsoft.AspNetCore.Mvc;
+
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]"), Authorize]
 public class GoalController : ControllerBase
 {
     private readonly IGoalRepository _goalRepository;
@@ -19,7 +19,7 @@ public class GoalController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("{userId}"), Authorize(Roles = "Admin, User")]
     public async Task<IActionResult> GetGoalsByAccountId(int userId)
     {
         try
@@ -34,7 +34,7 @@ public class GoalController : ControllerBase
         }
     }
     
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "Admin, User")]
     public async Task<IActionResult> CreateGoal(GoalInputModel goal)
     {
         try
@@ -50,7 +50,7 @@ public class GoalController : ControllerBase
     }
     
     
-    [HttpDelete("{goalId}")]
+    [HttpDelete("{goalId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<bool>> DeleteGoal(int goalId)
     {
         try

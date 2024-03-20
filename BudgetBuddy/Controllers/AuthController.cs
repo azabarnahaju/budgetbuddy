@@ -1,4 +1,7 @@
-﻿using BudgetBuddy.Contracts;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using BudgetBuddy.Contracts;
+using BudgetBuddy.Model.RequestModels;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +35,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
+        return CreatedAtAction(nameof(Register), new {message = "Registration successful"});
     }
     
     [HttpPost("Login")]
@@ -51,7 +54,33 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return Ok(new AuthResponse(result.Email, result.UserName, result.Token));
+        return Ok( new {message = "Login successful", data = new AuthResponse(result.Email, result.UserName, result.Token)});
+    }
+    
+    [HttpPost("Validate")]
+    public async Task<IActionResult> ValidateToken([FromBody] TokenValidationRequest request)
+    {
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadToken(request.Token) as JwtSecurityToken;
+            if (token.ValidTo < DateTime.UtcNow)
+            {
+                return BadRequest(new { message = "Token expired" });
+            }
+            
+            var username = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+            var email = token.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+            var role = token.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+            var userId = token.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            
+            return Ok(new { message = "Token is valid", data = new {username, email, userId, role } });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return BadRequest(new { message = "Token validation failed" });
+        }
     }
 
     private void AddErrors(AuthResult result)
