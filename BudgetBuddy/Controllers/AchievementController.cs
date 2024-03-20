@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetBuddy.Controllers;
 
@@ -19,7 +21,7 @@ public class AchievementController : ControllerBase
         _achievementRepository = achievementRepository;
     }
 
-    [HttpGet, Authorize(Roles = "Admin, User")]
+    [HttpGet] // Authorize(Roles = "Admin, User")
     public async Task<ActionResult<IEnumerable<Achievement>>> GetAll()
     {
         try
@@ -33,7 +35,7 @@ public class AchievementController : ControllerBase
         }
     }
 
-    [HttpGet("/Achievement/{achievementId}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("/Achievement/{achievementId}")] //  Authorize(Roles = "Admin, User")
     public async Task<ActionResult<Achievement>> Get(int achievementId)
     {
         try
@@ -51,15 +53,15 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpPost("/Achievement/add"), Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Achievement>> Add(IEnumerable<Achievement> achievements)
+    [HttpPost("/Achievement/add")] // Authorize(Roles = "Admin")
+    public async Task<ActionResult<Achievement>> Add(AchievementInputModel achievement)
     {
         try
         {
             return Ok(new
             {
                 message = "Achievement(s) successfully added.",
-                data = await _achievementRepository.AddAchievement(achievements)
+                data = await _achievementRepository.AddAchievement(achievement)
             });
         }
         catch (Exception e)
@@ -70,7 +72,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
+    [HttpDelete("delete/{achievementId}")] // Authorize(Roles = "Admin")
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
@@ -86,8 +88,8 @@ public class AchievementController : ControllerBase
     }
 
     // admin functionality
-    [HttpPatch("update"), Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Achievement>> Update(Achievement achievement)
+    [HttpPatch("update")] // Authorize(Roles = "Admin")
+    public async Task<ActionResult<Achievement>> Update(AchievementUpdateModel achievement)
     {
         try
         {

@@ -1,4 +1,6 @@
 using BudgetBuddy.Data;
+using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Services.Repositories.Account;
@@ -51,11 +53,19 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account> CreateAccount(Account account)
+    public async Task<Account> CreateAccount(AccountInputModel account)
     {
         try
         {
-            var newAccount = await _budgetBuddyContext.Accounts.AddAsync(account);
+            var accoutToCreate = new Account()
+            {
+                Balance = account.Balance,
+                Date = account.Date,
+                Name = account.Name,
+                UserId = account.UserId,
+                Type = account.Type
+            };
+            var newAccount = await _budgetBuddyContext.Accounts.AddAsync(accoutToCreate);
             await _budgetBuddyContext.SaveChangesAsync();
             return newAccount.Entity;
         }
@@ -66,7 +76,7 @@ public class AccountRepository : IAccountRepository
         }
     }
 
-    public async Task<Account> UpdateAccount(Account account)
+    public async Task<Account> UpdateAccount(AccountUpdateModel account)
     {
         try
         {

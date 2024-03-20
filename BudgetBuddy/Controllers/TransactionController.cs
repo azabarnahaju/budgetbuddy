@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
+using BudgetBuddy.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetBuddy.Controllers;
 
@@ -14,19 +17,22 @@ public class TransactionController : ControllerBase
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
+    private readonly IGoalService _goalService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
+        _goalService = goalService;
     }
     
-    [HttpPost("add"), Authorize(Roles = "Admin, User")]
-    public ActionResult<Transaction> AddTransaction(Transaction transaction)
+    [HttpPost("add")] // Authorize(Roles = "Admin, User")
+    public async Task<ActionResult<Transaction>> AddTransaction(TransactionInputModel transaction)
     {
         try
         {
-             _transactionRepository.AddTransaction(transaction);
+            var result = await _transactionRepository.AddTransaction(transaction);
+            await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)
@@ -36,7 +42,7 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("transactions"), Authorize(Roles = "Admin, User")]
+    [HttpGet("transactions")] // Authorize(Roles = "Admin, User")
     public async Task<ActionResult<Transaction>> GetAll()
     {
         try
@@ -51,7 +57,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("transactions/{id}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("transactions/{id}")] // Authorize(Roles = "Admin, User")
     public async Task<ActionResult<Transaction>> GetTransaction(int id)
     {
         try
@@ -66,8 +72,8 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpPatch("update"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Transaction>> UpdateTransaction(Transaction transaction)
+    [HttpPatch("update")] // Authorize(Roles = "Admin, User")
+    public async Task<ActionResult<Transaction>> UpdateTransaction(TransactionUpdateModel transaction)
     {
         try
         {
@@ -81,7 +87,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpDelete("delete/{id}"), Authorize(Roles = "Admin, User")]
+    [HttpDelete("delete/{id}")] // Authorize(Roles = "Admin, User")
     public ActionResult<Transaction> DeleteTransaction(int id)
     {
         try
@@ -96,7 +102,7 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("filterByType/{transactionType}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("filterByType/{transactionType}")] // Authorize(Roles = "Admin, User")
     public async Task<ActionResult<Transaction>> FilterTransactions([Required]TransactionType transactionType)
     {
         try
@@ -111,7 +117,7 @@ public class TransactionController : ControllerBase
         }
     }
     
-    [HttpGet("filterByTag/{tag}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("filterByTag/{tag}")] // Authorize(Roles = "Admin, User")
     public async Task<ActionResult<Transaction>> FinancialTransactions([Required]TransactionCategoryTag tag)
     {
         try

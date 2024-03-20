@@ -12,6 +12,8 @@ public enum TransactionCategoryTag
     Housing,
     Utilities,
     Entertainment,
+    DeptRepayment,
+    Investment,
     Clothing,
     HealthCare,
     Education,

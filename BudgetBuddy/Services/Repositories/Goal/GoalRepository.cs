@@ -1,5 +1,6 @@
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
+using BudgetBuddy.Model.CreateModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Services.Repositories.Goal;
@@ -39,11 +40,21 @@ public class GoalRepository : IGoalRepository
         }
     }
     
-    public async Task<GoalModel> CreateGoal(GoalModel goal)
+    public async Task<GoalModel> CreateGoal(GoalInputModel goal)
     {
         try
         {
-            var newGoal = await _database.GoalModel.AddAsync(goal);
+            var goalToCreate = new GoalModel()
+            {
+                AccountId = goal.AccountId,
+                UserId = goal.UserId,
+                Completed = goal.Completed,
+                CurrentProgress = goal.CurrentProgress,
+                StartDate = goal.StartDate,
+                Type = goal.Type,
+                Target = goal.Target
+            };
+            var newGoal = await _database.GoalModel.AddAsync(goalToCreate);
             await _database.SaveChangesAsync();
             return newGoal.Entity;
         }

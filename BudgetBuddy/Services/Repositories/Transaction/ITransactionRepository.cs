@@ -1,4 +1,7 @@
-﻿namespace BudgetBuddy.Services.Repositories.Transaction;
+﻿using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
+
+namespace BudgetBuddy.Services.Repositories.Transaction;
 
 using Model.Enums;
 using Model;
@@ -7,8 +10,8 @@ public interface ITransactionRepository
 {
     Task<IEnumerable<Transaction>> GetAllTransactions();
     Task<Transaction> GetTransaction(int id);
-    void AddTransaction(Transaction transaction);
-    Task<Transaction> UpdateTransaction(Transaction transaction);
+    Task<Transaction> AddTransaction(TransactionInputModel transaction);
+    Task<Transaction> UpdateTransaction(TransactionUpdateModel transaction);
     void DeleteTransaction(int id);
 
     Task<IEnumerable<Transaction>> FilterTransactions(TransactionType transactionType);

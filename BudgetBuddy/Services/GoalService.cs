@@ -1,6 +1,5 @@
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
-using BudgetBuddy.Model.InputModels;
 using BudgetBuddy.Services.Repositories.Goal;
 
 namespace BudgetBuddy.Services;
@@ -14,7 +13,7 @@ public class GoalService : IGoalService
         _goalRepository = goalRepository;
     }
 
-    public async Task UpdateGoalProcess(TransactionInputModel transaction)
+    public async Task UpdateGoalProcess(Transaction transaction)
     {
         var allGoalsInProgress = await _goalRepository.GetAllGoalsByAccountId(transaction.AccountId, false);
         if (allGoalsInProgress.Length > 0)
@@ -26,7 +25,7 @@ public class GoalService : IGoalService
         }
     }
 
-    private async Task HandleGoalChange(GoalModel goal, TransactionInputModel transaction)
+    private async Task HandleGoalChange(GoalModel goal, Transaction transaction)
     {
         if (goal.Type == GoalType.Spending && transaction.Type == TransactionType.Expense)
         {

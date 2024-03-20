@@ -1,4 +1,6 @@
 using BudgetBuddy.Model;
+using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
 using BudgetBuddy.Services.Repositories.Goal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,11 +35,11 @@ public class GoalController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateGoal(GoalModel goalModel)
+    public async Task<IActionResult> CreateGoal(GoalInputModel goal)
     {
         try
         {
-            var result = await _goalRepository.CreateGoal(goalModel);
+            var result = await _goalRepository.CreateGoal(goal);
             return Ok(new { message = "Goal created successfully", data = result });
         }
         catch (Exception e)
@@ -47,20 +49,6 @@ public class GoalController : ControllerBase
         }
     }
     
-    [HttpPatch]
-    public async Task<IActionResult> UpdateGoal(GoalModel goalModel)
-    {
-        try
-        {
-            var result = await _goalRepository.UpdateGoal(goalModel);
-            return Ok(new { message = "Goal updated successfully", data = result });
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Goal not updated");
-            return BadRequest(new { message = e.Message });
-        }
-    }
     
     [HttpDelete("{goalId}")]
     public async Task<ActionResult<bool>> DeleteGoal(int goalId)

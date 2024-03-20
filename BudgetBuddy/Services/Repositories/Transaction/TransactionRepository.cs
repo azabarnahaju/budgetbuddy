@@ -1,4 +1,7 @@
-﻿namespace BudgetBuddy.Services.Repositories.Transaction;
+﻿using BudgetBuddy.Model.CreateModels;
+using BudgetBuddy.Model.UpdateModels;
+
+namespace BudgetBuddy.Services.Repositories.Transaction;
 
 using Data;
 using Microsoft.EntityFrameworkCore;
@@ -31,20 +34,31 @@ public class TransactionRepository : ITransactionRepository
         return transaction;
     }
 
-    public void AddTransaction(Transaction transaction)
+    public async Task<Transaction> AddTransaction(TransactionInputModel transaction)
     {
-        var transactionToAdd = _budgetBuddyContext.Transactions.FirstOrDefault(r => r.Id == transaction.Id);
-        
-        if (transactionToAdd != null)
+        try
         {
-            throw new Exception("Transaction already exists.");
+            var transactionToCreate = new Transaction()
+            {
+                Name = transaction.Name,
+                AccountId = transaction.AccountId,
+                Amount = transaction.Amount,
+                Date = transaction.Date,
+                Tag = transaction.Tag,
+                Type = transaction.Type
+            };
+            var newTransaction = await _budgetBuddyContext.Transactions.AddAsync(transactionToCreate);
+            await _budgetBuddyContext.SaveChangesAsync();
+            return newTransaction.Entity;
         }
-        
-        _budgetBuddyContext.Transactions.Add(transaction);
-        _budgetBuddyContext.SaveChanges();
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Cannot create new transaction.");
+        }
     }
 
-    public async Task<Transaction> UpdateTransaction(Transaction transaction)
+    public async Task<Transaction> UpdateTransaction(TransactionUpdateModel transaction)
     {
         var transactionToUpdate = await _budgetBuddyContext.Transactions.FirstOrDefaultAsync(a => a.Id == transaction.Id);
         if (transactionToUpdate is null)
@@ -55,7 +69,7 @@ public class TransactionRepository : ITransactionRepository
         _budgetBuddyContext.Transactions.Entry(transactionToUpdate).CurrentValues.SetValues(transaction);
         await _budgetBuddyContext.SaveChangesAsync();
         
-        return await _budgetBuddyContext.Transactions.FirstAsync(a => a.Id == transaction.Id) ?? throw new Exception("Transaction not found.");
+        return transactionToUpdate;
     }
 
     public void DeleteTransaction(int id)
