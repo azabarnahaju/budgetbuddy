@@ -7,6 +7,7 @@ import Loading from "../../Loading/Loading";
 
 const sampleGoal = {
   userId: 1,
+  accountId: 1,
   type: "",
   target: "",
   currentProgress: 0,

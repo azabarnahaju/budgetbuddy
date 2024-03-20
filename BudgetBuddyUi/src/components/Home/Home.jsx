@@ -9,7 +9,7 @@ import { SnackbarContext } from "../../context/snackbarContext";
 import SnackBar from "../Snackbar/Snackbar";
 import "./Home.css";
 import GoalCreator from "../Create/GoalCreator/GoalCreator";
-import { formatDate } from "../../utils/helperFunctions";
+import { calculatePercentage, formatDate } from "../../utils/helperFunctions";
 
 const Home = () => {
   const { currentUser } = useContext(UserContext);
@@ -75,7 +75,7 @@ const Home = () => {
                 <h4>
                   <span>Goal: {goal.type}</span>
                   <span> - </span>
-                  <span>{goal.currentProgress}%</span>
+                  <span>{calculatePercentage(goal.currentProgress, goal.target)}%</span>
                   <span> - </span>
                   <span>Set at {formatDate(goal.startDate)}</span>
                 </h4>

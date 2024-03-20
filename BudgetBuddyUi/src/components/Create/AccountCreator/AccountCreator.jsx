@@ -13,7 +13,6 @@ const sampleAccount = {
   name: "",
   type: "",
   userId: currentUser,
-  transactions: [],
 };
 
 const AccountCreator = () => {
@@ -39,6 +38,7 @@ const AccountCreator = () => {
       const response = await fetchData(null, `/Account/${id}`, "GET");
       if (response.ok) {
         setAccount(response.data.data);
+        console.log(response.data.data);
         setLocalSnackbar({
           open: true,
           message: response.message,
@@ -77,14 +77,12 @@ const AccountCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      if (id && !account.transactions) {
-        account.transactions = [];
-      }
       const response = await fetchData(
         account,
         "/Account",
         id ? "PATCH" : "POST"
       );
+      console.log(response);
       if (response.ok) {
         setLocalSnackbar({
           open: true,

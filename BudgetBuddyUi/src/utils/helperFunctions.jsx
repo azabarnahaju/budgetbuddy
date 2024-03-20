@@ -28,3 +28,7 @@ export const formatDate = (dateString) => {
       return `${yearsDifference} year${yearsDifference !== 1 ? "s" : ""} ago`;
     }
   };
+
+export const calculatePercentage = (current, target) => {
+  return (current * 100 / target).toFixed(1);
+}
