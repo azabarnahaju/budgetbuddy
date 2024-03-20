@@ -61,15 +61,15 @@ public class ReportService : IReportService
         switch (type)
         {
             case ReportType.Monthly:
-                return (new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), DateTime.Today);
+                return (new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), DateTime.Now);
             case ReportType.Weekly:
-                return (GetStartOfCurrentWeek(DayOfWeek.Monday), DateTime.Today);
+                return (GetStartOfCurrentWeek(DayOfWeek.Monday), DateTime.Now);
             case ReportType.Yearly:
-                return (new DateTime(DateTime.Today.Year, 1, 1), DateTime.Today);
+                return (new DateTime(DateTime.Today.Year, 1, 1), DateTime.Now);
             case ReportType.Last7Days:
-                return (DateTime.Today.AddDays(-7), DateTime.Today);
+                return (DateTime.Today.AddDays(-7), DateTime.Now);
             case ReportType.Last30Days:
-                return (DateTime.Today.AddDays(-30), DateTime.Today);
+                return (DateTime.Today.AddDays(-30), DateTime.Now);
             case ReportType.Custom:
                 if (startDate is null || endDate is null)
                     throw new Exception("Missing date(s).");

@@ -1,5 +1,8 @@
-﻿namespace BudgetBuddy.Model.Enums;
+﻿using System.Text.Json.Serialization;
 
+namespace BudgetBuddy.Model.Enums;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ReportType
 {
     Weekly,

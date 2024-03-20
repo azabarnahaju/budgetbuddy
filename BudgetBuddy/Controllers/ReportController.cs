@@ -55,7 +55,7 @@ public class ReportController : ControllerBase
         }    
     }
 
-    [HttpGet("/user/{userId}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("Report/user/{userId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Report>>> GetByUserId(string userId)
     {
         try
@@ -73,7 +73,7 @@ public class ReportController : ControllerBase
         }
     }
     
-    [HttpGet("/account/{accountId}"), Authorize(Roles = "Admin, User")]
+    [HttpGet("report/account/{accountId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<IEnumerable<Report>>> GetByAccountId(int accountId)
     {
         try
