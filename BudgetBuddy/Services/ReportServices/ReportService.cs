@@ -20,21 +20,21 @@ public class ReportService : IReportService
         _accountRepository = accountRepository;
     }
     
-    public async Task<Report> CreateReport(ReportRequest request)
+    public async Task<Report> CreateReport(ReportCreateRequest createRequest)
     {
         try
         {
-            var (start, end) = GetDates(request.ReportType, request.StartDate, request.EndDate);
-            var transactionsPeriod = await _transactionRepository.GetExpenseTransactions(request.AccountId, start, end);
+            var (start, end) = GetDates(createRequest.ReportType, createRequest.StartDate, createRequest.EndDate);
+            var transactionsPeriod = await _transactionRepository.GetExpenseTransactions(createRequest.AccountId, start, end);
             var tags = await GetCategories(transactionsPeriod);
             var spendingByTags = GetSpendingByCategories(tags, transactionsPeriod);
             
             return new Report
             {
-                ReportType = request.ReportType,
+                ReportType = createRequest.ReportType,
                 CreatedAt = DateTime.Now,
-                Account = await _accountRepository.GetById(request.AccountId),
-                AccountId = request.AccountId,
+                Account = await _accountRepository.GetById(createRequest.AccountId),
+                AccountId = createRequest.AccountId,
                 StartDate = start,
                 EndDate = end,
                 Transactions = transactionsPeriod.ToList(),

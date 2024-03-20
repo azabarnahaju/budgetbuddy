@@ -93,11 +93,11 @@ public class ReportController : ControllerBase
     
     
     [HttpPost("Add"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Report>> Add(ReportRequest request)
+    public async Task<ActionResult<Report>> Add(ReportCreateRequest createRequest)
     {
         try
         {
-            var report = await _reportService.CreateReport(request);
+            var report = await _reportService.CreateReport(createRequest);
             return Ok(new
             {
                 message = "Report successfully created and added.",

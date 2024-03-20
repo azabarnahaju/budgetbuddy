@@ -6,5 +6,5 @@ namespace BudgetBuddy.Services.ReportServices;
 
 public interface IReportService
 {
-    Task<Report> CreateReport(ReportRequest request);
+    Task<Report> CreateReport(ReportCreateRequest createRequest);
 }
