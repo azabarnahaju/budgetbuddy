@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BudgetBuddy.Services.AchievementService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetBuddy.Controllers;
 
@@ -14,19 +15,22 @@ public class TransactionController : ControllerBase
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
+    private readonly IAchievementService _achievementService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IAchievementService achievementService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
+        _achievementService = achievementService;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
-    public ActionResult<Transaction> AddTransaction(Transaction transaction)
+    public async Task<ActionResult<Transaction>> AddTransaction(Transaction transaction)
     {
         try
         {
-             _transactionRepository.AddTransaction(transaction);
+            _transactionRepository.AddTransaction(transaction);
+            await _achievementService.UpdateAchievements(transaction.Account.User);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)
