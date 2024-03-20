@@ -4,9 +4,10 @@ import { goalTypes } from "../../../utils/categories";
 import { SnackbarContext } from "../../../context/snackbarContext";
 import { fetchData } from "../../../service/connectionService";
 import Loading from "../../Loading/Loading";
+import { UserContext } from "../../../context/userContext";
 
 const sampleGoal = {
-  userId: 1,
+  userId: "",
   accountId: 1,
   type: "",
   target: "",
@@ -17,6 +18,7 @@ const sampleGoal = {
 
 const GoalCreator = ({ goals, setGoals }) => {
   const [goal, setGoal] = useState(sampleGoal);
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const { setSnackbar } = useContext(SnackbarContext);
 
@@ -24,7 +26,9 @@ const GoalCreator = ({ goals, setGoals }) => {
     e.preventDefault();
     try {
       setLoading(true);
+      goal.userId = currentUser.userId;
       const response = await fetchData(goal, "/Goal", "POST");
+      console.log(response);
       if (response.ok) {
         response.data.data.startDate = new Date() - 3600 * 1000;
         setGoals([...goals, response.data.data]);

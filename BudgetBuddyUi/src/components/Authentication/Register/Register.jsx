@@ -4,13 +4,10 @@ import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
 
 const registerParams = {
-  id: 1,
-  registrationDate: new Date(),
   username: "",
   email: "",
   password: "",
   confirmPassword: "",
-  achievements: [],
 };
 
 const Register = () => {
@@ -23,14 +20,26 @@ const Register = () => {
   });
 
   const registerUser = async (e) => {
-    e.preventDefault();
-    if (checkPasswordDuplication()) {
+    setLoading(true);
+    if (registerInfo.confirmPassword !== registerInfo.password) {
+      setLocalSnackbar({
+        open: true,
+        message: "Passwords do not match.",
+        type: "error",
+      });
       return;
     }
+    e.preventDefault();
     try {
-      setLoading(true);
-      const response = await fetchData(registerInfo, "/Register", "POST");
-      setLoading(false);
+      const response = await fetchData(
+        {
+          username: registerInfo.username,
+          email: registerInfo.email,
+          password: registerInfo.password,
+        },
+        "/Auth/Register",
+        "POST"
+      );
       if (response.ok) {
         setLocalSnackbar({
           open: true,
@@ -45,34 +54,24 @@ const Register = () => {
         });
       }
     } catch (error) {
-      console.log(error);
       setLocalSnackbar({
         open: true,
-        message:
-          "An error occured during register. Try to login or register again.",
+        message: "Server not responding.",
         type: "error",
       });
     }
     setRegisterInfo(registerParams);
+    setLoading(false);
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   const handleSetRegisterInfo = (e) => {
     const key = e.target.name;
     const value = e.target.value;
     setRegisterInfo({ ...registerInfo, [key]: value });
-  };
-
-  const checkPasswordDuplication = () => {
-    if (registerInfo.password !== registerInfo.confirmPassword) {
-      setRegisterInfo(registerParams);
-      setLocalSnackbar({
-        open: true,
-        message: "Passwords do not match.",
-        type: "error",
-      });
-      return true;
-    }
-    return false;
   };
 
   if (loading) {
@@ -93,21 +92,6 @@ const Register = () => {
         <div className="form-container">
           <form onSubmit={registerUser}>
             <div className="form-group row">
-              <div className="mb-3">
-                <label className="form-label" htmlFor="registerId">
-                  Id
-                </label>
-                <input
-                  className="form-control"
-                  value={registerInfo.id}
-                  name="id"
-                  id="registerId"
-                  type="number"
-                  required
-                  onChange={handleSetRegisterInfo}
-                  placeholder="Enter your id"
-                />
-              </div>
             </div>
             <div className="form-group row">
               <div className="mb-3">

@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
 import { useNavigate, useParams } from "react-router-dom";
-
-const currentUser = 1;
+import { UserContext } from "../../../context/userContext";
 
 const sampleAccount = {
   balance: 0,
   date: new Date(),
   name: "",
   type: "",
-  userId: currentUser,
+  userId: "",
 };
 
 const AccountCreator = () => {
   const [account, setAccount] = useState(sampleAccount);
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -38,7 +38,6 @@ const AccountCreator = () => {
       const response = await fetchData(null, `/Account/${id}`, "GET");
       if (response.ok) {
         setAccount(response.data.data);
-        console.log(response.data.data);
         setLocalSnackbar({
           open: true,
           message: response.message,
@@ -77,12 +76,13 @@ const AccountCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      console.log(currentUser.userId);
+      !id && (account.userId = currentUser.userId);
       const response = await fetchData(
         account,
         "/Account",
         id ? "PATCH" : "POST"
       );
-      console.log(response);
       if (response.ok) {
         setLocalSnackbar({
           open: true,

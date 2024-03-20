@@ -10,9 +10,10 @@ import SnackBar from "../Snackbar/Snackbar";
 import "./Home.css";
 import GoalCreator from "../Create/GoalCreator/GoalCreator";
 import { calculatePercentage, formatDate } from "../../utils/helperFunctions";
+import { logoutUser } from "../../service/authenticationService";
 
 const Home = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const { snackbar, setSnackbar } = useContext(SnackbarContext);
   const [goals, setGoals] = useState(null);
   const navigate = useNavigate();
@@ -38,16 +39,24 @@ const Home = () => {
   }, []);
 
   const handleLogout = async () => {
-    const response = await fetchData(null, "/User/Logout", "POST");
-    if (response.ok) {
-      window.location.reload();
+    const isLoggedOut = await logoutUser();
+    if (isLoggedOut) {
+      setSnackbar({
+        open: true,
+        message: "Successfully logged out.",
+        type: "info",
+      });
+      setCurrentUser(null);
+      navigate("/");
       return;
     } else {
       setSnackbar({
         open: true,
-        message: response.message,
-        type: "error",
+        message: "Failed to log out.",
+        type: "info",
       });
+      navigate("/");
+      return;
     }
   };
 
@@ -75,7 +84,10 @@ const Home = () => {
                 <h4>
                   <span>Goal: {goal.type}</span>
                   <span> - </span>
-                  <span>{calculatePercentage(goal.currentProgress, goal.target)}%</span>
+                  <span>
+                    {calculatePercentage(goal.currentProgress, goal.target)}%
+                    (Target: {goal.target}$)
+                  </span>
                   <span> - </span>
                   <span>Set at {formatDate(goal.startDate)}</span>
                 </h4>
@@ -93,7 +105,7 @@ const Home = () => {
           <div className="h-stack">
             {currentUser && (
               <h4 className="welcome-msg display-6">
-                Hello {currentUser.userName}!
+                Hello {currentUser.username}!
               </h4>
             )}
           </div>
