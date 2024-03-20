@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BudgetBuddy.Contracts;
+﻿namespace BudgetBuddy.Contracts.Registration;
 
 public record RegistrationResponse(
     string Email,

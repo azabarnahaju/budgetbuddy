@@ -1,4 +1,5 @@
-﻿using BudgetBuddy.Model;
+﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.ReportServices;
 using BudgetBuddy.Services.Repositories.Report;
@@ -92,11 +93,11 @@ public class ReportController : ControllerBase
     
     
     [HttpPost("Add"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Report>> Add(Account account, ReportType type, DateTime? start = null, DateTime? end = null)
+    public async Task<ActionResult<Report>> Add(ReportRequest request)
     {
         try
         {
-            var report = await _reportService.CreateReport(account, type, start, end);
+            var report = await _reportService.CreateReport(request);
             return Ok(new
             {
                 message = "Report successfully created and added.",

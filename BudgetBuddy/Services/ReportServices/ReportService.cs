@@ -1,6 +1,8 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using BudgetBuddy.Contracts.ModelRequest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Transaction;
 
 namespace BudgetBuddy.Services.ReportServices;
@@ -8,29 +10,31 @@ namespace BudgetBuddy.Services.ReportServices;
 public class ReportService : IReportService
 {
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly ILogger<ReportService> _logger;
 
-    public ReportService(ILogger<ReportService> logger, ITransactionRepository transactionRepository)
+    public ReportService(ILogger<ReportService> logger, ITransactionRepository transactionRepository, IAccountRepository accountRepository)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
+        _accountRepository = accountRepository;
     }
     
-    public async Task<Report> CreateReport(Account account, ReportType type, DateTime? startDate = null, DateTime? endDate = null)
+    public async Task<Report> CreateReport(ReportRequest request)
     {
         try
         {
-            var (start, end) = GetDates(type, startDate, endDate);
-            var transactionsPeriod = await _transactionRepository.GetExpenseTransactions(account.Id, start, end);
+            var (start, end) = GetDates(request.ReportType, request.StartDate, request.EndDate);
+            var transactionsPeriod = await _transactionRepository.GetExpenseTransactions(request.AccountId, start, end);
             var tags = await GetCategories(transactionsPeriod);
             var spendingByTags = GetSpendingByCategories(tags, transactionsPeriod);
             
             return new Report
             {
-                ReportType = type,
+                ReportType = request.ReportType,
                 CreatedAt = DateTime.Now,
-                Account = account,
-                AccountId = account.Id,
+                Account = await _accountRepository.GetById(request.AccountId),
+                AccountId = request.AccountId,
                 StartDate = start,
                 EndDate = end,
                 Transactions = transactionsPeriod.ToList(),
