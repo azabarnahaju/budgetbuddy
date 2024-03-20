@@ -13,4 +13,5 @@ public interface ITransactionRepository
 
     Task<IEnumerable<Transaction>> FilterTransactions(TransactionType transactionType);
     Task<IEnumerable<Transaction>> FinancialTransactions(TransactionCategoryTag tag);
+    Task<IEnumerable<Transaction>> GetExpenseTransactions(int accountId, DateTime start, DateTime end);
 }

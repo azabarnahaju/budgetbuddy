@@ -30,6 +30,14 @@ public class TransactionRepository : ITransactionRepository
 
         return transaction;
     }
+    
+    public async Task<IEnumerable<Transaction>> GetTransactionByAccount(int accountId)
+    {
+        if (!await _budgetBuddyContext.Transactions.AnyAsync(t => t.AccountId == accountId))
+            throw new Exception($"No transactions found with this account ID {accountId}");
+        
+        return await _budgetBuddyContext.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
+    }
 
     public void AddTransaction(Transaction transaction)
     {
@@ -93,5 +101,20 @@ public class TransactionRepository : ITransactionRepository
         }
 
         return filteredTransactions;
+    }
+
+    public async Task<IEnumerable<Transaction>> GetExpenseTransactions(int accountId, DateTime start, DateTime end)
+    {
+        try
+        {
+            var transactions = await GetTransactionByAccount(accountId);
+            return transactions.Where(t => t.Date >= start && t.Date <= end);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An error occured while retrieving transactions.");
+        }
+        
     }
 }
