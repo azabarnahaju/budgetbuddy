@@ -1,8 +1,11 @@
-﻿using BudgetBuddy.Services.AchievementService;
-using Microsoft.AspNetCore.Authorization;
+using BudgetBuddy.Services.GoalServices;
 
 namespace BudgetBuddy.Controllers;
 
+using Services;
+using Contracts.ModelRequest.CreateModels;
+using Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 using Model.Enums;
 using Services.Repositories.Transaction;
 using System.ComponentModel.DataAnnotations;
@@ -10,27 +13,27 @@ using Model;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]"), Authorize]
 public class TransactionController : ControllerBase
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
-    private readonly IAchievementService _achievementService;
+    private readonly IGoalService _goalService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IAchievementService achievementService)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
-        _achievementService = achievementService;
+        _goalService = goalService;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Transaction>> AddTransaction(Transaction transaction)
+    public async Task<ActionResult<Transaction>> AddTransaction(TransactionCreateRequest transaction)
     {
         try
         {
-            _transactionRepository.AddTransaction(transaction);
-            await _achievementService.UpdateAchievements(transaction.Account.User);
+            var result = await _transactionRepository.AddTransaction(transaction);
+            await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)
@@ -71,7 +74,7 @@ public class TransactionController : ControllerBase
     }
     
     [HttpPatch("update"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Transaction>> UpdateTransaction(Transaction transaction)
+    public async Task<ActionResult<Transaction>> UpdateTransaction(TransactionUpdateRequest transaction)
     {
         try
         {

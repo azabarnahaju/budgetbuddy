@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
 namespace BudgetBuddy.Controllers;
 
+using Contracts.ModelRequest;
+using Contracts.ModelRequest.UpdateModels;
+using Microsoft.AspNetCore.Authorization;
 using Model;
 using Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ public class AchievementController : ControllerBase
     
     // admin functionality
     [HttpPost("/Achievement/add"), Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Achievement>> Add(IEnumerable<Achievement> achievements)
+    public async Task<ActionResult<Achievement>> Add(IEnumerable<AchievementCreateRequest> achievements)
     {
         try
         {
@@ -70,7 +71,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
@@ -87,7 +88,7 @@ public class AchievementController : ControllerBase
 
     // admin functionality
     [HttpPatch("update"), Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Achievement>> Update(Achievement achievement)
+    public async Task<ActionResult<Achievement>> Update(AchievementUpdateRequest achievement)
     {
         try
         {

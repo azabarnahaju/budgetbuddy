@@ -1,4 +1,8 @@
+
 ﻿using BudgetBuddy.Data;
+﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Services.Repositories.Achievement;
@@ -26,21 +30,27 @@ public class AchievementRepository : IAchievementRepository
             : await _database.Achievements.FirstAsync(a => a.Id == id);
     }
 
-    public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<Achievement> achievements)
+
+    public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements)
     {
+        var achievementsToAdd = new List<Achievement>();
         foreach (var achievement in achievements)
         {
-            if (await _database.Achievements.AnyAsync(a => a.Id == achievement.Id)) 
-                throw new Exception($"Achievement with ID {achievement.Id} already exists.");
+            achievementsToAdd.Add(
+                new Achievement
+                {
+                    Description = achievement.Description,
+                    Name = achievement.Name
+                });
         }
         
-        if (achievements.Select(achievement => achievement.Id).Distinct().Count() != achievements.Count())
+        if (achievementsToAdd.Select(achievement => achievement.Name).Distinct().Count() != achievementsToAdd.Count())
             throw new Exception("You're trying to add duplicate achievements.");
         
-        _database.Achievements.AddRange(achievements);
+        _database.Achievements.AddRange(achievementsToAdd);
         await _database.SaveChangesAsync();
         
-        return achievements;
+        return achievementsToAdd;
     }
 
     public async Task DeleteAchievement(int id)
@@ -52,15 +62,16 @@ public class AchievementRepository : IAchievementRepository
         await _database.SaveChangesAsync();
     }
     
-    public async Task<Achievement> UpdateAchievement(Achievement achievement)
+
+    public async Task<Achievement> UpdateAchievement(AchievementUpdateRequest achievement)
     {
         var achievementInDb = await _database.Achievements.FirstOrDefaultAsync(a => a.Id == achievement.Id);
-        if (achievementInDb is null) 
+        if (achievement is null)
             throw new Exception("Achievement not found.");
 
         _database.Achievements.Entry(achievementInDb).CurrentValues.SetValues(achievement);
         await _database.SaveChangesAsync();
         
-        return await _database.Achievements.FirstAsync(a => a.Id == achievement.Id);
+        return achievementInDb;
     }
 }

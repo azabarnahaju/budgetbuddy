@@ -1,23 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
 import { useNavigate, useParams } from "react-router-dom";
-
-const currentUser = 1;
+import { UserContext } from "../../../context/userContext";
 
 const sampleAccount = {
   balance: 0,
   date: new Date(),
   name: "",
   type: "",
-  userId: currentUser,
-  transactions: [],
+  userId: "",
 };
 
 const AccountCreator = () => {
   const [account, setAccount] = useState(sampleAccount);
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -77,9 +76,8 @@ const AccountCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      if (id && !account.transactions) {
-        account.transactions = [];
-      }
+      console.log(currentUser.userId);
+      !id && (account.userId = currentUser.userId);
       const response = await fetchData(
         account,
         "/Account",

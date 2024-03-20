@@ -8,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 const sampleAchievement = {
   name: "",
   description: "",
-  users: [],
 };
 
 const AchievementCreator = () => {
@@ -72,11 +71,8 @@ const AchievementCreator = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      if (id && !achievement.users) {
-        achievement.users = [];
-      }
       const response = await fetchData(
-        id ? achievement : [achievement],
+        achievement,
         id ? "/Achievement/update" : "/Achievement/add",
         id ? "PATCH" : "POST"
       );

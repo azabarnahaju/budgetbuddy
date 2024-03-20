@@ -1,17 +1,21 @@
 import AccountForm from "../Forms/AccountForm";
 import AchievementForm from "../Forms/AchievementForm";
 import TransactionForm from "../Forms/TransactionForm";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../service/connectionService";
 import { SnackbarContext } from "../../context/snackbarContext";
 import SnackBar from "../Snackbar/Snackbar";
 import "./Home.css";
+import GoalCreator from "../Create/GoalCreator/GoalCreator";
+import { calculatePercentage, formatDate } from "../../utils/helperFunctions";
+import { logoutUser } from "../../service/authenticationService";
 
 const Home = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const { snackbar, setSnackbar } = useContext(SnackbarContext);
+  const [goals, setGoals] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,17 +28,35 @@ const Home = () => {
     }, 6000);
   }, [setSnackbar]);
 
+  useEffect(() => {
+    const fetchGoals = async () => {
+      const response = await fetchData(null, "/Goal/1", "GET");
+      if (response.ok) {
+        setGoals(response.data.data);
+      }
+    };
+    fetchGoals();
+  }, []);
+
   const handleLogout = async () => {
-    const response = await fetchData(null, "/User/Logout", "POST");
-    if (response.ok) {
-      window.location.reload();
+    const isLoggedOut = await logoutUser();
+    if (isLoggedOut) {
+      setSnackbar({
+        open: true,
+        message: "Successfully logged out.",
+        type: "info",
+      });
+      setCurrentUser(null);
+      navigate("/");
       return;
     } else {
       setSnackbar({
         open: true,
-        message: response.message,
-        type: "error",
+        message: "Failed to log out.",
+        type: "info",
       });
+      navigate("/");
+      return;
     }
   };
 
@@ -55,6 +77,25 @@ const Home = () => {
         setOpen={() => setSnackbar({ ...snackbar, open: false })}
       />
       <div className="row justify-content-between">
+        {goals && (
+          <h2>
+            {goals.map((goal, index) => (
+              <div key={index}>
+                <h4>
+                  <span>Goal: {goal.type}</span>
+                  <span> - </span>
+                  <span>
+                    {calculatePercentage(goal.currentProgress, goal.target)}%
+                    (Target: {goal.target}$)
+                  </span>
+                  <span> - </span>
+                  <span>Set at {formatDate(goal.startDate)}</span>
+                </h4>
+              </div>
+            ))}
+          </h2>
+        )}
+        <GoalCreator goals={goals} setGoals={setGoals} />
         <div className="col-md-6 mx-2">
           <AccountForm />
           <AchievementForm />
@@ -63,7 +104,9 @@ const Home = () => {
         <div className="my-8 col-md-2 d-flex justify-content">
           <div className="h-stack">
             {currentUser && (
-              <h4 className="welcome-msg display-6">Hello {currentUser.userName}!</h4>
+              <h4 className="welcome-msg display-6">
+                Hello {currentUser.username}!
+              </h4>
             )}
           </div>
           <div className="mt-3 mx-5">

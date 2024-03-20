@@ -14,6 +14,7 @@ public class Account
     public ApplicationUser User { get; init; } 
     public string UserId { get; init; }
     public List<Transaction> Transactions { get; init; } 
+    public List<Report> Reports { get; init; }
     
     public override bool Equals(object obj)
     {
