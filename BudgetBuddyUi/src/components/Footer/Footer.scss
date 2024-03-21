@@ -1,0 +1,16 @@
+@import "../../Style/variables";
+
+footer {
+  background-color: rgb(19, 18, 18);
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.list-inline .list-inline-item a {
+  color: white;
+}
+
+.list-inline .list-inline-item a:hover {
+  color: $accent-color;
+}

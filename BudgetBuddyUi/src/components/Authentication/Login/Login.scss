@@ -1,0 +1,12 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 100%;
+}
+
+.login-content {
+  background-color: rgb(33, 33, 33);
+  flex: 1;
+  color: white;
+}

@@ -1,0 +1,31 @@
+@import "../../Style/variables";
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 100%;
+}
+
+.home-content {
+  background-color: rgb(33, 33, 33);
+  flex: 1;
+  color: white;
+}
+
+.feature-item {
+  font-family: $primary-font;
+  background-color: rgba(50, 39, 65, 0.211);
+  padding: 2rem;
+  border-radius: 15px;
+}
+
+.lead-text {
+  font-family: $primary-font;
+  font-size: larger;
+}
+
+div .btn-outline-light:hover {
+  border-color: $accent-color;
+  background-color: $accent-color;
+}
