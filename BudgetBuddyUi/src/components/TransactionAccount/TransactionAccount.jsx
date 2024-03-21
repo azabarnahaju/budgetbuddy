@@ -8,12 +8,14 @@ import { UserContext } from "../../context/userContext";
 import Loading from "../Loading/Loading";
 import TransactionSelector from "./TransactionSelector";
 import AccountCreator from "../Create/AccountCreator/AccountCreator";
+import { useNavigate } from "react-router";
 
 const TransactionAccount = () => {
   const [accounts, setAccounts] = useState([]);
   const [account, setAccount] = useState("");
   const [pageLoading, setPageLoading] = useState(false);
   const { currentUser, loading } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const fetchAccounts = async () => {
     setPageLoading(true);
@@ -46,6 +48,9 @@ const TransactionAccount = () => {
 
   if (loading || pageLoading) {
     return <Loading />;
+  }
+  if (!loading && !currentUser) {
+    navigate("/");
   }
 
   return (
