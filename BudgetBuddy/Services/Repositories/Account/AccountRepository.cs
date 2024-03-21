@@ -26,7 +26,7 @@ public class AccountRepository : IAccountRepository
             throw new Exception("Cannot get accounts.");
         }
     }
-
+    
     public async Task<Account> GetById(int id)
     {
         try
@@ -38,6 +38,25 @@ public class AccountRepository : IAccountRepository
             }
 
             return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("An unexpected error occured, cannot get account");
+        }
+    }
+
+    public async Task<List<Account>> GetByUserId(string userId)
+    {
+        try
+        {
+            var results = await _budgetBuddyContext.Accounts.Where(acc => acc.UserId == userId).ToListAsync();
+            return results;
         }
         catch (KeyNotFoundException e)
         {
