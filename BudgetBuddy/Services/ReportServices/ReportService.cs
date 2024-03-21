@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
 using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.Repositories.Account;
@@ -26,6 +27,7 @@ public class ReportService : IReportService
         {
             var (start, end) = GetDates(createRequest.ReportType, createRequest.StartDate, createRequest.EndDate);
             var transactionsPeriod = await _transactionRepository.GetExpenseTransactions(createRequest.AccountId, start, end);
+            if (!transactionsPeriod.Any()) throw new Exception("No transactions were found for this period.");
             var tags = await GetCategories(transactionsPeriod);
             var spendingByTags = GetSpendingByCategories(tags, transactionsPeriod);
             
