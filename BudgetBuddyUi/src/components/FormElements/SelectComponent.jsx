@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-const SelectComponent = ({value, text, array, id, onchange}) => {
+const SelectComponent = ({value, text, array, id, onchange, className}) => {
   return (
     <select
       onChange={onchange}
-      className="form-control mb-3"
+      className={`form-control mb-3 ${className && className}`}
       value={value}
       required
       id={id}

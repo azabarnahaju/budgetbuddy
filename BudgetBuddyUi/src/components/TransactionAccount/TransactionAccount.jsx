@@ -6,6 +6,8 @@ import "./TransactionAccount.scss";
 import { fetchData } from "../../service/connectionService";
 import { UserContext } from "../../context/userContext";
 import Loading from "../Loading/Loading";
+import TransactionSelector from "./TransactionSelector";
+import AccountCreator from "../Create/AccountCreator/AccountCreator";
 
 const TransactionAccount = () => {
   const [accounts, setAccounts] = useState([]);
@@ -38,7 +40,7 @@ const TransactionAccount = () => {
 
   const handleSetAccount = (e) => {
     const id = e.target.value;
-    const acc = accounts.find(acc => acc.id == id);
+    const acc = accounts.find((acc) => acc.id == id);
     setAccount(acc);
   };
 
@@ -50,29 +52,18 @@ const TransactionAccount = () => {
     <div className="transaction-container vh-100">
       <Navbar />
       <div className="transaction-content">
-        <div className="container mt-5">
-          <div className="container mt-5">
-            <h3>Select your account</h3>
-            <div className="row">
-              <div className="col-md-4">
-                <select
-                  onChange={handleSetAccount}
-                  className="form-control mb-3"
-                  value={account ? account.id : ""}
-                  required
-                  id="account"
-                  name="account"
-                >
-                  {accounts.map((acc) => (
-                    <option key={acc.id} value={acc.id}>
-                      {acc.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <h5>{account.name}</h5>
-              </div>
+        {accounts.length && (
+          <TransactionSelector
+            account={account}
+            setAccount={setAccount}
+            accounts={accounts}
+            handleSetAccount={handleSetAccount}
+          />
+        )}
+        <div className="container">
+          <div className="row">
+            <div className="col-md-5">
+              <AccountCreator currentUser={currentUser} />
             </div>
           </div>
         </div>
