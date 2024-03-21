@@ -1,0 +1,29 @@
+@import "../../Style/variables";
+
+.goal-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    min-height: 100%;
+}
+
+.goal-content {
+    position: relative;
+    background-color: $background-color;
+    flex: 1;
+    color: $text-color;
+}
+
+.add-goals {
+    position: absolute;
+    right: 0;
+    bottom: 2rem;
+}
+
+.add-goal-container {
+    position: relative;
+}
+
+.goal-icon:hover{
+    color: $accent-color;
+}

@@ -50,7 +50,7 @@ public class GoalRepository : IGoalRepository
                 UserId = goal.UserId,
                 Completed = goal.Completed,
                 CurrentProgress = goal.CurrentProgress,
-                StartDate = goal.StartDate,
+                StartDate = DateTime.Now,
                 Type = goal.Type,
                 Target = goal.Target
             };

@@ -14,7 +14,7 @@ const InputComponent = ({text, value, name, type, onChange}) => {
         type={type}
         required
         onChange={onChange}
-        placeholder={`Enter your ${name}`}
+        placeholder={name}
       />
     </>
   );
