@@ -35,9 +35,9 @@ public class TransactionController : ControllerBase
     {
         try
         {
+            await _transactionService.HandleAccountBalance(transaction);
             var result = await _transactionRepository.AddTransaction(transaction);
             await _goalService.UpdateGoalProcess(result);
-            await _transactionService.HandleAccountBalance(transaction);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (InvalidDataException e)
