@@ -16,8 +16,8 @@ const sampleAccount = {
 
 const AccountCreator = () => {
   const [account, setAccount] = useState(sampleAccount);
-  const { currentUser } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
+  const { currentUser, loading } = useContext(UserContext);
+  const [pageLoading, setPageLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
@@ -34,7 +34,7 @@ const AccountCreator = () => {
 
   const fetchAccountData = async () => {
     try {
-      setLoading(true);
+      setPageLoading(true);
       const response = await fetchData(null, `/Account/${id}`, "GET");
       if (response.ok) {
         setAccount(response.data.data);
@@ -59,7 +59,7 @@ const AccountCreator = () => {
         type: "error",
       });
     }
-    setLoading(false);
+    setPageLoading(false);
   };
 
   const handleAccountChange = (e) => {
@@ -75,8 +75,7 @@ const AccountCreator = () => {
   const handleCreateAccount = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
-      console.log(currentUser.userId);
+      setPageLoading(true);
       !id && (account.userId = currentUser.userId);
       const response = await fetchData(
         account,
@@ -103,11 +102,11 @@ const AccountCreator = () => {
         type: "error",
       });
     }
-    setLoading(false);
+    setPageLoading(false);
     setAccount(sampleAccount);
   };
 
-  if (loading) {
+  if (loading || pageLoading) {
     return <Loading />;
   }
 

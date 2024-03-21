@@ -26,15 +26,9 @@ const Home = () => {
     navigate(route);
   };
 
-  // useEffect(() => {
-  //   const fetchGoals = async () => {
-  //     const response = await fetchData(null, "/Goal/1", "GET");
-  //     if (response.ok) {
-  //       setGoals(response.data.data);
-  //     }
-  //   };
-  //   fetchGoals();
-  // }, []);
+  const handleNavigate = (route) => {
+    navigate(route);
+  };
 
   return (
     <div className="home-container vh-100">
@@ -105,7 +99,10 @@ const Home = () => {
               {currentUser ? (
                 <div className="row d-flex justify-content-center text-center mb-5">
                   <div className="col-md-4 mb-3">
-                    <button className="btn btn-lg btn-outline-light">
+                    <button
+                      onClick={() => handleNavigate("/account")}
+                      className="btn btn-lg btn-outline-light"
+                    >
                       Manage your accounts
                     </button>
                   </div>
@@ -115,7 +112,10 @@ const Home = () => {
                     </button>
                   </div>
                   <div className="col-md-4 mb-3">
-                    <button className="btn btn-lg btn-outline-light">
+                    <button
+                      onClick={() => handleNavigate("/goal")}
+                      className="btn btn-lg btn-outline-light"
+                    >
                       Look at your goals
                     </button>
                   </div>

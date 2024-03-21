@@ -3,8 +3,8 @@ namespace BudgetBuddy.Controllers;
 using Model;
 using Services.Repositories.Account;
 using Microsoft.AspNetCore.Mvc;
-using BudgetBuddy.Contracts.ModelRequest;
-using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using Contracts.ModelRequest;
+using Contracts.ModelRequest.UpdateModels;
 using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
@@ -20,12 +20,12 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Account>> Get(int accountId)
+    [HttpGet("{userId}"), Authorize(Roles = "Admin, User")]
+    public async Task<ActionResult<List<Account>>> Get(string userId)
     {
         try
         {
-            var result = await _accountRepository.GetById(accountId);
+            var result = await _accountRepository.GetByUserId(userId);
             return Ok(new { message = "Account retrieved successfully", data = result });
         }
         catch (Exception e)
