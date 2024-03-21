@@ -2,6 +2,7 @@ using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.ReportServices;
@@ -99,6 +100,7 @@ void AddServices(){
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
     builder.Services.AddTransient<IGoalService, GoalService>();
+    builder.Services.AddTransient<IAchievementService, AchievementService>();
     builder.Services.AddScoped<AuthenticationSeeder>(provider =>
     {
         var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();

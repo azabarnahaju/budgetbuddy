@@ -1,4 +1,7 @@
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Controllers;
 
@@ -19,12 +22,16 @@ public class TransactionController : ControllerBase
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
     private readonly IGoalService _goalService;
+    private readonly IAchievementService _achievementService;
+    private readonly BudgetBuddyContext _dbContext;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService, IAchievementService achievementService, BudgetBuddyContext dbContext)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
         _goalService = goalService;
+        _achievementService = achievementService;
+        _dbContext = dbContext;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
@@ -34,6 +41,8 @@ public class TransactionController : ControllerBase
         {
             var result = await _transactionRepository.AddTransaction(transaction);
             await _goalService.UpdateGoalProcess(result);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Accounts.FirstOrDefault(a => a.Id == result.AccountId) != null);
+            await _achievementService.UpdateAchievements(user);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
         catch (Exception e)

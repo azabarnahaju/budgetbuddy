@@ -1,6 +1,7 @@
 ﻿using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Services.AchievementService;
 
@@ -17,38 +18,49 @@ public class AchievementService : IAchievementService
     public async Task UpdateAchievements(ApplicationUser user)
     {
         await BudgetMasterAchievement(user, 1000);
-        await TransactionTrackerAchievement(user);
-        await AccountAchievement(user);
-        await SavingsAchievement(user);
-        //await FirstGoalAchievement(user);
-        //await GoalVisionary(user);
-        await CategorizeAchievement(user);
+        // await TransactionTrackerAchievement(user);
+        // await AccountAchievement(user);
+        // await SavingsAchievement(user);
+        // //await FirstGoalAchievement(user);
+        // //await GoalVisionary(user);
+        // await CategorizeAchievement(user);
     }
 
     public async Task BudgetMasterAchievement(ApplicationUser user, decimal budgetAmount)
     {
+        var appUser = await _context.Users.Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(applicationUser => true);
+        var transactionSum = _context.Users.Where(u => u.Id == user.Id)
+            .SelectMany(account => account.Accounts)
+            .SelectMany(account => account.Transactions)
+            .Where(t => t.Type == TransactionType.Expense)
+            .Where(t => t.Date >= DateTime.Now.AddDays(-30))
+            .Sum(t => t.Amount);
         
-        var transactions= user.Accounts.SelectMany(account => account.Transactions).Where(transaction => transaction.Date >= DateTime.Now.AddDays(-30)).ToList();
-        var totalSpent = transactions.Where(transaction => transaction.Type == TransactionType.Expense).Sum(transaction => transaction.Amount);
-        
-        if (totalSpent < budgetAmount)
-        {
-            var budgetMaster = new Achievement
+        // Console.WriteLine(user.Accounts.SelectMany(account => account.Transactions));
+        //     var transactions = user.Accounts.SelectMany(account => account.Transactions)
+        //         .Where(transaction => transaction.Date >= DateTime.Now.AddDays(-30)).ToList()
+        //         .Sum(transaction => transaction.Amount);
+
+            if (transactionSum < budgetAmount)
             {
-                Name = "Budget Master",
-                Description = "You've spent less than your budget in the past 30 days!"
-            };
-            if (user.Achievements.Any(a => a.Name != budgetMaster.Name)) user.Achievements.Add(budgetMaster);
-            if (_context.Achievements.Any(a => a.Id != budgetMaster.Id)) _context.Achievements.Add(budgetMaster);
-            
-            await _context.SaveChangesAsync();
-            
-        }
+                var budgetMaster = new Achievement
+                {
+                    Name = "Budget Master",
+                    Description = "You've spent less than your budget in the past 30 days!"
+                };
+                if (appUser.Achievements.Any(a => a.Name != budgetMaster.Name)) appUser.Achievements.Add(budgetMaster);
+                if (_context.Achievements.Any(a => a.Id != budgetMaster.Id)) _context.Achievements.Add(budgetMaster);
+                
+                await _context.SaveChangesAsync();
+            }
     }
+
 
     public async Task TransactionTrackerAchievement(ApplicationUser user)
     {
-        var totalTransactions = user.Accounts.Sum(account => account.Transactions.Where(transaction =>  transaction.Type == TransactionType.Expense).ToList().Count);
+        var appUser = await _context.Users.Include(applicationUser => applicationUser.Achievements)
+            .Include(applicationUser => applicationUser.Accounts).ThenInclude(account => account.Transactions).FirstOrDefaultAsync(applicationUser => true);
+        var totalTransactions = appUser.Accounts.Sum(account => account.Transactions.Where(transaction =>  transaction.Type == TransactionType.Expense).ToList().Count);
 
         switch (totalTransactions)
         {
@@ -58,7 +70,7 @@ public class AchievementService : IAchievementService
                     Name = "Pioneer",
                     Description = "You've recorded your first transaction!"
                 };
-                if (user.Achievements.Any(a => a.Name != pioneer.Name)) user.Achievements.Add(pioneer);
+                if (appUser.Achievements.Any(a => a.Name != pioneer.Name)) appUser.Achievements.Add(pioneer);
                 if (_context.Achievements.Any(a => a.Id != pioneer.Id)) _context.Achievements.Add(pioneer);
                 await _context.SaveChangesAsync();
                 break;
@@ -68,7 +80,7 @@ public class AchievementService : IAchievementService
                     Name = "Big Spender",
                     Description = "You've recorded 5 transactions!"
                 };
-                if (user.Achievements.Any(a => a.Name != bigSpender.Name)) user.Achievements.Add(bigSpender);
+                if (appUser.Achievements.Any(a => a.Name != bigSpender.Name)) appUser.Achievements.Add(bigSpender);
                 if (_context.Achievements.Any(a => a.Id != bigSpender.Id)) _context.Achievements.Add(bigSpender);
                 await _context.SaveChangesAsync();
                 break;

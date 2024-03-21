@@ -1,3 +1,6 @@
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
+
 namespace BudgetBuddy.Controllers;
 
 using Model;
@@ -13,11 +16,15 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
+    private readonly IAchievementService _achievementService;
+    private BudgetBuddyContext _dbContext;
 
-    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository)
+    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, IAchievementService achievementService, BudgetBuddyContext dbContext)
     {
         _accountRepository = accountRepository;
         _logger = logger;
+        _achievementService = achievementService;
+        _dbContext = dbContext;
     }
 
     [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
@@ -41,6 +48,8 @@ public class AccountController : ControllerBase
         try
         {
             var result = await _accountRepository.CreateAccount(account);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == result.UserId);
+            if (user != null) await _achievementService.UpdateAchievements(user);
             return Ok(new { message = "Account created successfully", data = result });
         }
         catch (Exception e)
