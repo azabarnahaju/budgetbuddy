@@ -10,6 +10,7 @@ import {
 
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.scss";
+import { TbPigMoney } from "react-icons/tb";
 
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);

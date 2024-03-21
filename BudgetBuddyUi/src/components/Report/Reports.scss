@@ -1,0 +1,37 @@
+@import "../../Style/variables";
+
+.reports-table {
+  background-color: $background-color;
+  color: $text-color;
+}
+
+.report-content {
+  flex: 1;
+  background-color: $background-color;
+}
+
+.reports-container {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 100%;
+}
+
+tbody > tr > td.text-center {
+  background-color: $background-color;
+  padding: 1rem;
+  color: $text-color;
+}
+
+tbody > tr > th {
+  background-color: $background-color;
+  padding: 1rem;
+}
+
+table > thead > tr > th {
+  background-color: $background-color;
+}
+
+table > thead > tr > th {
+  background-color: $background-color;
+}

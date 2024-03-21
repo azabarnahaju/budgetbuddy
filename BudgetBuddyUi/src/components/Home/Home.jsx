@@ -4,7 +4,7 @@ import SnackBar from "../Snackbar/Snackbar";
 import "./Home.scss";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
 
 const Home = () => {
@@ -110,9 +110,11 @@ const Home = () => {
                     </button>
                   </div>
                   <div className="col-md-4 mb-3">
-                    <button className="btn btn-lg btn-outline-light">
-                      Show reports
-                    </button>
+                    <Link to="/reports/">
+                      <button className="btn btn-lg btn-outline-light">
+                        Show reports
+                      </button>
+                    </Link>
                   </div>
                   <div className="col-md-4 mb-3">
                     <button className="btn btn-lg btn-outline-light">

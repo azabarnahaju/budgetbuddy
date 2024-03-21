@@ -9,6 +9,9 @@ import AccountCreator from "./components/Create/AccountCreator/AccountCreator";
 import Login from "./components/Authentication/Login/Login";
 import Register from "./components/Authentication/Register/Register";
 import UserProfile from "./components/UserProfile/UserProfile";
+import Reports from "./components/Report/Reports";
+import ReportDetails from "./components/Report/ReportDetails";
+import ReportCreator from "./components/Create/ReportCreator/ReportCreator";
 
 const App = () => {
   return (
@@ -27,6 +30,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile/:id" element={<UserProfile />} />
+        <Route path="/reports/" element={<Reports />} />
+        <Route path="/reports/:reportId" element={<ReportDetails />} />
+        <Route path="/reports/add" element={<ReportCreator />} />
       </Routes>
     </div>
   );
