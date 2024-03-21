@@ -1,4 +1,5 @@
 using BudgetBuddy.Services.GoalServices;
+using BudgetBuddy.Services.TransactionServices;
 
 namespace BudgetBuddy.Controllers;
 
@@ -19,12 +20,14 @@ public class TransactionController : ControllerBase
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
     private readonly IGoalService _goalService;
+    private readonly ITransactionService _transactionService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService, ITransactionService transactionService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
         _goalService = goalService;
+        _transactionService = transactionService;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
@@ -34,7 +37,13 @@ public class TransactionController : ControllerBase
         {
             var result = await _transactionRepository.AddTransaction(transaction);
             await _goalService.UpdateGoalProcess(result);
+            await _transactionService.HandleAccountBalance(transaction);
             return Ok(new { message = "Transaction added.", data = transaction });
+        }
+        catch (InvalidDataException e)
+        {
+            _logger.LogError(e, e.Message);
+            return BadRequest(new { message = e.Message });
         }
         catch (Exception e)
         {

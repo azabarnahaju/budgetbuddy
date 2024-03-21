@@ -1,11 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using BudgetBuddy.Contracts;
-﻿using BudgetBuddy.Contracts;
 using BudgetBuddy.Contracts.Auth;
 using BudgetBuddy.Contracts.Registration;
 using BudgetBuddy.Services.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetBuddy.Controllers;
