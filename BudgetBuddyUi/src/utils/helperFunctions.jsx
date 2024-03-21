@@ -28,6 +28,14 @@ export const formatDate = (dateString) => {
   }
 };
 
+export const stringToDate = (dateToFormat) =>
+  new Date(dateToFormat).toLocaleDateString("en-gb", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
 export const calculatePercentage = (current, target) => {
   return ((current * 100) / target).toFixed(1);
 };

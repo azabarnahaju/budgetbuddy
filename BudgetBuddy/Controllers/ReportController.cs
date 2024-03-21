@@ -1,4 +1,5 @@
 ﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.ReportServices;

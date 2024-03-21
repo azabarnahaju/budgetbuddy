@@ -1,0 +1,14 @@
+@import "../../Style/variables";
+
+.report-detail-container {
+    display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 100%;
+}
+
+.report-content {
+    flex: 1;
+    background-color: $background-color;
+    color: $text-color;
+}

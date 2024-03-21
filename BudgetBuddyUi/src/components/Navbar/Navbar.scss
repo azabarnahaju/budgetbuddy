@@ -8,7 +8,7 @@
 
 .nav-item .nav-link,
 .nav-item .nav-link:focus {
-  color:$text-color;
+  color: $text-color;
 }
 
 .nav-item .nav-link:hover {
@@ -25,11 +25,15 @@ button.navbar-toggler {
 }
 
 .logo-img {
-    width: 2.5rem;
+  width: 2.5rem;
 }
 
 .logo-text {
-    color: $text-color;
-    font-size: 1.5rem;
-    font-family: $regular-font-1;
+  color: $text-color;
+  font-size: 1.5rem;
+  font-family: $regular-font-1;
+}
+
+.piggybank {
+  margin: 0.2em;
 }
