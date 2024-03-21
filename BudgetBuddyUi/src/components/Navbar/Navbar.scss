@@ -1,14 +1,14 @@
 @import "../../Style/variables";
 
 .navbar-container {
-  background-color: rgb(18, 19, 19);
+  background-color: $primary-color;
   color: $text-color;
   font-family: $regular-font-2;
 }
 
 .nav-item .nav-link,
 .nav-item .nav-link:focus {
-  color: white;
+  color:$text-color;
 }
 
 .nav-item .nav-link:hover {
@@ -20,8 +20,8 @@
 }
 
 button.navbar-toggler {
-  color: white;
-  border-color: white;
+  color: $text-color;
+  border-color: $text-color;
 }
 
 .logo-img {
@@ -29,7 +29,7 @@ button.navbar-toggler {
 }
 
 .logo-text {
-    color: white;
+    color: $text-color;
     font-size: 1.5rem;
     font-family: $regular-font-1;
 }

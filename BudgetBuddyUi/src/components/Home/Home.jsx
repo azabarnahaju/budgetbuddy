@@ -48,11 +48,11 @@ const Home = () => {
           <div className="text-center">
             <h1 className="title mb-4">
               Take Control of Your Finances with{" "}
-              <span className="brand-name">{" MoneyFlow "}</span>!
+              <span className="brand-name">{" BudgetBuddy "}</span>!
             </h1>
             <h2 className="lead-text mb-4">
               Ready to manage your expenses, track your income, and stay on top
-              of your financial goals? MoneyFlow has you covered.
+              of your financial goals? BudgetBuddy has you covered.
             </h2>
             <h2 className="lead-text">
               Say goodbye to financial stress and hello to financial freedom.

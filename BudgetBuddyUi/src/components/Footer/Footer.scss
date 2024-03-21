@@ -1,14 +1,14 @@
 @import "../../Style/variables";
 
 footer {
-  background-color: rgb(19, 18, 18);
-  color: white;
+  background-color: $primary-color;
+  color: $text-color;
   padding: 10px;
   text-align: center;
 }
 
 .list-inline .list-inline-item a {
-  color: white;
+  color: $text-color;
 }
 
 .list-inline .list-inline-item a:hover {

@@ -8,14 +8,14 @@
 }
 
 .home-content {
-  background-color: rgb(33, 33, 33);
+  background-color: $background-color;
   flex: 1;
-  color: white;
+  color: $text-color;
 }
 
 .feature-item {
   font-family: $primary-font;
-  background-color: rgba(50, 39, 65, 0.211);
+  background-color: $transparent-div;
   padding: 2rem;
   border-radius: 15px;
 }
