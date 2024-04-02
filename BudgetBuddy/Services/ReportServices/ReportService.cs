@@ -43,12 +43,12 @@ public class ReportService : IReportService
                 Categories = tags,
                 SpendingByTags = spendingByTags,
                 AverageSpendingDaily = GetAvgSpendingDaily(transactionsPeriod, start, end),
-                AverageSpendingTransaction = transactionsPeriod.Average(t => t.Amount),
+                AverageSpendingTransaction = transactionsPeriod.Where(t => t.Type == TransactionType.Expense).Average(t => t.Amount),
                 MostSpendingTag = GetMostSpendingTag(spendingByTags),
                 MostSpendingDay = GetMostSpendingDay(transactionsPeriod),
                 SumExpense = transactionsPeriod.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount),
                 SumIncome = transactionsPeriod.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount),
-                BiggestExpense = transactionsPeriod.Max(t => t.Amount)
+                BiggestExpense = transactionsPeriod.Where(t => t.Type == TransactionType.Expense).Max(t => t.Amount)
             };
         }
         catch (Exception e)
@@ -115,7 +115,7 @@ public class ReportService : IReportService
     private decimal GetAvgSpendingDaily(IEnumerable<Transaction> transactions, DateTime start, DateTime end)
     {
         var days = (end - start).Days;
-        return transactions.Sum(t => t.Amount) / days;
+        return transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount) / days;
     }
 
     private TransactionCategoryTag GetMostSpendingTag(Dictionary<TransactionCategoryTag, decimal> spendingByTags)
@@ -125,6 +125,6 @@ public class ReportService : IReportService
 
     private DateTime GetMostSpendingDay(IEnumerable<Transaction> transactions)
     {
-        return transactions.GroupBy(x => x.Date).Select(x => new { Date = x.Key, Amount = x.Sum(t => t.Amount) }).OrderByDescending(x => x.Amount).First().Date;
+        return transactions.Where(t => t.Type == TransactionType.Expense).GroupBy(x => x.Date).Select(x => new { Date = x.Key, Amount = x.Sum(t => t.Amount) }).OrderByDescending(x => x.Amount).First().Date;
     }
 }

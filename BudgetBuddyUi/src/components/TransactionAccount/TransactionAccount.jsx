@@ -57,13 +57,15 @@ const TransactionAccount = () => {
     <div className="transaction-container vh-100">
       <Navbar />
       <div className="transaction-content">
-        {accounts.length && (
+        {accounts.length ? (
           <TransactionSelector
             account={account}
             setAccount={setAccount}
             accounts={accounts}
             handleSetAccount={handleSetAccount}
           />
+        ) : (
+          <></>
         )}
         <div className="container">
           <div className="row">

@@ -62,7 +62,7 @@ const ReportDetails = () => {
                     <td>Categories</td>
                     <td>
                       {report.categories.$values.map((c) => (
-                        <span>{c}</span>
+                        <span>{c} </span>
                       ))}
                     </td>
                   </tr>
@@ -95,7 +95,7 @@ const ReportDetails = () => {
                   </thead>
                   <tbody>
                     {Object.entries(report.spendingByTags).map((key, i) =>
-                      i > 0 ? (
+                      i > 0 && key[0] !== "Income" ? (
                         <tr>
                           <td>{key[0]}</td>
                           <td>{key[1]}</td>

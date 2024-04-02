@@ -23,7 +23,6 @@ const Reports = () => {
         `/report/report/user/${currentUser.userId}`,
         "GET"
       );
-      console.log(result.data.data.$values);
       setReports(result.data.data.$values);
     };
     if (currentUser) {
