@@ -1,10 +1,11 @@
-﻿using BudgetBuddy.Controllers;
+﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework.Internal;
 
 namespace BudgetBuddyTest.AchievementTests;
 
@@ -93,9 +94,9 @@ public class AchievementControllerTest
     [Test]
     public async Task Add_ReturnsNotFoundWhenRepositoryThrowsException()
     {
-        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<Achievement>>())).Throws(new Exception());
+        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<AchievementCreateRequest>>())).Throws(new Exception());
         
-        var result = await _controller.Add(It.IsAny<IEnumerable<Achievement>>());
+        var result = await _controller.Add(It.IsAny<IEnumerable<AchievementCreateRequest>>());
         
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result);
     }
@@ -104,9 +105,9 @@ public class AchievementControllerTest
     public async Task Add_ReturnsOkIfRepositoryReturnsValidData()
     {
         var achievements = new List<Achievement>();
-        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<Achievement>>())).ReturnsAsync(achievements);
-
-        var result = await _controller.Add(achievements);
+        _achievementRepositoryMock.Setup(x => x.AddAchievement(It.IsAny<IEnumerable<AchievementCreateRequest>>())).ReturnsAsync(achievements);
+        var achievementsToCreate = new List<AchievementCreateRequest>();
+        var result = await _controller.Add(achievementsToCreate);
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 
@@ -154,9 +155,9 @@ public class AchievementControllerTest
     [Test]
     public async Task Update_ReturnsNotFoundWhenRepositoryThrowsException()
     {
-        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<Achievement>())).Throws(new Exception());
+        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<AchievementUpdateRequest>())).Throws(new Exception());
         
-        var result = await _controller.Update(It.IsAny<Achievement>());
+        var result = await _controller.Update(It.IsAny<AchievementUpdateRequest>());
         
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
     }
@@ -164,10 +165,10 @@ public class AchievementControllerTest
     [Test]
     public async Task Update_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var achievement = new Achievement();
-        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<Achievement>())).ReturnsAsync(achievement);
-
-        var result = await _controller.Update(achievement);
+        var achievement = new Achievement(){Id = 1, Name = "Test", Description = "Test"};
+        _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<AchievementUpdateRequest>())).ReturnsAsync(achievement);
+        var achievementToUpdate = new AchievementUpdateRequest(1, "Test", "Test");
+        var result = await _controller.Update(achievementToUpdate);
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);
 

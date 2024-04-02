@@ -20,4 +20,9 @@ public class Achievement
     {
         return HashCode.Combine(Id, Name, Description, Users);
     }
+
+    public override string ToString()
+    {
+        return $"Id: {Id}, Name: {Name}, Description: {Description}, Users: {Users}";
+    }
 }
