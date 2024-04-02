@@ -1,3 +1,6 @@
+using System.Globalization;
+using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.Account;
@@ -24,9 +27,9 @@ public class AccountControllerTest
     [Test]
     public void GetReturnsNotFoundWhenRepositoryThrowsException()
     {
-        _accountRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Throws(new Exception());
+        _accountRepositoryMock.Setup(x => x.GetByUserId(It.IsAny<string>())).Throws(new Exception());
         
-        var result = _controller.Get(1);
+        var result = _controller.Get("1");
         
         Assert.IsInstanceOf(typeof(NotFoundObjectResult), result.Result.Result);
     }
@@ -34,12 +37,12 @@ public class AccountControllerTest
     [Test]
     public void GetReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
-        _accountRepositoryMock.Setup(x => x.GetById(1)).ReturnsAsync(account);
+        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = "1", Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.GetByUserId("1")).ReturnsAsync(new List<Account>() { account });
     
-        var result = _controller.Get(1);
+        var result = _controller.Get("1");
         
-        Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
+        Assert.IsInstanceOf<ActionResult<List<Account>>>(result.Result);
 
         var objectResult = result.Result;
         Assert.IsInstanceOf<OkObjectResult>(objectResult.Result);
@@ -51,16 +54,16 @@ public class AccountControllerTest
         var dataValue = GetDataFromResult(responseData);
         
         Assert.That(messageValue, Is.EqualTo("Account retrieved successfully"));
-        Assert.That(dataValue, Is.EqualTo(account));
+        Assert.That(dataValue, Is.EqualTo(new List<Account> { account }));
     }
     
     
     [Test]
     public void CreateAccountReturnsNotFoundWhenRepositoryThrowsException()
     {
-        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>())).Throws(new Exception());
+        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<AccountCreateRequest>())).Throws(new Exception());
         
-        var result = _controller.CreateAccount(It.IsAny<Account>());
+        var result = _controller.CreateAccount(It.IsAny<AccountCreateRequest>());
         
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
@@ -68,11 +71,11 @@ public class AccountControllerTest
     [Test]
     public void CreateAccountReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
-        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<Account>())).ReturnsAsync(account);
+        var accountRequest = new AccountCreateRequest(100, "A", "A", "1");
+        var account = new Account {Id = 1, Balance = 5.656m, Name = "A", Type = "A", UserId = "1", Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.CreateAccount(It.IsAny<AccountCreateRequest>())).ReturnsAsync(account);
     
-        var result = _controller.CreateAccount(account);
-        
+        var result = _controller.CreateAccount(accountRequest);
         Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
     
         var objectResult = result.Result;
@@ -121,9 +124,9 @@ public class AccountControllerTest
     [Test]
     public void UpdateReturnsNotFoundWhenRepositoryThrowsException()
     {
-        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<Account>())).Throws(new Exception());
+        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<AccountUpdateRequest>())).Throws(new Exception());
         
-        var result = _controller.UpdateAccount(It.IsAny<Account>());
+        var result = _controller.UpdateAccount(It.IsAny<AccountUpdateRequest>());
         
         Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result.Result);
     }
@@ -131,11 +134,11 @@ public class AccountControllerTest
     [Test]
     public void Update_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var account = new Account {Id = 1, Date = new DateTime(2022, 02, 02), Balance = 5.656m, Name = "sample1", Type = "simple1", UserId = 1, Transactions = new List<Transaction>()};
-        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<Account>())).ReturnsAsync(account);
+        var accountUpdate = new AccountUpdateRequest(0, 150, "B", "A", "1");
+        var account = new Account {Id = 0, Balance = 150, Name = "B", Type = "A", UserId = "1", Transactions = new List<Transaction>()};
+        _accountRepositoryMock.Setup(x => x.UpdateAccount(It.IsAny<AccountUpdateRequest>())).ReturnsAsync(account);
     
-        var result = _controller.UpdateAccount(account);
-        
+        var result = _controller.UpdateAccount(accountUpdate);
         Assert.IsInstanceOf<ActionResult<Account>>(result.Result);
     
         var objectResult = result.Result;
@@ -145,8 +148,7 @@ public class AccountControllerTest
         var responseData = okObjectResult.Value;
     
         var messageValue = GetMessageFromResult(responseData);
-        var dataValue = GetDataFromResult(responseData);
-        
+        var dataValue = (Account)GetDataFromResult(responseData);
         Assert.That(messageValue, Is.EqualTo("Account updated successfully"));
         Assert.That(dataValue, Is.EqualTo(account));
     }

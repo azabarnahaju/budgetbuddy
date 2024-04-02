@@ -1,4 +1,4 @@
-﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
