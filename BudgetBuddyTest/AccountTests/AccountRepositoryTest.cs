@@ -1,4 +1,6 @@
-﻿using BudgetBuddy.Data;
+﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services.Repositories.Account;
 using Microsoft.EntityFrameworkCore;
@@ -71,66 +73,39 @@ public class AccountRepositoryTest
     [Test]
     public async Task CreateAccountSuccess()
     {
-        var accountToCreate = new Account
+        var accountToCreate = new AccountCreateRequest(150, "sample1", "simple1", "1");
+        var accountCreated = new Account
         {
-            Id = 152,
-            Date = new DateTime(2022, 02, 02),
-            Balance = 5.656m,
+            Balance = 150,
             Name = "sample1",
             Type = "simple1",
-            UserId = 1,
-            Transactions = new List<Transaction>()
+            UserId = "1",
         };
         var accountRepository = new AccountRepository(_context);
         var result = await accountRepository.CreateAccount(accountToCreate);
         
-        Assert.That(result, Is.EqualTo(accountToCreate));
-    }
-    
-    [Test]
-    public async Task SameIdFailToCreateAccount()
-    {
-        var accountToCreate = new Account
-        {
-            Id = 1,
-            Date = new DateTime(2022, 02, 02),
-            Balance = 5.656m,
-            Name = "sample1",
-            Type = "simple1",
-            UserId = 1,
-            Transactions = new List<Transaction>()
-        };
-        var accountRepository = new AccountRepository(_context);
-
-        Exception exception = null;
-        try
-        {
-            await accountRepository.CreateAccount(accountToCreate);
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-        Assert.That(exception, Is.Not.Null);
-        Assert.That(exception, Is.InstanceOf<Exception>());
-        Assert.That(exception.Message, Is.EqualTo("Cannot create new account."));
+        Assert.That(result.Balance, Is.EqualTo(accountCreated.Balance));
+        Assert.That(result.Name, Is.EqualTo(accountCreated.Name));
+        Assert.That(result.Type, Is.EqualTo(accountCreated.Type));
+        Assert.That(result.UserId, Is.EqualTo(accountCreated.UserId));
     }
     
     [Test]
     public async Task UpdateAccountSuccess()
     {
         var accountRepository = new AccountRepository(_context);
+        var accountUpdateRequest = new AccountUpdateRequest(1, 5.656m, "sample1", "simple2", "5");
         var updatedAccount = new Account
         {
             Id = 1,
-            Date = new DateTime(2023, 02, 02),
+            Date = new DateTime(2022, 02, 02),
             Balance = 5.656m,
             Name = "sample1",
             Type = "simple2",
-            UserId = 5,
+            UserId = "5",
             Transactions = new List<Transaction>()
         };
-        var result = await accountRepository.UpdateAccount(updatedAccount);
+        var result = await accountRepository.UpdateAccount(accountUpdateRequest);
         
         Assert.That(result, Is.EqualTo(updatedAccount));
     }
@@ -139,21 +114,12 @@ public class AccountRepositoryTest
     public async Task WrongIdFailToUpdateAccount()
     {
         var accountRepository = new AccountRepository(_context);
-        var updatedAccount = new Account
-        {
-            Id = 19,
-            Date = new DateTime(2023, 02, 02),
-            Balance = 5.656m,
-            Name = "sample1",
-            Type = "simple2",
-            UserId = 5,
-            Transactions = new List<Transaction>()
-        };
+        var accountUpdateRequest = new AccountUpdateRequest(19, 5.656m, "sample1", "simple2", "5");
         
         Exception exception = null;
         try
         {
-            await accountRepository.UpdateAccount(updatedAccount);
+            await accountRepository.UpdateAccount(accountUpdateRequest);
         }
         catch (KeyNotFoundException ex)
         {
@@ -163,7 +129,7 @@ public class AccountRepositoryTest
         Assert.That(exception, Is.InstanceOf<KeyNotFoundException>());
         Assert.That(exception.Message, Is.EqualTo("Failed to update. Account not found."));
     }
-
+    
     [Test]
     public async Task DeleteAccountSuccess()
     {
@@ -179,7 +145,7 @@ public class AccountRepositoryTest
         {
             exception = ex;
         }
-
+    
         Assert.That(exception, Is.Null);
     }
     
@@ -198,7 +164,7 @@ public class AccountRepositoryTest
         {
             exception = ex;
         }
-
+    
         Assert.That(exception, Is.Not.Null);
         Assert.That(exception, Is.InstanceOf<KeyNotFoundException>());
         Assert.That(exception.Message, Is.EqualTo("Failed to delete. Account not found."));
@@ -213,7 +179,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample1",
             Type = "simple1",
-            UserId = 1,
+            UserId = "1",
             Transactions = new List<Transaction>()
         },
         new Account
@@ -223,7 +189,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample2",
             Type = "simple2",
-            UserId = 2,
+            UserId = "2",
             Transactions = new List<Transaction>()
         },
         new Account
@@ -233,7 +199,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample3",
             Type = "simple3",
-            UserId = 1,
+            UserId = "1",
             Transactions = new List<Transaction>()
         },
         new Account
@@ -243,7 +209,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample4",
             Type = "simple4",
-            UserId = 2,
+            UserId = "2",
             Transactions = new List<Transaction>()
         },
         new Account
@@ -253,7 +219,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample5",
             Type = "simple5",
-            UserId = 1,
+            UserId = "1",
             Transactions = new List<Transaction>()
         },
         new Account
@@ -263,7 +229,7 @@ public class AccountRepositoryTest
             Balance = 5.656m,
             Name = "sample6",
             Type = "simple6",
-            UserId = 1,
+            UserId = "1",
             Transactions = new List<Transaction>()
         }
     };
