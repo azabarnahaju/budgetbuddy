@@ -2,6 +2,7 @@
 using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
+using BudgetBuddy.Model.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -45,22 +46,33 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                 }
             );
             
-            // SeedTestData(services);
+            SeedTestData(services);
         });
     }
     
-    // void SeedTestData(IServiceCollection services)
-    // {
-    //     using var scope = services.BuildServiceProvider().CreateScope();
-    //     var serviceProvider = scope.ServiceProvider;
-    //     var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
-    //
-    //     context.Users.Add(new ApplicationUser { Id = "testUserId", Email = "user1@user1.com", UserName = "user1", Accounts = new List<Account> { new Account { Id = 1, Date = new DateTime(2024, 04, 02), Balance = 150, Name = "Test1", UserId = "1", Type = "Test"} }, Achievements = new List<Achievement> { new Achievement { Id = 5 } }});
-    //     context.Accounts.Add(new Account { Id = 1, Date = new DateTime(2024, 04, 02), Balance = 150, Name = "Test1", UserId = "1", Type = "Test", Reports = new List<Report> { new Report { Id = 3, AccountId = 1 } }});
-    //     context.Goals.Add(new Goal { Id = 2, UserId = "testUserId", AccountId = 1 });
-    //     context.Reports.Add(new Report { Id = 3, AccountId = 1 });
-    //     context.Transactions.Add(new Transaction { Id = 4, AccountId = 1 });
-    //     context.Achievements.Add(new Achievement { Id = 5, Users = new List<ApplicationUser> { new ApplicationUser { Id = "testUserId", Email = "user1@user1.com", UserName = "user1", Accounts = new List<Account> { new Account { Id = 1, Date = new DateTime(2024, 04, 02), Balance = 150, Name = "Test1", UserId = "1", Type = "Test"} }, Achievements = new List<Achievement> { new Achievement { Id = 5 } }}}});
-    //     context.SaveChanges();
-    // }
+    void SeedTestData(IServiceCollection services)
+    {
+        using var scope = services.BuildServiceProvider().CreateScope();
+        var serviceProvider = scope.ServiceProvider;
+        var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
+        context.Accounts.Add(new Account()
+            { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
+        context.Reports.Add(new Report
+        {
+            Id = 1, AccountId = 1, Categories = new HashSet<TransactionCategoryTag>(),
+            SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
+        });
+        context.Transactions.Add(new Transaction()
+        {
+            Id = 1, AccountId = 1, Amount = 1400, Date = DateTime.Now, Name = "Test",
+            Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
+        });
+        context.Achievements.Add(new Achievement() { Id = 1, Description = "Test", Name = "Test" });
+        context.Goals.Add(new Goal()
+        {
+            AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = DateTime.Now,
+            Type = GoalType.Income, Target = 100
+        });
+        context.SaveChanges();
+    }
 }
