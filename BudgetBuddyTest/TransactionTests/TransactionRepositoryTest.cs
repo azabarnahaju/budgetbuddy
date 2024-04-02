@@ -1,4 +1,6 @@
-﻿using BudgetBuddy.Services.Repositories.Achievement;
+﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Services.Repositories.Achievement;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BudgetBuddyTest.TransactionTests;
@@ -57,26 +59,6 @@ public class TransactionRepositoryTest
         
         Assert.That(transaction, Is.EqualTo(result.Result));
         
-    }
-    
-    [Test]
-    public async Task AddTransactionThrowsExceptionIfTransactionExists()
-    {
-        var transaction = new Transaction
-        {
-            Id = 1,
-            Date = DateTime.Now,
-            Name = "test",
-            Amount = 100,
-            Tag = TransactionCategoryTag.Food,
-            Type = TransactionType.Expense,
-            AccountId = 1
-        };
-        await _context.AddAsync(transaction);
-        await _context.SaveChangesAsync();
-        
-        var exception = Assert.Throws<Exception>(() => _repository.AddTransaction(transaction));
-        Assert.That(exception?.Message, Is.EqualTo("Transaction already exists."));
     }
     
     [Test]
@@ -141,7 +123,7 @@ public class TransactionRepositoryTest
         
         Assert.That(exception?.Message, Is.EqualTo("Transaction not found."));
     }
-
+    
     
     [Test]
     public async Task UpdateTransactionReturnsTransaction()
@@ -158,12 +140,15 @@ public class TransactionRepositoryTest
         };
         await _context.AddAsync(transaction);
         await _context.SaveChangesAsync();
-        
-        var result = await _repository.UpdateTransaction(transaction);
-        
+
+        var updatedTransaction = new TransactionUpdateRequest(transaction.Id, "updated test", 200,
+            TransactionCategoryTag.Food, TransactionType.Income, 2);
+        var result = await _repository.UpdateTransaction(updatedTransaction);
+
         Assert.That(transaction, Is.EqualTo(result));
     }
 
+    
     [Test]
     public async Task UpdateTransactionThrowsExceptionIfTransactionNotFound()
     {
@@ -181,25 +166,18 @@ public class TransactionRepositoryTest
         await _context.AddAsync(transaction);
         await _context.SaveChangesAsync();
         
-        var transactionToUpdate = new Transaction
-        {
-            Id = 2,
-            Date = DateTime.Now,
-            Name = "test",
-            Amount = 100,
-            Tag = TransactionCategoryTag.Food,
-            Type = TransactionType.Expense,
-            AccountId = 2
-        };
+        var transactionToUpdate = new TransactionUpdateRequest(2, "updated test", 200,
+            TransactionCategoryTag.Food, TransactionType.Income, 2);
+        
         var aggregateException = Assert.Throws<AggregateException>(() => _repository.UpdateTransaction(transactionToUpdate).Wait());
-        var exception = aggregateException.InnerException;
+        var exception = aggregateException?.InnerException;
         Assert.That(exception, Is.InstanceOf<Exception>());
-        Assert.That(exception.Message, Is.EqualTo("Transaction not found."));
+        Assert.That(exception?.Message, Is.EqualTo("Transaction not found."));
     }
-
+    
     
     [Test]
-    public void DeleteTransactionRemovesTransaction()
+    public async Task DeleteTransactionRemovesTransaction()
     {
         var transaction = new Transaction
         {
@@ -211,65 +189,38 @@ public class TransactionRepositoryTest
             Type = TransactionType.Expense,
             AccountId = 1
         };
-         _context.Add(transaction);
-         _context.SaveChanges();
+         await _context.AddAsync(transaction);
+         await _context.SaveChangesAsync();
         
-        _repository.DeleteTransaction(1);
+        await _repository.DeleteTransaction(1);
     
         Assert.IsEmpty(_context.Transactions.ToList());
     }
     
     [Test]
-    public void DeleteTransactionThrowsExceptionIfTransactionNotFound()
+    public async Task DeleteTransactionThrowsExceptionIfTransactionNotFound()
     {
-        var exception = Assert.Throws<Exception>(() => _repository.DeleteTransaction(1));
+        var exception =  Assert.ThrowsAsync<Exception>(() => _repository.DeleteTransaction(1));
         Assert.That(exception?.Message, Is.EqualTo("Transaction not found."));
     }
     
     [Test]
     public async Task FilterTransactionsReturnsTransactions()
     {
-        var transactions = new List<Transaction>
+        var transactions = new List<TransactionCreateRequest>
         {
-            new Transaction
-            {
-                Id = 1,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Food,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            },
-            new Transaction
-            {
-                Id = 2,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Food,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            },
-            new Transaction
-            {
-                Id = 3,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Entertainment,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            }
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1),
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1),
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1)
+            
         };
-        _repository.AddTransaction(transactions[0]);
-        _repository.AddTransaction(transactions[1]);
-        _repository.AddTransaction(transactions[2]);
+        await _repository.AddTransaction(transactions[0]);
+        await _repository.AddTransaction(transactions[1]);
+        await _repository.AddTransaction(transactions[2]);
         
         var result = await _repository.FilterTransactions(TransactionType.Expense);
         
         Assert.That(result.Count(), Is.EqualTo(3));
-        Assert.That(transactions, Is.EqualTo(result.ToList()));
     }
     
     [Test]
@@ -287,74 +238,51 @@ public class TransactionRepositoryTest
         };
         await _context.AddAsync(transaction);
         await _context.SaveChangesAsync();
-
+    
         var aggregateException = Assert.Throws<AggregateException>(() => _repository.FilterTransactions(TransactionType.Income).Wait());
         var exception = aggregateException.InnerException;
         Assert.That(exception, Is.InstanceOf<Exception>());
         Assert.That(exception.Message, Is.EqualTo($"No transaction found by {TransactionType.Income.ToString()} type."));
     }
-
+    
     
     [Test]
     public async Task FinancialTransactionsReturnsTransactions()
     {
-        var transactions = new List<Transaction>
+        var transactions = new List<TransactionCreateRequest>
         {
-            new Transaction
-            {
-                Id = 1,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Food,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            },
-            new Transaction
-            {
-                Id = 2,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Food,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            },
-            new Transaction
-            {
-                Id = 3,
-                Date = DateTime.Now,
-                Name = "test",
-                Amount = 100,
-                Tag = TransactionCategoryTag.Food,
-                Type = TransactionType.Expense,
-                AccountId = 1
-            }
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1),
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1),
+            new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food, TransactionType.Expense, 1)
         };
-        _repository.AddTransaction(transactions[0]);
-        _repository.AddTransaction(transactions[1]);
-        _repository.AddTransaction(transactions[2]);
+        await _repository.AddTransaction(transactions[0]);
+        await _repository.AddTransaction(transactions[1]);
+        await _repository.AddTransaction(transactions[2]);
         
         var result = await _repository.FinancialTransactions(TransactionCategoryTag.Food);
         
-        Assert.That(transactions, Is.EqualTo(result));
+        Assert.That(result.Count(), Is.EqualTo(3));
     }
     
     [Test]
     public async Task FinancialTransactionsThrowsExceptionIfNoTransactionsFound()
     {
+        var transactionRequest = new TransactionCreateRequest(DateTime.Now, "test", 100, TransactionCategoryTag.Food,
+            TransactionType.Expense, 1);
+        
         var transaction = new Transaction
         {
             Id = 1,
-            Date = DateTime.Now,
-            Name = "test",
-            Amount = 100,
-            Tag = TransactionCategoryTag.Food,
-            Type = TransactionType.Expense,
-            AccountId = 1
+            Date = transactionRequest.Date,
+            Name = transactionRequest.Name,
+            Amount = transactionRequest.Amount,
+            Tag = transactionRequest.Tag,
+            Type = transactionRequest.Type,
+            AccountId = transactionRequest.AccountId
         };
-        _context.Add(transaction);
-        _context.SaveChanges();
+        
+        await _context.AddAsync(transaction);
+        await _context.SaveChangesAsync();
         
         var aggregateException = Assert.Throws<AggregateException>(() => _repository.FinancialTransactions(TransactionCategoryTag.Income).Wait());
         var exception = aggregateException.InnerException;
