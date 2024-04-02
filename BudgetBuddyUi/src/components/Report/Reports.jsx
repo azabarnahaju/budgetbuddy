@@ -1,4 +1,3 @@
-import { dividerClasses } from "@mui/material";
 import Navbar from "../Navbar/Navbar";
 import Loading from "../Loading/Loading";
 import { useContext, useEffect, useState } from "react";
