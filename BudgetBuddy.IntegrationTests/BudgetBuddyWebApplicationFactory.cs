@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace BudgetBuddy.IntegrationTests;
@@ -20,6 +22,15 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        var userSecretsTest = new Dictionary<string, string>
+        {
+            { "validIssuer", "Sample_Auth_Server" },
+            { "validAudience", "Sample_Auth_Server" },
+            { "issuerSigningKey", "This_is_a_super_secure_key_and_you_know_it" },
+            { "adminEmail", "admin@test.com"},
+            { "adminPassword", "adminTESTpassword" }
+        };
+        
         builder.ConfigureServices(services =>
         {
             // adding in-memory database
@@ -64,14 +75,17 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                 // Fetch adminInfo from configuration or any other source
                 var adminInfo = new Dictionary<string, string>
                 {
-                    {"adminEmail", "admin@test.com"},
-                    {"adminPassword", "adminTESTpassword"}
+                    {"adminEmail", userSecretsTest["adminEmail"]},
+                    {"adminPassword", userSecretsTest["adminPassword"]}
                 };
 
                 return new AuthenticationSeeder(roleManager, userManager, adminInfo);
             });
             
             // adding JWT authorization
+            services.AddScoped<ITokenService>(provider =>
+                new TokenService(JwtTokenProvider.Issuer, JwtTokenProvider.Issuer, userSecretsTest["issuerSigningKey"]));
+
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
@@ -83,9 +97,8 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                     options.TokenValidationParameters.ValidIssuer = JwtTokenProvider.Issuer;
                     options.TokenValidationParameters.ValidAudience = JwtTokenProvider.Issuer;
                     options.TokenValidationParameters.IssuerSigningKey = JwtTokenProvider.SecurityKey;
-                }
-            );
-            
+                });
+                
             SeedTestData(services);
         });
         builder.UseEnvironment("Development");
