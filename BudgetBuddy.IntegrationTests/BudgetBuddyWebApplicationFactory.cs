@@ -34,11 +34,11 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             {
                 services.Remove(configurationServiceDescriptor);
             }
-
-            // Add a fake configuration provider
-            services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-                .AddInMemoryCollection(fakeConfiguration)
-                .Build());
+            var jwtAuthenticationDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(JwtBearerOptions));
+            if (jwtAuthenticationDescriptor != null)
+            {
+                services.Remove(jwtAuthenticationDescriptor);
+            }
             // adding in-memory database
             var dbContextDescriptor =
                 services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<BudgetBuddyContext>));
@@ -46,10 +46,17 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.Remove(dbConnectionDescriptor);
             services.Remove(dbContextDescriptor);
             services.Remove(services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationSeeder)));
+            
+            // Add a fake configuration provider
+            services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
+                .AddInMemoryCollection(fakeConfiguration)
+                .Build());
+            
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
+            
             services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
