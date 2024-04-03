@@ -17,6 +17,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "test");
         builder.ConfigureServices(services =>
         {
             // adding in-memory database

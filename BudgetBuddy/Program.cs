@@ -36,7 +36,7 @@ var userSecrets = new Dictionary<string, string>
     { "adminPassword", builder.Configuration["AdminInfo:AdminPassword"]}
 };
 
-if (environment != "Development")
+if (environment == "test")
 {
     userSecrets["validIssuer"] = "testIssuer";
     userSecrets["validAudience"] = "testAudience";
