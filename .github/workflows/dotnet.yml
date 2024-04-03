@@ -27,3 +27,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    env:
+        VALID_ISSUER: ${{ secrets.VALID_ISSUER }}
+        VALID_AUDIENCE: ${{ secrets.VALID_AUDIENCE }}
+        ISSUER_SIGNING_KEY: ${{ secrets.ISSUER_SIGNING_KEY }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
