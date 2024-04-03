@@ -85,15 +85,11 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             // adding JWT authorization
             services.AddScoped<ITokenService>(provider =>
                 new TokenService(JwtTokenProvider.Issuer, JwtTokenProvider.Issuer, userSecretsTest["issuerSigningKey"]));
-
+            
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
                 {
-                    options.Configuration = new OpenIdConnectConfiguration
-                    {
-                        Issuer = JwtTokenProvider.Issuer,
-                    };
                     options.TokenValidationParameters.ValidIssuer = JwtTokenProvider.Issuer;
                     options.TokenValidationParameters.ValidAudience = JwtTokenProvider.Issuer;
                     options.TokenValidationParameters.IssuerSigningKey = JwtTokenProvider.SecurityKey;
