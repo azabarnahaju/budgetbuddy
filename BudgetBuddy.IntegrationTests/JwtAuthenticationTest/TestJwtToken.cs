@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 
@@ -22,13 +23,17 @@ public class TestJwtToken
 
     public string Build()
     {
-        var token = new JwtSecurityToken(
-            JwtTokenProvider.Issuer,
-            JwtTokenProvider.Issuer,
-            Claims,
-            expires: DateTime.Now.AddMinutes(ExpiresInMinutes),
-            signingCredentials: JwtTokenProvider.SigningCredentials
-        );
-        return JwtTokenProvider.JwtSecurityTokenHandler.WriteToken(token);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(Claims),
+            Expires = DateTime.UtcNow.AddMinutes(ExpiresInMinutes),
+            SigningCredentials = JwtTokenProvider.SigningCredentials,
+            Issuer = "your_fake_valid_issuer",
+            Audience = "your_fake_valid_audience"
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(securityToken);
     }
 }

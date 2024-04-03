@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
@@ -6,11 +7,13 @@ using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetBuddy.IntegrationTests;
 
@@ -34,7 +37,8 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             {
                 services.Remove(configurationServiceDescriptor);
             }
-            services.Remove(services.SingleOrDefault(service => service.ServiceType == typeof(IAuthenticationSeeder)));
+
+            services.Remove(services.SingleOrDefault(service => service.ServiceType == typeof(JwtBearerOptions)));
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
                 .AddInMemoryCollection(fakeConfiguration)
                 .Build());
@@ -56,15 +60,13 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                 {
                     options.Configuration = new OpenIdConnectConfiguration
                     {
-                        Issuer = JwtTokenProvider.Issuer,
+                        Issuer = "your_fake_valid_issuer",
                     };
-                    options.TokenValidationParameters.ValidIssuer = JwtTokenProvider.Issuer;
-                    options.TokenValidationParameters.ValidAudience = JwtTokenProvider.Issuer;
-                    options.TokenValidationParameters.IssuerSigningKey = JwtTokenProvider.SecurityKey;
+                    options.TokenValidationParameters.ValidIssuer = "your_fake_valid_issuer";
+                    options.TokenValidationParameters.ValidAudience = "your_fake_valid_audience";
+                    options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This_is_a_super_secure_key_and_you_know_it"));
                 }
             );
-            
-            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             
             SeedTestData(services);
         });
