@@ -3,8 +3,10 @@ using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +55,22 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             //         logger.LogError(ex, "An error occurred seeding the " + "database with test messages. Error: {Message}", ex.Message);
             //     }
             // }
+            
+            services.AddScoped<AuthenticationSeeder>(provider =>
+            {
+                var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
+            
+                // Fetch adminInfo from configuration or any other source
+                var adminInfo = new Dictionary<string, string>
+                {
+                    {"adminEmail", "admin@test.com"},
+                    {"adminPassword", "adminTESTpassword"}
+                };
+
+                return new AuthenticationSeeder(roleManager, userManager, adminInfo);
+            });
+            
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
