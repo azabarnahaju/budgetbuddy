@@ -1,0 +1,14 @@
+@import "../../../Style/variables";
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    min-height: 100%;
+  }
+
+.register-content {
+    background-color: $background-color;
+    flex: 1;
+    color: $text-color;
+  }

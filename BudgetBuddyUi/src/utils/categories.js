@@ -33,3 +33,5 @@ export const goalTypes = [
 ];
 
 export const types = ["Income", "Expense"];
+
+export const reportTypes = ["Weekly", "Monthly", "Yearly", "Last7Days", "Last30Days", "Custom"];

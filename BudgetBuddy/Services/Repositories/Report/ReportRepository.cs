@@ -23,7 +23,7 @@ public class ReportRepository : IReportRepository
         if (!await _database.Accounts.AnyAsync(a => a.Id == accountId))
             throw new Exception($"No account exists with ID {accountId}");
 
-        return await _database.Reports.Where(r => r.AccountId == accountId).ToListAsync();
+        return await _database.Reports.Include(r => r.Account).Where(r => r.AccountId == accountId).ToListAsync();
     }
     
     public async Task<IEnumerable<Report>> GetReportsByUser(string userId)

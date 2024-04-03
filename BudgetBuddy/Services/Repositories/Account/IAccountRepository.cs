@@ -9,6 +9,7 @@ public interface IAccountRepository
 {
     Task<List<Account>> GetAll();
     Task<Account> GetById(int id);
+    Task<List<Account>> GetByUserId(string userId);
     Task<Account> CreateAccount(AccountCreateRequest account);
     Task<Account> UpdateAccount(AccountUpdateRequest account);
     Task DeleteAccount(int id);

@@ -2,7 +2,6 @@ using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
-using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.ReportServices;
@@ -12,6 +11,7 @@ using BudgetBuddy.Services.Repositories.Goal;
 using BudgetBuddy.Services.Repositories.Report;
 // using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using BudgetBuddy.Services.TransactionServices;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -100,7 +100,7 @@ void AddServices(){
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
     builder.Services.AddTransient<IGoalService, GoalService>();
-    builder.Services.AddTransient<IAchievementService, AchievementService>();
+    builder.Services.AddTransient<ITransactionService, TransactionService>();
     builder.Services.AddScoped<AuthenticationSeeder>(provider =>
     {
         var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();

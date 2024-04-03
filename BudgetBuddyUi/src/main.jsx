@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { UserProvider } from "./context/userContext.jsx";
 import { SnackbarProvider } from "./context/snackbarContext.jsx";
-import "./index.css";
+import "./index.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 

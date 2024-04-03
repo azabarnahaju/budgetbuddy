@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
-import { useNavigate, useParams } from "react-router-dom";
 import { tags, types } from "../../../utils/categories";
+import InputComponent from "../../FormElements/InputComponent";
+import SelectComponent from "../../FormElements/SelectComponent";
 
 const sampleTransaction = {
   date: new Date(),
@@ -12,59 +14,17 @@ const sampleTransaction = {
   amount: 0,
   tag: "",
   type: "",
-  accountId: 1,
+  accountId: "",
 };
 
-const TransactionCreator = () => {
+const TransactionCreator = ({ account, setAccount }) => {
   const [transaction, setTransaction] = useState(sampleTransaction);
   const [loading, setLoading] = useState(false);
-  const { id } = useParams();
-  const navigate = useNavigate();
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
     type: "",
   });
-
-  useEffect(() => {
-    if (id) {
-      fetchTransactionData();
-    }
-  }, []);
-
-  const fetchTransactionData = async () => {
-    try {
-      setLoading(true);
-      const response = await fetchData(
-        null,
-        `/Transaction/transactions/${id}`,
-        "GET"
-      );
-      if (response.ok) {
-        setTransaction(response.data.data);
-        setLocalSnackbar({
-          open: true,
-          message: response.message,
-          type: "success",
-        });
-      } else {
-        setTransaction(sampleTransaction);
-        setLocalSnackbar({
-          open: true,
-          message: response.message,
-          type: "error",
-        });
-      }
-    } catch (error) {
-      setTransaction(sampleTransaction);
-      setLocalSnackbar({
-        open: true,
-        message: "Server not responding.",
-        type: "error",
-      });
-    }
-    setLoading(false);
-  };
 
   const handleTransactionChange = (e) => {
     const key = e.target.name;
@@ -72,25 +32,33 @@ const TransactionCreator = () => {
     setTransaction({ ...transaction, [key]: value });
   };
 
-  const handleBack = () => {
-    navigate("/");
-  };
-
   const handleCreateTransaction = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetchData(
-        transaction,
-        id ? "/Transaction/update" : "/Transaction/add",
-        id ? "PATCH" : "POST"
-      );
+      transaction.accountId = account.id;
+      const response = await fetchData(transaction, "/Transaction/add", "POST");
       if (response.ok) {
         setLocalSnackbar({
           open: true,
           message: response.message,
           type: "success",
         });
+        if (transaction.type == "Expense") {
+          const newAmount =
+            Number(account.balance) - Number(transaction.amount);
+          setAccount({
+            ...account,
+            balance: `${newAmount}`,
+          });
+        } else {
+          const newAmount =
+            Number(account.balance) + Number(transaction.amount);
+          setAccount({
+            ...account,
+            balance: `${newAmount}`,
+          });
+        }
       } else {
         setLocalSnackbar({
           open: true,
@@ -114,82 +82,53 @@ const TransactionCreator = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-1">
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <h1>{id ? "Update transaction" : "Create new transaction:"}</h1>
-      <form onSubmit={handleCreateTransaction}>
-        <label className="form-label mb-3" htmlFor="name">
-          Name
-        </label>
-        <input
-          onChange={handleTransactionChange}
-          className="form-control mb-3"
-          required
-          value={transaction.name}
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter the name of the transaction"
-        />
-        <label className="form-label mb-3" htmlFor="amount">
-          Amount
-        </label>
-        <input
-          onChange={handleTransactionChange}
-          className="form-control mb-3"
-          value={transaction.amount}
-          required
-          type="number"
-          id="amount"
-          name="amount"
-          placeholder="Enter the transaction amount"
-        />
-        <label className="form-label mb-3" htmlFor="tag">
-          Tag
-        </label>
-        <select
-          onChange={handleTransactionChange}
-          className="form-control mb-3"
-          value={transaction.tag}
-          required
-          id="tag"
-          name="tag"
-        >
-          <option value="">Select Tag</option>
-          {tags.map((tag, index) => (
-            <option key={index} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
-        <label className="form-label mb-3" htmlFor="type">
-          Type
-        </label>
-        <select
-          onChange={handleTransactionChange}
-          className="form-control mb-3"
-          value={transaction.type}
-          required
-          id="type"
-          name="type"
-        >
-          <option value="">Select Type</option>
-          {types.map((tag, index) => (
-            <option key={index} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </select>
+      <form onSubmit={handleCreateTransaction} className="rounded border p-4">
+        <h3 className="my-2">New transaction on {account.name}</h3>
+        <div className="mb-3">
+          <InputComponent
+            text="Name"
+            name="name"
+            type="text"
+            value={transaction.name}
+            onChange={handleTransactionChange}
+          />
+        </div>
+        <div className="mb-3">
+          <InputComponent
+            text="Amount"
+            name="amount"
+            type="number"
+            value={transaction.amount}
+            onChange={handleTransactionChange}
+          />
+        </div>
+        <div className="my-4">
+          <SelectComponent
+            text="Select Tag"
+            id="tag"
+            value={transaction.tag}
+            array={tags}
+            onchange={handleTransactionChange}
+          />
+        </div>
+        <div className="my-4">
+          <SelectComponent
+            text="Select Type"
+            id="type"
+            value={transaction.type}
+            array={types}
+            onchange={handleTransactionChange}
+          />
+        </div>
         <div>
-          <div className="mb-5">
-            <button className="btn btn-info ms-4" type="submit">
+          <div className="mb-3">
+            <button className="btn btn-lg btn-outline-light" type="submit">
               Submit
-            </button>
-            <button onClick={handleBack} className="btn btn-dark ms-4">
-              Back
             </button>
           </div>
         </div>

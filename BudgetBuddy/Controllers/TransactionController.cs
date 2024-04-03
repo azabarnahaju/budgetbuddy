@@ -1,7 +1,5 @@
-using BudgetBuddy.Data;
-using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
-using Microsoft.EntityFrameworkCore;
+using BudgetBuddy.Services.TransactionServices;
 
 namespace BudgetBuddy.Controllers;
 
@@ -22,16 +20,14 @@ public class TransactionController : ControllerBase
     private readonly ITransactionRepository _transactionRepository;
     private readonly ILogger<TransactionController> _logger;
     private readonly IGoalService _goalService;
-    private readonly IAchievementService _achievementService;
-    private readonly BudgetBuddyContext _dbContext;
+    private readonly ITransactionService _transactionService;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService, IAchievementService achievementService, BudgetBuddyContext dbContext)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService, ITransactionService transactionService)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
         _goalService = goalService;
-        _achievementService = achievementService;
-        _dbContext = dbContext;
+        _transactionService = transactionService;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
@@ -39,11 +35,15 @@ public class TransactionController : ControllerBase
     {
         try
         {
+            await _transactionService.HandleAccountBalance(transaction);
             var result = await _transactionRepository.AddTransaction(transaction);
             await _goalService.UpdateGoalProcess(result);
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Accounts.FirstOrDefault(a => a.Id == result.AccountId) != null);
-            await _achievementService.UpdateAchievements(user);
             return Ok(new { message = "Transaction added.", data = transaction });
+        }
+        catch (InvalidDataException e)
+        {
+            _logger.LogError(e, e.Message);
+            return BadRequest(new { message = e.Message });
         }
         catch (Exception e)
         {

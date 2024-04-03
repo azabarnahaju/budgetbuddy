@@ -1,23 +1,36 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../service/connectionService";
 import { SnackbarContext } from "../../../context/snackbarContext";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
-import "./Login.css";
+import "./Login.scss";
+import InputComponent from "../../FormElements/InputComponent";
+import Navbar from "../../Navbar/Navbar";
+import Footer from "../../Footer/Footer";
 
 const authParams = { email: "", password: "" };
 
 const Login = () => {
   const [userInfo, setUserInfo] = useState(authParams);
   const navigate = useNavigate();
-  const { setSnackbar } = useContext(SnackbarContext);
+  const { snackbar, setSnackbar } = useContext(SnackbarContext);
   const [loading, setLoading] = new useState(false);
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
     type: "",
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSnackbar({
+        open: false,
+        message: "",
+        type: "",
+      });
+    }, 6000);
+  }, [setSnackbar]);
 
   const handleLogin = async (e) => {
     setLoading(true);
@@ -53,7 +66,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setLocalSnackbar({
         open: true,
         message: "Server not responding.",
@@ -75,58 +88,54 @@ const Login = () => {
   }
 
   return (
-    <div className="vh-100">
+    <div className="vh-100 login-container">
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <div>
-        <div className="text-center">
-          <h4>Already a Member? Login Here:</h4>
-          <h1>Login</h1>
+      <SnackBar
+        {...snackbar}
+        setOpen={() => setSnackbar({ ...snackbar, open: false })}
+      />
+      <Navbar />
+      <div className="login-content">
+        <div className="container mt-5">
+          <div className="text-center">
+            <h4>Already a Member? Login Here:</h4>
+            <h1>Login</h1>
+          </div>
+          <form onSubmit={handleLogin}>
+            <div className="row d-flex justify-content-center">
+              <div className="mb-3 col-md-4 border rounded p-4 my-3">
+                <div className="mb-3">
+                  <InputComponent
+                    text="Email"
+                    name="email"
+                    type="email"
+                    value={userInfo.email}
+                    onChange={handleSetUserInfo}
+                  />
+                </div>
+                <div className="mb-3">
+                  <InputComponent
+                    text="Password"
+                    name="password"
+                    type="password"
+                    value={userInfo.password}
+                    onChange={handleSetUserInfo}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="container d-flex justify-content-center align-items-center">
+              <button type="submit" className="btn btn-lg btn-outline-light">
+                Login
+              </button>
+            </div>
+          </form>
         </div>
-        <form onSubmit={handleLogin} className="form-container">
-          <div className="form-group row">
-            <div className="mb-3">
-              <label className="form-label" htmlFor="loginEmail">
-                Email
-              </label>
-              <input
-                className="form-control"
-                value={userInfo.email}
-                id="loginEmail"
-                name="email"
-                type="email"
-                required
-                onChange={handleSetUserInfo}
-                placeholder="Enter your email"
-              />
-            </div>
-          </div>
-          <div className="form-group row">
-            <div className="mb-3">
-              <label className="form-label" htmlFor="loginPassword">
-                Password
-              </label>
-              <input
-                className="form-control"
-                value={userInfo.password}
-                id="loginPassword"
-                name="password"
-                type="password"
-                required
-                onChange={handleSetUserInfo}
-                placeholder="Enter your password"
-              />
-            </div>
-          </div>
-          <div className="container d-flex justify-content-center align-items-center">
-            <button type="submit" className="btn btn-lg btn-dark">
-              Login
-            </button>
-          </div>
-        </form>
       </div>
+      <Footer />
     </div>
   );
 };
