@@ -40,8 +40,8 @@ var userSecrets = new Dictionary<string, string>
 AddServices();
 ConfigureSwagger();
 AddDbContext();
-AddAuthentication();
 AddIdentity();
+AddAuthentication();
 
 var app = builder.Build();
 

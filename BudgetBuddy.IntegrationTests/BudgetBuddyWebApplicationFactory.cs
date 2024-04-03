@@ -86,7 +86,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.AddScoped<ITokenService>(provider =>
                 new TokenService(JwtTokenProvider.Issuer, JwtTokenProvider.Issuer, userSecretsTest["issuerSigningKey"]));
             
-            services.Configure<JwtBearerOptions>(
+            services.PostConfigure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
                 {
