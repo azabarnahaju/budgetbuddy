@@ -29,11 +29,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 var userSecrets = new Dictionary<string, string>
 {
-    { "validIssuer", builder.Configuration["JwtSettings:ValidIssuer"] },
-    { "validAudience", builder.Configuration["JwtSettings:ValidAudience"] },
-    { "issuerSigningKey", builder.Configuration["JwtSettings:IssuerSigningKey"] },
-    { "adminEmail", builder.Configuration["AdminInfo:AdminEmail"]},
-    { "adminPassword", builder.Configuration["AdminInfo:AdminPassword"]}
+    { "validIssuer", "JwtSettings:ValidIssuer" },
+    { "validAudience", "JwtSettings:ValidAudience" },
+    { "issuerSigningKey", "JwtSettings:IssuerSigningKeySuperSecretLong" },
+    { "adminEmail", "admin@admin.com" },
+    { "adminPassword", "admin123" }
 };
 
 
