@@ -198,6 +198,9 @@ void AddIdentity()
 
 void AddAuthentication()
 {
+    Console.WriteLine($"Valid Issuer: {userSecrets["validIssuer"]}");
+    Console.WriteLine($"Valid Audience: {userSecrets["validAudience"]}");
+    Console.WriteLine($"Issuer Signing Key: {userSecrets["issuerSigningKey"]}");
     builder.Services.AddAuthentication(options => { 
         options.DefaultScheme = "Cookies"; 
     }).AddCookie("Cookies", options => {
