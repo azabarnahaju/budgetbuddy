@@ -28,10 +28,12 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             var authenticationSeeder = services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationSeeder));
             var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
             var tokenService = services.SingleOrDefault(d => d.ServiceType == typeof(ITokenService));
+            var jwtOptions = services.SingleOrDefault(d => d.ServiceType == typeof(JwtBearerOptions));
             services.Remove(authenticationSeeder);
             services.Remove(dbConnectionDescriptor);
             services.Remove(dbContextDescriptor);
             services.Remove(tokenService);
+            services.Remove(jwtOptions);
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
