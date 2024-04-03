@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
@@ -28,8 +29,30 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
-            }, ServiceLifetime.Singleton);
+            });
             
+            var sp = services.BuildServiceProvider();
+
+            // using (var scope = sp.CreateScope())
+            // {
+            //     var scopedServices = scope.ServiceProvider;
+            //     var db = scopedServices.GetRequiredService<BudgetBuddyContext>();
+            //     var logger = scopedServices.GetRequiredService<ILogger<BudgetBuddyWebApplicationFactory<TProgram>>>();
+            //
+            //     db.Database.EnsureDeleted();
+            //     db.Database.EnsureCreated();
+            //
+            //     try
+            //     {
+            //         Console.WriteLine("Seeding...");
+            //         SeedData.Initialize(db);
+            //         Console.WriteLine($"Data seeded");
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         logger.LogError(ex, "An error occurred seeding the " + "database with test messages. Error: {Message}", ex.Message);
+            //     }
+            // }
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
@@ -47,6 +70,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             
             SeedTestData(services);
         });
+        builder.UseEnvironment("Development");
     }
     
     void SeedTestData(IServiceCollection services)
@@ -54,7 +78,10 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         using var scope = services.BuildServiceProvider().CreateScope();
         var serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
-        context.Users.Add(new ApplicationUser() { Id = "1", UserName = "User", Email = "test@email.com" });
+        
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+        
         context.Accounts.Add(new Account()
             { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
         context.Reports.Add(new Report
