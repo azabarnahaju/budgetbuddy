@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace BudgetBuddy.IntegrationTests;
 
@@ -21,11 +20,11 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
     {
         var fakeConfiguration = new List<KeyValuePair<string, string?>>
         {
-            new ("JwtSettings:ValidIssuer", "your_fake_valid_issuer"),
-            new ("JwtSettings:ValidAudience", "your_fake_valid_audience"),
-            new ("JwtSettings:IssuerSigningKey", "This_is_a_super_secure_key_and_you_know_it"),
-            new ("AdminInfo:AdminEmail", "test@admin.com"),
-            new ("AdminInfo:AdminPassword", "test123")
+            new ("ValidIssuer", "your_fake_valid_issuer"),
+            new ("ValidAudience", "your_fake_valid_audience"),
+            new ("IssuerSigningKey", "This_is_a_super_secure_key_and_you_know_it"),
+            new ("AdminEmail", "test@admin.com"),
+            new ("AdminPassword", "test123")
         };
         
         builder.ConfigureServices(services =>
