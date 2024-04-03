@@ -1,11 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
-using BudgetBuddy.Model;
-using BudgetBuddy.Model.Enums;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BudgetBuddy.IntegrationTests.IntegrationTests;
 

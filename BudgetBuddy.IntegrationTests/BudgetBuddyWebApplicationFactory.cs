@@ -81,7 +81,8 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
-        
+
+        context.Users.Add(new ApplicationUser { Id = "1", UserName = "User1", Email = "testuser1@email.com" });
         context.Accounts.Add(new Account()
             { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
         context.Reports.Add(new Report
