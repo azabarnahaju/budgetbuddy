@@ -6,7 +6,6 @@ namespace BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 
 public class JwtTokenProvider
 {
-    public static string Issuer { get; } = "Sample_Auth_Server";
     public static SecurityKey SecurityKey { get; } =
         new SymmetricSecurityKey(
             Encoding.ASCII.GetBytes("This_is_a_super_secure_key_and_you_know_it")
