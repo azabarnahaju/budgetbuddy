@@ -7,10 +7,12 @@ using BudgetBuddy.Model.Enums;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
@@ -35,17 +37,16 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.Remove(dbContextDescriptor);
             services.Remove(tokenService);
             services.Remove(jwtOptions);
+            services.RemoveAll<IAuthorizationPolicyProvider>();
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
-            
-            
+            services.AddSingleton<IAuthorizationPolicyProvider, FakeAuthorizationPolicy>();
             services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
-            // adding JWT authorization
+
             services.AddScoped<ITokenService>(provider =>
                 new TokenService("testIssuer", "testAudience", "This_is_a_super_secure_key_and_you_know_it"));
-
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
                 options =>
