@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
@@ -17,8 +18,25 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        var fakeConfiguration = new List<KeyValuePair<string, string?>>
+        {
+            new ("JwtSettings:ValidIssuer", "your_fake_valid_issuer"),
+            new ("JwtSettings:ValidAudience", "your_fake_valid_audience"),
+            new ("JwtSettings:IssuerSigningKey", "This_is_a_super_secure_key_and_you_know_it"),
+            new ("AdminInfo:AdminEmail", "test@admin.com"),
+            new ("AdminInfo:AdminPassword", "test123")
+        };
+        
         builder.ConfigureServices(services =>
         {
+            var configurationServiceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IConfiguration));
+            if (configurationServiceDescriptor != null)
+            {
+                services.Remove(configurationServiceDescriptor);
+            }
+            services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
+                .AddInMemoryCollection(fakeConfiguration)
+                .Build());
             // adding in-memory database
             var dbContextDescriptor =
                 services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<BudgetBuddyContext>));
@@ -54,23 +72,23 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         using var scope = services.BuildServiceProvider().CreateScope();
         var serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
-        context.Users.Add(new ApplicationUser() { Id = "1", UserName = "User", Email = "test@email.com" });
+        context.Users.Add(new ApplicationUser() { UserName = "User", Email = "test@email.com" });
         context.Accounts.Add(new Account()
-            { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
+            { UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
         context.Reports.Add(new Report
         {
-            Id = 1, AccountId = 1, Categories = new HashSet<TransactionCategoryTag>(),
+            AccountId = 1, Categories = new HashSet<TransactionCategoryTag>(),
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         });
         context.Transactions.Add(new Transaction()
         {
-            Id = 1, AccountId = 1, Amount = 1400, Date = DateTime.Now, Name = "Test",
+            AccountId = 1, Amount = 1400, Date = DateTime.Now, Name = "Test",
             Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
         });
-        context.Achievements.Add(new Achievement() { Id = 1, Description = "Test", Name = "Test" });
+        context.Achievements.Add(new Achievement() { Description = "Test", Name = "Test" });
         context.Goals.Add(new Goal()
         {
-            AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = DateTime.Now,
+            AccountId = 1, UserId = "1", Completed = false, CurrentProgress = 0, StartDate = DateTime.Now,
             Type = GoalType.Income, Target = 100
         });
         context.SaveChanges();
