@@ -39,6 +39,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             }
 
             services.Remove(services.SingleOrDefault(service => service.ServiceType == typeof(JwtBearerOptions)));
+            services.Remove(services.SingleOrDefault(service => service.ServiceType == typeof(IAuthenticationSeeder)));
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
                 .AddInMemoryCollection(fakeConfiguration)
                 .Build());
@@ -67,6 +68,8 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                     options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This_is_a_super_secure_key_and_you_know_it"));
                 }
             );
+            
+            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             
             SeedTestData(services);
         });
