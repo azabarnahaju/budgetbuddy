@@ -26,7 +26,7 @@ Env.TraversePath().Load("../.envs/server.env");
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 var builder = WebApplication.CreateBuilder(args);
-
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 var userSecrets = new Dictionary<string, string>
 {
     { "validIssuer", builder.Configuration["JwtSettings:ValidIssuer"] },
@@ -35,6 +35,15 @@ var userSecrets = new Dictionary<string, string>
     { "adminEmail", builder.Configuration["AdminInfo:AdminEmail"]},
     { "adminPassword", builder.Configuration["AdminInfo:AdminPassword"]}
 };
+
+if (environment != "Development")
+{
+    userSecrets["validIssuer"] = "testIssuer";
+    userSecrets["validAudience"] = "testAudience";
+    userSecrets["issuerSigningKey"] = "This_is_a_super_secure_key_and_you_know_it";
+    userSecrets["adminEmail"] = "test@admin.com";
+    userSecrets["adminPassword"] = "test123";
+}
 
 
 AddServices();
