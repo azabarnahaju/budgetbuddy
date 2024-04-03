@@ -3,6 +3,7 @@ using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -34,6 +35,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             {
                 services.Remove(configurationServiceDescriptor);
             }
+            services.Remove(services.SingleOrDefault(service => service.ServiceType == typeof(IAuthenticationSeeder)));
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
                 .AddInMemoryCollection(fakeConfiguration)
                 .Build());
@@ -62,6 +64,8 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
                     options.TokenValidationParameters.IssuerSigningKey = JwtTokenProvider.SecurityKey;
                 }
             );
+            
+            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             
             SeedTestData(services);
         });
