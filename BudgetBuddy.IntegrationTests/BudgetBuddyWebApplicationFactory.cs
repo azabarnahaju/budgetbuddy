@@ -38,11 +38,16 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.Remove(tokenService);
             services.Remove(jwtOptions);
             services.RemoveAll<IAuthorizationPolicyProvider>();
+            services.RemoveAll<IAuthorizationHandler>();
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
-            services.AddSingleton<IAuthorizationPolicyProvider, FakeAuthorizationPolicy>();
+            services.AddTransient<IAuthorizationPolicyProvider, FakeAuthorizationPolicy>();
+            services.AddTransient<IAuthorizationHandler, FakeAuthorizationHandler>();
+            
+            services.AddHttpContextAccessor();
+            
             services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
 
             services.AddScoped<ITokenService>(provider =>
