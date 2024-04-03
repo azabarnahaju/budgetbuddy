@@ -3,6 +3,7 @@ using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -25,11 +26,12 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
             services.Remove(dbConnectionDescriptor);
             services.Remove(dbContextDescriptor);
+            services.Remove(services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationSeeder)));
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
-            
+            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
@@ -54,7 +56,6 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         using var scope = services.BuildServiceProvider().CreateScope();
         var serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
-        context.Users.Add(new ApplicationUser() { Id = "1", UserName = "User", Email = "test@email.com" });
         context.Accounts.Add(new Account()
             { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
         context.Reports.Add(new Report
