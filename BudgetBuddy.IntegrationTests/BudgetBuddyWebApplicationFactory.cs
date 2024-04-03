@@ -39,17 +39,18 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
                 .AddInMemoryCollection(fakeConfiguration)
                 .Build());
-            
             // adding in-memory database
             var dbContextDescriptor =
                 services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<BudgetBuddyContext>));
             var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
             services.Remove(dbConnectionDescriptor);
             services.Remove(dbContextDescriptor);
+            services.Remove(services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationSeeder)));
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
+            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,
