@@ -14,235 +14,221 @@ public class AchievementService : IAchievementService
     {
         _context = context;
     }
+    public async Task UpdateAccountAchievements(ApplicationUser user)
+    {
+        await AccountAchievement(user);
+    }
+
+    public async Task UpdateTransactionAchievements(ApplicationUser user)
+    { 
+        await ExpenseTransactionTrackerAchievement(user);
+        await IncomeTransactionTrackerAchievement(user);
+        await SavingsAchievement(user);
+        await CategorizeAchievement(user);
+    }
     
-    public async Task UpdateAchievements(ApplicationUser user)
+    public async Task UpdateGoalAchievements(ApplicationUser user)
     {
-        await BudgetMasterAchievement(user, 1000);
-        // await TransactionTrackerAchievement(user);
-        // await AccountAchievement(user);
-        // await SavingsAchievement(user);
-        // //await FirstGoalAchievement(user);
-        // //await GoalVisionary(user);
-        // await CategorizeAchievement(user);
+        await GoalAchievement(user);
+        await CompletedGoalAchievement(user);
     }
 
-    public async Task BudgetMasterAchievement(ApplicationUser user, decimal budgetAmount)
+    // public async Task BudgetMasterAchievement(ApplicationUser user, decimal budgetAmount)
+    // {
+    //     var appUser = await _context.Users.Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(applicationUser => true);
+    //     var transactionSum = _context.Users.Where(u => u.Id == user.Id)
+    //         .SelectMany(account => account.Accounts)
+    //         .SelectMany(account => account.Transactions)
+    //         .Where(t => t.Type == TransactionType.Expense)
+    //         .Where(t => t.Date >= DateTime.Now.AddDays(-30))
+    //         .Sum(t => t.Amount);
+    //     
+    //     Console.WriteLine(user.Accounts.SelectMany(account => account.Transactions));
+    //         var transactions = user.Accounts.SelectMany(account => account.Transactions)
+    //             .Where(transaction => transaction.Date >= DateTime.Now.AddDays(-30)).ToList()
+    //             .Sum(transaction => transaction.Amount);
+    //
+    //         if (transactionSum < budgetAmount)
+    //         {
+    //             var budgetMaster = new Achievement
+    //             {
+    //                 Name = "Budget Master",
+    //                 Description = "You've spent less than your budget in the past 30 days!"
+    //             };
+    //             if (appUser.Achievements.Any(a => a.Name != budgetMaster.Name)) appUser.Achievements.Add(budgetMaster);
+    //             if (_context.Achievements.Any(a => a.Id != budgetMaster.Id)) _context.Achievements.Add(budgetMaster);
+    //             
+    //             await _context.SaveChangesAsync();
+    //         }
+    // }
+
+
+    private async Task ExpenseTransactionTrackerAchievement(ApplicationUser applicationUser)
     {
-        var appUser = await _context.Users.Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(applicationUser => true);
-        var transactionSum = _context.Users.Where(u => u.Id == user.Id)
-            .SelectMany(account => account.Accounts)
-            .SelectMany(account => account.Transactions)
-            .Where(t => t.Type == TransactionType.Expense)
-            .Where(t => t.Date >= DateTime.Now.AddDays(-30))
-            .Sum(t => t.Amount);
-        
-        // Console.WriteLine(user.Accounts.SelectMany(account => account.Transactions));
-        //     var transactions = user.Accounts.SelectMany(account => account.Transactions)
-        //         .Where(transaction => transaction.Date >= DateTime.Now.AddDays(-30)).ToList()
-        //         .Sum(transaction => transaction.Amount);
-
-            if (transactionSum < budgetAmount)
-            {
-                var budgetMaster = new Achievement
-                {
-                    Name = "Budget Master",
-                    Description = "You've spent less than your budget in the past 30 days!"
-                };
-                if (appUser.Achievements.Any(a => a.Name != budgetMaster.Name)) appUser.Achievements.Add(budgetMaster);
-                if (_context.Achievements.Any(a => a.Id != budgetMaster.Id)) _context.Achievements.Add(budgetMaster);
-                
-                await _context.SaveChangesAsync();
-            }
-    }
-
-
-    public async Task TransactionTrackerAchievement(ApplicationUser user)
-    {
-        var appUser = await _context.Users.Include(applicationUser => applicationUser.Achievements)
-            .Include(applicationUser => applicationUser.Accounts).ThenInclude(account => account.Transactions).FirstOrDefaultAsync(applicationUser => true);
-        var totalTransactions = appUser.Accounts.Sum(account => account.Transactions.Where(transaction =>  transaction.Type == TransactionType.Expense).ToList().Count);
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+        var totalTransactions = user.Accounts.Sum(account => account.Transactions.Where(transaction =>  transaction.Type == TransactionType.Expense).ToList().Count);
 
         switch (totalTransactions)
         {
             case 1:
-                var pioneer = new Achievement
-                {
-                    Name = "Pioneer",
-                    Description = "You've recorded your first transaction!"
-                };
-                if (appUser.Achievements.Any(a => a.Name != pioneer.Name)) appUser.Achievements.Add(pioneer);
-                if (_context.Achievements.Any(a => a.Id != pioneer.Id)) _context.Achievements.Add(pioneer);
+                var pioneer = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Pioneer");
+                user.Achievements.Add(pioneer);
                 await _context.SaveChangesAsync();
                 break;
             case 5:
-                var bigSpender = new Achievement
-                {
-                    Name = "Big Spender",
-                    Description = "You've recorded 5 transactions!"
-                };
-                if (appUser.Achievements.Any(a => a.Name != bigSpender.Name)) appUser.Achievements.Add(bigSpender);
-                if (_context.Achievements.Any(a => a.Id != bigSpender.Id)) _context.Achievements.Add(bigSpender);
+                var bigSpender = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Big Spender");
+                if (user.Achievements.Any(a => a.Id != bigSpender.Id)) user.Achievements.Add(bigSpender);
                 await _context.SaveChangesAsync();
                 break;
             case 10:
-                var moneyBags = new Achievement
-                {
-                    Name = "Money Bags",
-                    Description = "You've recorded 10 transactions!"
-                };
-                if (user.Achievements.Any(a => a.Name != moneyBags.Name)) user.Achievements.Add(moneyBags);
-                if (_context.Achievements.Any(a => a.Id != moneyBags.Id)) _context.Achievements.Add(moneyBags);
+                var moneyBags = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Money Bags");
+                if (user.Achievements.Any(a => a.Id != moneyBags.Id)) user.Achievements.Add(moneyBags);
+                await _context.SaveChangesAsync();
+                break;
+        }
+    }
+    
+    private async Task IncomeTransactionTrackerAchievement(ApplicationUser applicationUser)
+    {
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+        var totalTransactions = user.Accounts.Sum(account => account.Transactions.Where(transaction =>  transaction.Type == TransactionType.Income).ToList().Count);
+
+        switch (totalTransactions)
+        {
+            case 1:
+                var moneyMaker = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Money Maker");
+                if (user.Achievements.Any(a => a.Id != moneyMaker.Id)) user.Achievements.Add(moneyMaker);
+                await _context.SaveChangesAsync();
+                break;
+            case 5:
+                var wealthBuilder = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Wealth Builder");
+                if (user.Achievements.Any(a => a.Id != wealthBuilder.Id)) user.Achievements.Add(wealthBuilder);
+                await _context.SaveChangesAsync();
+                break;
+            case 10:
+                var moneyBags = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Financial Wizard");
+                if (user.Achievements.Any(a => a.Id != moneyBags.Id)) user.Achievements.Add(moneyBags);
                 await _context.SaveChangesAsync();
                 break;
         }
     }
 
-    public async Task AccountAchievement(ApplicationUser user)
+    private async Task AccountAchievement(ApplicationUser applicationUser)
     {
-        if (user.Accounts.Count > 0)
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+        
+        if (user.Accounts.Count == 1)
         {
-            var accountHolder = new Achievement
-            {
-                Name = "Account Holder",
-                Description = "You've created your first account!"
-            };
-            if (user.Achievements.Any(a => a.Name != accountHolder.Name)) user.Achievements.Add(accountHolder);
-            if (_context.Achievements.Any(a => a.Id != accountHolder.Id)) _context.Achievements.Add(accountHolder);
+            var accountHolder = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Account Holder");
+            user.Achievements.Add(accountHolder);
             await _context.SaveChangesAsync();
-            
         }
     }
-
-    public async Task SavingsAchievement(ApplicationUser user)
+    
+    private async Task SavingsAchievement(ApplicationUser applicationUser)
     {
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
         var totalSavings = user.Accounts.Sum(account => account.Transactions.Where(transaction => transaction.Type == TransactionType.Income).Sum(transaction => transaction.Amount));
 
-        switch (totalSavings)
+        if (totalSavings >= 1500 && user.Achievements.All(a => a.Name != "Thrifty"))
         {
-            case 500:
-                var pennyPincher = new Achievement
-                {
-                    Name = "Penny Pincher",
-                    Description = "You've saved $500!"
-                };
-                if (user.Achievements.Any(a => a.Name != pennyPincher.Name)) user.Achievements.Add(pennyPincher);
-                if (_context.Achievements.Any(a => a.Id != pennyPincher.Id)) _context.Achievements.Add(pennyPincher);
+            var thrifty = _context.Achievements.FirstOrDefault(a => a.Name == "Thrifty");
+            user.Achievements.Add(thrifty);
+            await _context.SaveChangesAsync();
+        }
+        else if (totalSavings >= 1000 && user.Achievements.All(a => a.Name != "Frugal"))
+        {
+            var frugal = _context.Achievements.FirstOrDefault(a => a.Name == "Frugal");
+            user.Achievements.Add(frugal);
+            await _context.SaveChangesAsync();
+        }
+        else if (totalSavings >= 500 && user.Achievements.All(a => a.Name != "Penny Pincher"))
+        {
+            var pennyPincher = _context.Achievements.FirstOrDefault(a => a.Name == "Penny Pincher");
+            user.Achievements.Add(pennyPincher);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    private async Task GoalAchievement(ApplicationUser applicationUser)
+    {
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+        var goals = _context.Goals.Count(goal => goal.UserId == user.Id);
+
+        switch (goals)
+        {
+            case 1:
+                var goalSetter = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Setter");
+                user.Achievements.Add(goalSetter);
                 await _context.SaveChangesAsync();
                 break;
-            case 1000:
-                var frugal = new Achievement
-                {
-                    Name = "Frugal",
-                    Description = "You've saved $1000!"
-                };
-                if (user.Achievements.Any(a => a.Name != frugal.Name)) user.Achievements.Add(frugal);
-                if (_context.Achievements.Any(a => a.Id != frugal.Id)) _context.Achievements.Add(frugal);
+            case 3:
+                var goalAchiever = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Achiever");
+                user.Achievements.Add(goalAchiever);
                 await _context.SaveChangesAsync();
                 break;
-            case 1500:
-                var thrifty = new Achievement
-                {
-                    Name = "Thrifty",
-                    Description = "You've saved $1500!"
-                };
-                if (user.Achievements.Any(a => a.Name != thrifty.Name)) user.Achievements.Add(thrifty);
-                if (_context.Achievements.Any(a => a.Id != thrifty.Id)) _context.Achievements.Add(thrifty);
+            case 5:
+                var masterOfGoals = _context.Achievements.FirstOrDefault(a => a.Name == "Master of Goals");
+                user.Achievements.Add(masterOfGoals);
+                await _context.SaveChangesAsync();
+                break;
+        }
+    }
+    
+    private async Task CompletedGoalAchievement(ApplicationUser applicationUser)
+    {
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+        
+        var completedGoals = _context.Goals.Where(goal => goal.UserId == user.Id).Count(goal => goal.Completed);
+    
+        switch (completedGoals)
+        {
+            case 1:
+                var goalGetter = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Getter");
+                user.Achievements.Add(goalGetter);
+                await _context.SaveChangesAsync();
+                break;
+            case 3:
+                var goalDigger = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Digger");
+                user.Achievements.Add(goalDigger);
+                await _context.SaveChangesAsync();
+                break;
+            case 5:
+                var goalCrusher = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Crusher");
+                user.Achievements.Add(goalCrusher);
                 await _context.SaveChangesAsync();
                 break;
         }
     }
 
-    // public async Task FirstGoalAchievement(ApplicationUser user)
-    // {
-    //     var firstGoal = user.Goals.FirstOrDefault();
-    //     
-    //     if (firstGoal != null)
-    //     {
-    //         var goalSetter = new Achievement
-    //         {
-    //             Name = "Goal Setter",
-    //             Description = "You've created your first goal!"
-    //         };
-    //         if (user.Achievements.Any(a => a.Name != firstGoal.Name)) user.Achievements.Add(goalSetter);
-    //         if (_context.Achievements.Any(a => a.Id != goalSetter.Id)) _context.Achievements.Add(goalSetter);
-    //         await _context.SaveChangesAsync();
-    //     }
-    // }
-    //
-    // public async Task GoalVisionary(ApplicationUser user)
-    // {
-    //     var completedGoals = user.Goals.Where(goal => goal.Completed).ToList().Count;
-    //
-    //     switch (completedGoals)
-    //     {
-    //         case 1:
-    //             var goalGetter = new Achievement
-    //             {
-    //                 Name = "Goal Getter",
-    //                 Description = "You've completed your first goal!"
-    //             };
-    //             if (user.Achievements.Any(a => a.Name != goalGetter.Name)) user.Achievements.Add(goalGetter);
-    //             if (_context.Achievements.Any(a => a.Id != goalGetter.Id)) _context.Achievements.Add(goalGetter);
-    //             await _context.SaveChangesAsync();
-    //             break;
-    //         case 3:
-    //             var goalDigger = new Achievement
-    //             {
-    //                 Name = "Goal Digger",
-    //                 Description = "You've completed 3 goals!"
-    //             };
-    //             if (user.Achievements.Any(a => a.Name != goalDigger.Name)) user.Achievements.Add(goalDigger);
-    //             if (_context.Achievements.Any(a => a.Id != goalDigger.Id)) _context.Achievements.Add(goalDigger);
-    //             await _context.SaveChangesAsync();
-    //             break;
-    //         case 5:
-    //             var goalCrusher = new Achievement
-    //             {
-    //                 Name = "Goal Crusher",
-    //                 Description = "You've completed 5 goals!"
-    //             };
-    //             if (user.Achievements.Any(a => a.Name != goalCrusher.Name)) user.Achievements.Add(goalCrusher);
-    //             if (_context.Achievements.Any(a => a.Id != goalCrusher.Id)) _context.Achievements.Add(goalCrusher);
-    //             await _context.SaveChangesAsync();
-    //             break;
-    //     }
-    // }
-
-    public async Task CategorizeAchievement(ApplicationUser user)
+    private async Task CategorizeAchievement(ApplicationUser applicationUser)
     {
+        var user = await _context.Users.Include(u => u.Accounts).ThenInclude(a => a.Transactions)
+            .Include(applicationUser => applicationUser.Achievements).FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
         var numberOfCategories = user.Accounts.SelectMany(account => account.Transactions).Select(transaction => transaction.Tag).Distinct().ToList().Count;
         var allCategories = Enum.GetValues(typeof(TransactionCategoryTag)).Length;
         
         switch (numberOfCategories)
         {
-            case 1:
-                var oneTrickPony = new Achievement
-                {
-                    Name = "One Trick Pony",
-                    Description = "You've only used one category!"
-                };
-                if (user.Achievements.Any(a => a.Name != oneTrickPony.Name)) user.Achievements.Add(oneTrickPony);
-                if (_context.Achievements.Any(a => a.Id != oneTrickPony.Id)) _context.Achievements.Add(oneTrickPony);
+            case 5:
+                var fiveStarDabbler = _context.Achievements.FirstOrDefault(a => a.Name == "Five-Star Dabbler");
+                user.Achievements.Add(fiveStarDabbler);
                 await _context.SaveChangesAsync();
                 break;
             case 10:
-                var jackOfAllTrades = new Achievement
-                {
-                    Name = "Jack of All Trades",
-                    Description = "You've used 10 categories!"
-                };
-                if (user.Achievements.Any(a => a.Name != jackOfAllTrades.Name)) user.Achievements.Add(jackOfAllTrades);
-                if (_context.Achievements.Any(a => a.Name != jackOfAllTrades.Name)) _context.Achievements.Add(jackOfAllTrades);
+                var jackOfAllTrades = _context.Achievements.FirstOrDefault(a => a.Name == "Jack of All Trades");
+                user.Achievements.Add(jackOfAllTrades);
                 await _context.SaveChangesAsync();
                 break;
             case var _ when numberOfCategories == allCategories:
-                var masterOfAll = new Achievement
-                {
-                    Name = "Master of All",
-                    Description = "You've used ALL categories!"
-                };
-                if (user.Achievements.Any(a => a.Name != masterOfAll.Name));
-                if (_context.Achievements.Any(a => a.Name != masterOfAll.Name));
+                var masterOfAll = _context.Achievements.FirstOrDefault(a => a.Name == "Master of All");
+                user.Achievements.Add(masterOfAll);
                 await _context.SaveChangesAsync();
                 break;
         }
