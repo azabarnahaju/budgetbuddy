@@ -56,7 +56,7 @@ var app = builder.Build();
 
 
 using var scope = app.Services.CreateScope();
-var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+var authenticationSeeder = scope.ServiceProvider.GetRequiredService<IAuthenticationSeeder>();
 authenticationSeeder.AddRoles();
 authenticationSeeder.AddAdmin();
 
@@ -110,7 +110,7 @@ void AddServices(){
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
     builder.Services.AddTransient<IGoalService, GoalService>();
     builder.Services.AddTransient<ITransactionService, TransactionService>();
-    builder.Services.AddScoped<AuthenticationSeeder>(provider =>
+    builder.Services.AddScoped<IAuthenticationSeeder, AuthenticationSeeder>(provider =>
     {
         var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
