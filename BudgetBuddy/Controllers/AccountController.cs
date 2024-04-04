@@ -1,5 +1,3 @@
-using BudgetBuddy.Contracts.ResponseModels;
-
 namespace BudgetBuddy.Controllers;
 
 using Model;
@@ -23,12 +21,12 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("{userId}"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<AccountResponse>> Get(string userId)
+    public async Task<ActionResult<List<Account>>> Get(string userId)
     {
         try
         {
             var result = await _accountRepository.GetByUserId(userId);
-            return Ok(new AccountResponse("Account retrieved successfully", result));
+            return Ok(new { message = "Account retrieved successfully", data = result });
         }
         catch (Exception e)
         {
