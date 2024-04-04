@@ -2,7 +2,9 @@ using System.Globalization;
 using BudgetBuddy.Contracts.ModelRequest;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
+using BudgetBuddy.Data;
 using BudgetBuddy.Model;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Repositories.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,8 @@ public class AccountControllerTest
 {
     private Mock<ILogger<AccountController>> _loggerMock;
     private Mock<IAccountRepository> _accountRepositoryMock;
+    private Mock<IAchievementService> _achievementServiceMock;
+    private Mock<BudgetBuddyContext> _dbContextMock;
     private AccountController _controller;
 
     [SetUp]
@@ -21,7 +25,7 @@ public class AccountControllerTest
     {
         _loggerMock = new Mock<ILogger<AccountController>>();
         _accountRepositoryMock = new Mock<IAccountRepository>();
-        _controller = new AccountController(_loggerMock.Object, _accountRepositoryMock.Object);
+        _controller = new AccountController(_loggerMock.Object, _accountRepositoryMock.Object, _achievementServiceMock.Object, _dbContextMock.Object);
     }
 
     [Test]
