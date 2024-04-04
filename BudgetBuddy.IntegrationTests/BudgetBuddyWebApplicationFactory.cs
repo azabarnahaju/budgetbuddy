@@ -3,6 +3,7 @@ using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,13 +25,15 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             var dbContextDescriptor =
                 services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<BudgetBuddyContext>));
             var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
+            var authSeeder = services.SingleOrDefault(d => d.ServiceType == typeof(IAuthenticationSeeder));
             services.Remove(dbConnectionDescriptor);
             services.Remove(dbContextDescriptor);
+            services.Remove(authSeeder);
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
                 options.UseInMemoryDatabase("BudgetBuddy_Test");
             }, ServiceLifetime.Singleton);
-            
+            services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization
             services.Configure<JwtBearerOptions>(
                 JwtBearerDefaults.AuthenticationScheme,

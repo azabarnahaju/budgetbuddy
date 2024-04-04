@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BudgetBuddy.Services.Authentication;
 
-public class AuthenticationSeeder
+public class AuthenticationSeeder : IAuthenticationSeeder
 {
     private RoleManager<IdentityRole> roleManager;
     private UserManager<ApplicationUser> userManager;
