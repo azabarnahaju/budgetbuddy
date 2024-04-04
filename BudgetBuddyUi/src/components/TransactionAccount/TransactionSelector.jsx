@@ -1,7 +1,14 @@
 import TransactionCreator from "../Create/TransactionCreator/TransactionCreator";
 
 /* eslint-disable react/prop-types */
-const TransactionSelector = ({ account, setAccount, accounts, handleSetAccount }) => {
+const TransactionSelector = ({ selectedAccountIndex, setSelectedAccountIndex, accounts, setAccounts }) => {
+
+  const handleSetAccount = (e) => {
+    const id = e.target.value;
+    console.log(id);
+    setSelectedAccountIndex(id);
+  }
+
   return (
     <div className="container mt-5">
       <div className="container mt-5">
@@ -11,13 +18,13 @@ const TransactionSelector = ({ account, setAccount, accounts, handleSetAccount }
             <select
               onChange={handleSetAccount}
               className="form-control mb-3"
-              value={account ? account.id : ""}
+              value={selectedAccountIndex}
               required
               id="account"
               name="account"
             >
-              {accounts.map((acc) => (
-                <option key={acc.id} value={acc.id}>
+              {accounts.map((acc, index) => (
+                <option key={acc.id} value={index}>
                   {acc.name}
                 </option>
               ))}
@@ -26,16 +33,16 @@ const TransactionSelector = ({ account, setAccount, accounts, handleSetAccount }
           <div>
             <h4 className="my-4">Details:</h4>
             <h3>
-              {account.name} - <span className="lead fs-4">{account.type}</span>
+              {accounts[selectedAccountIndex].name} - <span className="lead fs-4">{accounts[selectedAccountIndex].type}</span>
             </h3>
-            <h5>Balance: {account.balance}$</h5>
+            <h5>Balance: {accounts[selectedAccountIndex].balance}$</h5>
           </div>
           
         </div>
       </div>
       <div className="row my-5">
             <div className="col-md-6">
-              <TransactionCreator account={account} setAccount={setAccount} />
+              <TransactionCreator selectedAccountIndex={selectedAccountIndex} accounts={accounts} setAccounts={setAccounts} />
             </div>
           </div>
     </div>
