@@ -238,3 +238,6 @@ void AddAuthentication()
             };
         });
 }
+
+public partial class Program 
+{}

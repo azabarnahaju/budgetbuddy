@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchData } from "../../service/connectionService";
@@ -6,7 +7,6 @@ import { stringToDate } from "../../utils/helperFunctions";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import "./ReportDetails.scss";
-import SnackBar from "../Snackbar/Snackbar";
 
 const ReportDetails = () => {
   const { reportId } = useParams();
@@ -61,8 +61,8 @@ const ReportDetails = () => {
                   <tr>
                     <td>Categories</td>
                     <td>
-                      {report.categories.$values.map((c) => (
-                        <span>{c} </span>
+                      {report.categories.$values.map((c, i) => (
+                        <span key={`${i}category`}>{c} </span>
                       ))}
                     </td>
                   </tr>
@@ -89,20 +89,20 @@ const ReportDetails = () => {
                 <table className="text-center table table-info table-xsm w-50">
                   <thead>
                     <tr>
-                      <th>Tag</th>
-                      <th>Amount</th>
+                      <th scope="col">Tag</th>
+                      <th scope="col">Amount</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(report.spendingByTags).map((key, i) =>
-                      i > 0 && key[0] !== "Income" ? (
-                        <tr>
-                          <td>{key[0]}</td>
-                          <td>{key[1]}</td>
-                        </tr>
-                      ) : (
-                        <></>
-                      )
+                    {Object.entries(report.spendingByTags).map(
+                      (item, i) =>
+                        i > 0 &&
+                        item[0] !== "Income" && (
+                          <tr key={`tableinfo${i}`}>
+                            <td>{item[0]}</td>
+                            <td>{item[1]}</td>
+                          </tr>
+                        )
                     )}
                   </tbody>
                 </table>

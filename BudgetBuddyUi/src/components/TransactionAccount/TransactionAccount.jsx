@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 
 const TransactionAccount = () => {
   const [accounts, setAccounts] = useState([]);
-  const [account, setAccount] = useState("");
+  const [selectedAccountIndex, setSelectedAccountIndex] = useState(0);
   const [pageLoading, setPageLoading] = useState(false);
   const { currentUser, loading } = useContext(UserContext);
   const navigate = useNavigate();
@@ -27,9 +27,6 @@ const TransactionAccount = () => {
     if (response.ok) {
       const accountList = response.data.data["$values"];
       setAccounts(accountList);
-      if (!account) {
-        setAccount(accountList[0]);
-      }
     }
     setPageLoading(false);
   };
@@ -39,12 +36,6 @@ const TransactionAccount = () => {
       fetchAccounts();
     }
   }, [currentUser]);
-
-  const handleSetAccount = (e) => {
-    const id = e.target.value;
-    const acc = accounts.find((acc) => acc.id == id);
-    setAccount(acc);
-  };
 
   if (loading || pageLoading) {
     return <Loading />;
@@ -59,10 +50,10 @@ const TransactionAccount = () => {
       <div className="transaction-content">
         {accounts.length ? (
           <TransactionSelector
-            account={account}
-            setAccount={setAccount}
+            selectedAccountIndex={selectedAccountIndex}
+            setSelectedAccountIndex={setSelectedAccountIndex}
             accounts={accounts}
-            handleSetAccount={handleSetAccount}
+            setAccounts={setAccounts}
           />
         ) : (
           <></>

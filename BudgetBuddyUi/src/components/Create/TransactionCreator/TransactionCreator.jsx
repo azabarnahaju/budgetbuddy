@@ -17,7 +17,7 @@ const sampleTransaction = {
   accountId: "",
 };
 
-const TransactionCreator = ({ account, setAccount }) => {
+const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => {
   const [transaction, setTransaction] = useState(sampleTransaction);
   const [loading, setLoading] = useState(false);
   const [localSnackbar, setLocalSnackbar] = useState({
@@ -36,7 +36,7 @@ const TransactionCreator = ({ account, setAccount }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      transaction.accountId = account.id;
+      transaction.accountId = accounts[selectedAccountIndex].id;
       const response = await fetchData(transaction, "/Transaction/add", "POST");
       if (response.ok) {
         setLocalSnackbar({
@@ -44,21 +44,24 @@ const TransactionCreator = ({ account, setAccount }) => {
           message: response.message,
           type: "success",
         });
+        let newAmount;
         if (transaction.type == "Expense") {
-          const newAmount =
-            Number(account.balance) - Number(transaction.amount);
-          setAccount({
-            ...account,
-            balance: `${newAmount}`,
-          });
+          newAmount =
+            Number(accounts[selectedAccountIndex].balance) -
+            Number(transaction.amount);
         } else {
-          const newAmount =
-            Number(account.balance) + Number(transaction.amount);
-          setAccount({
-            ...account,
-            balance: `${newAmount}`,
-          });
+          newAmount =
+            Number(accounts[selectedAccountIndex].balance) +
+            Number(transaction.amount);
         }
+        setAccounts((prevAccounts) => {
+          return prevAccounts.map((account) => {
+            if (account.id === accounts[selectedAccountIndex].id) {
+              return { ...account, balance: newAmount };
+            }
+            return account;
+          });
+        });
       } else {
         setLocalSnackbar({
           open: true,
@@ -88,7 +91,7 @@ const TransactionCreator = ({ account, setAccount }) => {
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
       <form onSubmit={handleCreateTransaction} className="rounded border p-4">
-        <h3 className="my-2">New transaction on {account.name}</h3>
+        <h3 className="my-2">New transaction on {accounts[selectedAccountIndex].name}</h3>
         <div className="mb-3">
           <InputComponent
             text="Name"
