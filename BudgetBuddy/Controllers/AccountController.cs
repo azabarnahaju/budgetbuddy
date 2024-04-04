@@ -49,7 +49,7 @@ public class AccountController : ControllerBase
         {
             var result = await _accountRepository.CreateAccount(account);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == result.UserId);
-            if (user != null) await _achievementService.UpdateAchievements(user);
+            await _achievementService.UpdateAccountAchievements(user);
             return Ok(new { message = "Account created successfully", data = result });
         }
         catch (Exception e)
