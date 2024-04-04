@@ -57,22 +57,26 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
         context.Users.Add(new ApplicationUser() { Id = "1", UserName = "User", Email = "test@email.com" });
         context.Accounts.Add(new Account()
-            { Id = 1, UserId = "1", Date = DateTime.Now, Balance = 1500, Name = "Test", Type = "Test" });
-        context.Reports.Add(new Report
-        {
-            Id = 1, AccountId = 1, Categories = new HashSet<TransactionCategoryTag>(),
-            SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
-        });
+            { Id = 1, UserId = "1", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test" });
         context.Transactions.Add(new Transaction()
         {
-            Id = 1, AccountId = 1, Amount = 1400, Date = DateTime.Now, Name = "Test",
+            Id = 1, AccountId = 1, Amount = 1400, Date = new DateTime(2022, 02, 02), Name = "Test",
             Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
         });
         context.Achievements.Add(new Achievement() { Id = 1, Description = "Test", Name = "Test" });
         context.Goals.Add(new Goal()
         {
-            AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = DateTime.Now,
+            AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = new DateTime(2022, 02, 02),
             Type = GoalType.Income, Target = 100
+        });
+        context.Reports.Add(new Report()
+        {
+            Id = 1, AccountId = 1, ReportType = ReportType.Monthly, StartDate = new DateTime(2022, 02, 02),
+            EndDate = new DateTime(2022, 02, 02), SumExpense = 100, AverageSpendingDaily = 100,
+            AverageSpendingTransaction = 100, MostSpendingTag = TransactionCategoryTag.Education,
+            MostSpendingDay = new DateTime(2022, 02, 02), BiggestExpense = 100, CreatedAt = new DateTime(2022, 02, 02),
+            SumIncome = 100, Categories = new HashSet<TransactionCategoryTag>(),
+            SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         });
         context.SaveChanges();
     }
