@@ -53,12 +53,11 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         });
     }
     
-    void SeedTestData(IServiceCollection services)
+    async Task SeedTestData(IServiceCollection services)
     {
         using var scope = services.BuildServiceProvider().CreateScope();
         var serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
-        context.Users.Add(new ApplicationUser() { Id = "385", UserName = "TestUser", Email = "test@email.com" });
         context.Accounts.Add(new Account()
             { Id = 1, UserId = "385", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test" });
         context.Transactions.Add(new Transaction()
@@ -81,6 +80,6 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             SumIncome = 100, Categories = new HashSet<TransactionCategoryTag>(),
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         });
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }
