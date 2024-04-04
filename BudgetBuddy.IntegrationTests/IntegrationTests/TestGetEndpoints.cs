@@ -23,7 +23,7 @@ public class TestGetEndpoints : IClassFixture<BudgetBuddyWebApplicationFactory<P
     }
     
     [Theory]
-    [InlineData("/account/1")]
+    [InlineData("/account/2")]
     public async Task Get_Accounts_By_UserId_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
@@ -31,7 +31,7 @@ public class TestGetEndpoints : IClassFixture<BudgetBuddyWebApplicationFactory<P
         {
             new ()
             {
-                Id = 1, UserId = "1", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test"
+                Id = 1, UserId = "2", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test"
             }
         };
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -102,7 +102,7 @@ public class TestGetEndpoints : IClassFixture<BudgetBuddyWebApplicationFactory<P
         {
             new ()
             {
-                AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0,
+                AccountId = 1, UserId = "2", Id = 1, Completed = false, CurrentProgress = 0,
                 StartDate = new DateTime(2022, 02, 02),
                 Type = GoalType.Income, Target = 100
             }
@@ -184,7 +184,7 @@ public class TestGetEndpoints : IClassFixture<BudgetBuddyWebApplicationFactory<P
     }
     
     [Theory]
-    [InlineData("/report/report/user/1")]
+    [InlineData("/report/report/user/2")]
     public async Task Get_ReportsByUserId_Returns_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
