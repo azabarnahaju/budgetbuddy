@@ -31,7 +31,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.Remove(authSeeder);
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
-                options.UseInMemoryDatabase("BudgetBuddy_Test");
+                options.UseInMemoryDatabase(Guid.NewGuid().ToString());
             }, ServiceLifetime.Singleton);
             services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization
