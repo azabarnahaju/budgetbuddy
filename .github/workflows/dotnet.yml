@@ -26,4 +26,11 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
+      env:
+        VALID_ISSUER: ${{ secrets.JWTSETTINGS_VALIDISSUER }}
+        VALID_AUDIENCE: ${{ secrets.JWTSETTINGS_VALIDAUDIENCE }}
+        ISSUER_SIGNING_KEY: ${{ secrets.JWTSETTINGS_ISSUERSIGNINGKEY }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        ADMIN_PASSWORD: ${{ secrets.ADMININFO_ADMINEMAIL }}
       run: dotnet test --no-build --verbosity normal
+    
