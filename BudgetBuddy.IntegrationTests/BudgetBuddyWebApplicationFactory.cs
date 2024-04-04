@@ -58,6 +58,9 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         using var scope = services.BuildServiceProvider().CreateScope();
         var serviceProvider = scope.ServiceProvider;
         var context = serviceProvider.GetRequiredService<BudgetBuddyContext>();
+        
+        await ClearDatabase(context);
+        
         context.Accounts.Add(new Account()
             { Id = 1, UserId = "385", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test" });
         context.Transactions.Add(new Transaction()
@@ -80,6 +83,18 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             SumIncome = 100, Categories = new HashSet<TransactionCategoryTag>(),
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         });
+        await context.SaveChangesAsync();
+    }
+    
+    async Task ClearDatabase(BudgetBuddyContext context)
+    {
+        // Clear existing data
+        context.Accounts.RemoveRange(context.Accounts);
+        context.Transactions.RemoveRange(context.Transactions);
+        context.Achievements.RemoveRange(context.Achievements);
+        context.Goals.RemoveRange(context.Goals);
+        context.Reports.RemoveRange(context.Reports);
+
         await context.SaveChangesAsync();
     }
 }
