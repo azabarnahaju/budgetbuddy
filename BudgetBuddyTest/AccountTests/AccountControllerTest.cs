@@ -7,6 +7,8 @@ using BudgetBuddy.Model;
 using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Repositories.Account;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -17,15 +19,30 @@ public class AccountControllerTest
     private Mock<ILogger<AccountController>> _loggerMock;
     private Mock<IAccountRepository> _accountRepositoryMock;
     private Mock<IAchievementService> _achievementServiceMock;
-    private Mock<BudgetBuddyContext> _dbContextMock;
+    private BudgetBuddyContext _dbContext;
+    private DbContextOptions<BudgetBuddyContext> _contextOptions;
     private AccountController _controller;
 
     [SetUp]
     public void SetUp()
     {
+        _contextOptions = new DbContextOptionsBuilder<BudgetBuddyContext>()
+            .UseInMemoryDatabase("BloggingControllerTest")
+            .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            .Options;
+
+        _dbContext = new BudgetBuddyContext(_contextOptions);
+
+        _dbContext.Database.EnsureDeleted();
+        _dbContext.Database.EnsureCreated();
+        
+
+        _dbContext.SaveChanges();
+        
         _loggerMock = new Mock<ILogger<AccountController>>();
         _accountRepositoryMock = new Mock<IAccountRepository>();
-        _controller = new AccountController(_loggerMock.Object, _accountRepositoryMock.Object, _achievementServiceMock.Object, _dbContextMock.Object);
+        _achievementServiceMock = new Mock<IAchievementService>();
+        _controller = new AccountController(_loggerMock.Object, _accountRepositoryMock.Object, _achievementServiceMock.Object, _dbContext);
     }
 
     [Test]
