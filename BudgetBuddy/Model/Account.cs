@@ -26,8 +26,7 @@ public class Account
         Account other = (Account)obj;
 
         return Id == other.Id &&
-               Date == other.Date &&
-               Balance == other.Balance &&
+               Balance - other.Balance < 1 &&
                Name == other.Name &&
                Type == other.Type &&
                UserId == other.UserId;

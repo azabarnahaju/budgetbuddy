@@ -63,7 +63,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         await context.Database.EnsureCreatedAsync();
         
         context.Accounts.Add(new Account()
-            { Id = 1, UserId = "385", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test" });
+            { Id = 1, UserId = "1", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test" });
         context.Transactions.Add(new Transaction()
         {
             Id = 1, AccountId = 1, Amount = 1400, Date = new DateTime(2022, 02, 02), Name = "Test",
@@ -72,7 +72,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         context.Achievements.Add(new Achievement() { Id = 1, Description = "Test", Name = "Test" });
         context.Goals.Add(new Goal()
         {
-            AccountId = 1, UserId = "385", Id = 1, Completed = false, CurrentProgress = 0, StartDate = new DateTime(2022, 02, 02),
+            AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = new DateTime(2022, 02, 02),
             Type = GoalType.Income, Target = 100
         });
         context.Reports.Add(new Report()

@@ -33,24 +33,21 @@ public class AchievementRepository : IAchievementRepository
 
     public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements)
     {
-        var achievementsToAdd = new List<Achievement>();
+        var createdAchievements = new List<Achievement>();
         foreach (var achievement in achievements)
         {
-            achievementsToAdd.Add(
-                new Achievement
-                {
-                    Description = achievement.Description,
-                    Name = achievement.Name
-                });
+            var achievementToCreate = new Achievement
+            {
+                Description = achievement.Description,
+                Name = achievement.Name
+            };
+            var result = await _database.Achievements.AddAsync(achievementToCreate);
+            createdAchievements.Add(result.Entity);
         }
         
-        if (achievementsToAdd.Select(achievement => achievement.Name).Distinct().Count() != achievementsToAdd.Count())
-            throw new Exception("You're trying to add duplicate achievements.");
-        
-        _database.Achievements.AddRange(achievementsToAdd);
         await _database.SaveChangesAsync();
         
-        return achievementsToAdd;
+        return createdAchievements;
     }
 
     public async Task DeleteAchievement(int id)

@@ -20,13 +20,13 @@ public class BasicTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program
     }
 
     [Theory]
-    [InlineData("/account/385")]
+    [InlineData("/account/1")]
     [InlineData("/achievement")]
     [InlineData("/achievement/1")]
     [InlineData("/goal/1")]
     [InlineData("/report")]
     [InlineData("/report/1")]
-    [InlineData("/report/report/user/385")]
+    [InlineData("/report/report/user/1")]
     [InlineData("/report/report/account/1")]
     [InlineData("/transaction/transactions")]
     [InlineData("/transaction/transactions/1")]
@@ -39,12 +39,12 @@ public class BasicTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program
     }
     
     [Theory]
-    [InlineData("/account/385")]
+    [InlineData("/account/1")]
     [InlineData("/achievement")]
     [InlineData("/achievement/1")]
     [InlineData("/goal/1")]
     [InlineData("/report/1")]
-    [InlineData("/report/report/user/385")]
+    [InlineData("/report/report/user/1")]
     [InlineData("/report/report/account/1")]
     [InlineData("/transaction/transactions")]
     [InlineData("/transaction/transactions/1")]
@@ -60,13 +60,13 @@ public class BasicTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program
     }
     
     [Theory]
-    [InlineData("/account/385")]
+    [InlineData("/account/1")]
     [InlineData("/achievement")]
     [InlineData("/achievement/1")]
     [InlineData("/goal/1")]
     [InlineData("/report/1")]
     [InlineData("/report")]
-    [InlineData("/report/report/user/385")]
+    [InlineData("/report/report/user/1")]
     [InlineData("/report/report/account/1")]
     [InlineData("/transaction/transactions")]
     [InlineData("/transaction/transactions/1")]
