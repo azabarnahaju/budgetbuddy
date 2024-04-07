@@ -10,29 +10,22 @@ namespace BudgetBuddy.IntegrationTests.IntegrationTests;
 
 public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program>>
 {
-    private readonly BudgetBuddyWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-
-    public GetEndpointTests(BudgetBuddyWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-        _client = _factory.CreateClient();
-    }
-    
     [Theory]
-    [InlineData("/account/385")]
+    [InlineData("/account/1")]
     public async Task Get_Accounts_By_UserId_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
         var expectedResult = new List<Account>()
         {
-            new ()
+            new()
             {
-                Id = 1, UserId = "385", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test"
-            }
+                Id = 1, UserId = "1", Date = new DateTime(2022, 02, 02), Balance = 1500, Name = "Test", Type = "Test"
+            },
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Account> actualResult = await ConvertResponseData<List<Account>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -44,8 +37,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
         var expectedResult = new List<Account>();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Account> actualResult = await ConvertResponseData<List<Account>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -60,8 +55,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
         {
             new () { Id = 1, Description = "Test", Name = "Test" }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Achievement> actualResult = await ConvertResponseData<List<Achievement>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -73,8 +70,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
         var expectedResult = new Achievement() { Id = 1, Description = "Test", Name = "Test" };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         Achievement actualResult = await ConvertResponseData<Achievement>(response);
         Assert.Equal(expectedResult, actualResult);
@@ -85,8 +84,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_AchievementById_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -99,13 +100,15 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
         {
             new ()
             {
-                AccountId = 1, UserId = "385", Id = 1, Completed = false, CurrentProgress = 0,
+                AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0,
                 StartDate = new DateTime(2022, 02, 02),
                 Type = GoalType.Income, Target = 100
             }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Goal> actualResult = await ConvertResponseData<List<Goal>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -116,9 +119,11 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_GoalByAccountId_Returns_Empty_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var expected = new List<Goal>();
-        var response = await _client.GetAsync(url);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Goal> actualResult = await ConvertResponseData<List<Goal>>(response);
         Assert.Equivalent(expected, actualResult);
@@ -138,8 +143,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
             SumIncome = 100, Categories = new HashSet<TransactionCategoryTag>(),
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         Report actualResult = await ConvertResponseData<Report>(response);
         Assert.Equal(expectedResult, actualResult);
@@ -150,8 +157,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_ReportById_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -173,15 +182,17 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
                 SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
             }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Report> actualResult = await ConvertResponseData<List<Report>>(response);
         Assert.Equivalent(expectedResult, actualResult);
     }
     
     [Theory]
-    [InlineData("/report/report/user/385")]
+    [InlineData("/report/report/user/1")]
     public async Task Get_ReportsByUserId_Returns_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
@@ -196,8 +207,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
 
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Report> actualResult = await ConvertResponseData<List<Report>>(response);
         Assert.Equal(expectedResult, actualResult[0]);
@@ -208,8 +221,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_ReportsByUserId_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -229,8 +244,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
 
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Report> actualResult = await ConvertResponseData<List<Report>>(response);
         Assert.Equal(expectedResult, actualResult[0]);
@@ -241,8 +258,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_ReportsByAccountId_Returns_NotFound(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -259,8 +278,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
                 Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
             }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Transaction> actualResult = await ConvertResponseData<List<Transaction>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -276,8 +297,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
             Id = 1, AccountId = 1, Amount = 1400, Date = new DateTime(2022, 02, 02), Name = "Test",
             Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         Transaction actualResult = await ConvertResponseData<Transaction>(response);
         Assert.Equal(expectedResult, actualResult);
@@ -288,8 +311,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_Transaction_By_Id_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -306,8 +331,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
                 Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
             }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Transaction> actualResult = await ConvertResponseData<List<Transaction>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -318,8 +345,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_Transaction_By_Type_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
@@ -336,8 +365,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
                 Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
             }
         };
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         List<Transaction> actualResult = await ConvertResponseData<List<Transaction>>(response);
         Assert.Equivalent(expectedResult, actualResult);
@@ -348,8 +379,10 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_Transaction_By_Tag_Returns_NotFound(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(url);
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     

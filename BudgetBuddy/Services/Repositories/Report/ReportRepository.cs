@@ -47,10 +47,10 @@ public class ReportRepository : IReportRepository
         if (await _database.Reports.AnyAsync(a => a.Id == report.Id)) 
             throw new Exception($"Report with ID {report.Id} already exists.");
         
-        _database.Reports.Add(report);
+        var result = await _database.Reports.AddAsync(report);
         await _database.SaveChangesAsync();
 
-        return report;
+        return result.Entity;
     }
 
     public async Task DeleteReport(int id)

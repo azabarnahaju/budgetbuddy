@@ -104,14 +104,18 @@ public class AchievementRepositoryTest
     }
     
     [Test]
-    public void AddAchievement_ThrowExceptionWhenAddingDuplicateAchievements()
+    public async Task AddAchievement_ThrowExceptionWhenAddingDuplicateAchievements()
     {
         var achievementsToAdd = new List<AchievementCreateRequest>
         {
             new ("a", "abc"),
             new ("a", "abc")
         };
-        
+        var result = await _repository.AddAchievement(achievementsToAdd);
+        foreach (var VARIABLE in result)
+        {
+            Console.WriteLine(VARIABLE);
+        }
         var ex = Assert.ThrowsAsync<Exception>(() => _repository.AddAchievement(achievementsToAdd));
         Assert.That(ex, Is.InstanceOf<Exception>());
         Assert.That(ex.Message, Is.EqualTo($"You're trying to add duplicate achievements."));

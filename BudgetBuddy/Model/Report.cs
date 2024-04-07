@@ -28,7 +28,13 @@ public class Report
     public decimal SumIncome { get; set; }
     [Precision(14, 2)]
     public decimal BiggestExpense { get; set; }
-   
+
+    public override string ToString()
+    {
+        return
+            $"Id: {Id}, AccountId: {AccountId}, CreatedAt: {CreatedAt}, ReportType: {ReportType}, StartDate: {StartDate}, EndDate: {EndDate}, Transactions: {Transactions}, Categories: {Categories}, SpendingByTags: {SpendingByTags}, AverageSpendingDaily: {AverageSpendingDaily}, AverageSpendingTransaction: {AverageSpendingTransaction}, MostSpendingTag: {MostSpendingTag}, MostSpendingDay: {MostSpendingDay}, SumExpense: {SumExpense}, SumIncome: {SumIncome}, BiggestExpense: {BiggestExpense}";
+    }
+
     public override bool Equals(object obj)
     {
         if (obj == null || GetType() != obj.GetType())
@@ -40,7 +46,6 @@ public class Report
 
         return Id == other.Id &&
                AccountId == other.AccountId &&
-               CreatedAt == other.CreatedAt &&
                ReportType == other.ReportType &&
                StartDate == other.StartDate &&
                EndDate == other.EndDate &&

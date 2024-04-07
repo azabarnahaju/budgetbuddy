@@ -15,4 +15,22 @@ public class Goal
     public decimal CurrentProgress { get; set; }
     public bool Completed { get; set; }
     public DateTime StartDate { get; set; }
+    
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        
+        Goal other = (Goal)obj;
+
+        return Id == other.Id &&
+               UserId == other.UserId &&
+               AccountId == other.AccountId &&
+               Type == other.Type &&
+               Target == other.Target &&
+               CurrentProgress == other.CurrentProgress &&
+               Completed == other.Completed;
+    }
 }
