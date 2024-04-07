@@ -36,6 +36,11 @@ public class AchievementRepository : IAchievementRepository
         var createdAchievements = new List<Achievement>();
         foreach (var achievement in achievements)
         {
+            var isExists = await _database.Achievements.FirstOrDefaultAsync(a => a.Name == achievement.Name);
+            if (isExists != null)
+            {
+                throw new Exception("You're trying to add duplicate achievements.");
+            }
             var achievementToCreate = new Achievement
             {
                 Description = achievement.Description,

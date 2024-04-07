@@ -11,27 +11,20 @@ namespace BudgetBuddy.IntegrationTests.IntegrationTests;
 
 public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program>>
 {
-    private readonly BudgetBuddyWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-    
-    public PostEndpointTests(BudgetBuddyWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-        _client = _factory.CreateClient();
-    }
-    
     [Theory]
     [InlineData("/account")]
     public async Task Post_Account_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         
         var expectedResult = new Account(){Id = 2, Type = "Card", Balance = 1500, Name = "Revolut", UserId = "1"};
         var accountToCreate = new AccountCreateRequest(1500, "Revolut", "Card", "1");
         
         var content = new StringContent(JsonConvert.SerializeObject(accountToCreate), Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync(url, content);
+        var response = await client.PostAsync(url, content);
         
         response.EnsureSuccessStatusCode();
         Account actualResult = await ConvertResponseData<Account>(response);
@@ -44,14 +37,16 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
     public async Task Post_Achievement_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var expectedResult = new List<Achievement>()
-            { new () { Id = 2, Name = "Test", Description = "Test" } };
-        var achievementToCreate = new List<AchievementCreateRequest> {new ("Test", "Test")};
+            { new () { Id = 2, Name = "Test2", Description = "Test" } };
+        var achievementToCreate = new List<AchievementCreateRequest> {new ("Test2", "Test")};
         
         var content = new StringContent(JsonConvert.SerializeObject(achievementToCreate), Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync(url, content);
+        var response = await client.PostAsync(url, content);
         
         response.EnsureSuccessStatusCode();
         List<Achievement> actualResult = await ConvertResponseData<List<Achievement>>(response);
@@ -64,7 +59,9 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
     public async Task Post_Goal_Returns_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var expectedResult = new Goal()
         {
@@ -74,7 +71,7 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
         var goalToCreate = new GoalCreateRequest("1", 1, GoalType.Income, 150, 10, false);
         
         var content = new StringContent(JsonConvert.SerializeObject(goalToCreate), Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync(url, content);
+        var response = await client.PostAsync(url, content);
         
         response.EnsureSuccessStatusCode();
         Goal actualResult = await ConvertResponseData<Goal>(response);
@@ -87,17 +84,19 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
     public async Task Post_Transaction_Returns_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     
         var expectedResult = new Transaction()
         {
             Id = 0, Type = TransactionType.Expense, Name = "Test", AccountId = 1, Date = new DateTime(2022, 02, 02),
-            Amount = 0, Tag = TransactionCategoryTag.Clothing
+            Amount = 150, Tag = TransactionCategoryTag.Clothing
         };
-        var transactionToCreate = new TransactionCreateRequest(new DateTime(2022, 02, 02), "Test", 0, TransactionCategoryTag.Clothing, TransactionType.Expense, 1);
+        var transactionToCreate = new TransactionCreateRequest(new DateTime(2022, 02, 02), "Test", 150, TransactionCategoryTag.Clothing, TransactionType.Expense, 1);
         
         var content = new StringContent(JsonConvert.SerializeObject(transactionToCreate), Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync(url, content);
+        var response = await client.PostAsync(url, content);
         
         response.EnsureSuccessStatusCode();
         Transaction actualResult = await ConvertResponseData<Transaction>(response);

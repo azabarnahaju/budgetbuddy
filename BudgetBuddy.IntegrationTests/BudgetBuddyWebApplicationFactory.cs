@@ -15,6 +15,7 @@ namespace BudgetBuddy.IntegrationTests;
 
 public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
+    private readonly string _dbName = Guid.NewGuid().ToString();
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "test");
@@ -30,7 +31,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             services.Remove(authSeeder);
             services.AddDbContext<BudgetBuddyContext>(options =>
             {
-                options.UseInMemoryDatabase("BudgetBuddy_Test");
+                options.UseInMemoryDatabase(_dbName);
             }, ServiceLifetime.Singleton);
             services.AddScoped<IAuthenticationSeeder, FakeAuthenticationSeeder>();
             // adding JWT authorization

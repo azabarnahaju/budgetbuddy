@@ -6,23 +6,15 @@ namespace BudgetBuddy.IntegrationTests.IntegrationTests;
 
 public class DeleteEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<Program>>
 {
-    private readonly BudgetBuddyWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-    
-    public DeleteEndpointTests(BudgetBuddyWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-        _client = _factory.CreateClient();
-    }
-    
     [Theory]
     [InlineData("/account/1")]
     public async Task Delete_Account_Return_Success(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        
-        var response = await _client.DeleteAsync(url);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.DeleteAsync(url);
         
         response.EnsureSuccessStatusCode();
     }
@@ -33,9 +25,11 @@ public class DeleteEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
     public async Task Delete_Achievement_Return_Success(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _client.DeleteAsync(url);
+        var response = await client.DeleteAsync(url);
         response.EnsureSuccessStatusCode();
     }
     
@@ -45,9 +39,11 @@ public class DeleteEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
     public async Task Delete_Goal_Returns_Success(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _client.DeleteAsync(url);
+        var response = await client.DeleteAsync(url);
         
         response.EnsureSuccessStatusCode();
     }
@@ -57,9 +53,11 @@ public class DeleteEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
     public async Task Delete_Report_Returns_Success(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _client.DeleteAsync(url);
+        var response = await client.DeleteAsync(url);
         
         response.EnsureSuccessStatusCode();
     }
@@ -70,9 +68,11 @@ public class DeleteEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
     public async Task Delete_Transaction_Returns_Success(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var factory = new BudgetBuddyWebApplicationFactory<Program>();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     
-        var response = await _client.DeleteAsync(url);
+        var response = await client.DeleteAsync(url);
         
         response.EnsureSuccessStatusCode();
     }
