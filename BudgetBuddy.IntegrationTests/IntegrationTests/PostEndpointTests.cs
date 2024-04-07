@@ -92,7 +92,7 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
         var expectedResult = new Transaction()
         {
             Id = 0, Type = TransactionType.Expense, Name = "Test", AccountId = 1, Date = new DateTime(2022, 02, 02),
-            Amount = 150, Tag = TransactionCategoryTag.Clothing
+            Amount = 0, Tag = TransactionCategoryTag.Clothing
         };
         var transactionToCreate = new TransactionCreateRequest(new DateTime(2022, 02, 02), "Test", 0, TransactionCategoryTag.Clothing, TransactionType.Expense, 1);
         
