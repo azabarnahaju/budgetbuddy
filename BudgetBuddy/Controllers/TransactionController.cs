@@ -47,6 +47,7 @@ public class TransactionController : ControllerBase
             var result = await _transactionRepository.AddTransaction(transaction);
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Accounts.Any(a => a.Id == result.AccountId));
             await _achievementService.UpdateTransactionAchievements(user);
+            await _achievementService.UpdateGoalAchievements(user);
             await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
