@@ -13,6 +13,7 @@ import ReportDetails from "./components/Report/ReportDetails";
 import ReportCreator from "./components/Create/ReportCreator/ReportCreator";
 import Goal from "./components/Goals/Goal";
 import TransactionAccount from "./components/TransactionAccount/TransactionAccount";
+import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="account/update/:id" element={<AccountCreator />} />
         <Route path="transaction/update/:id" element={<TransactionCreator />} />
         <Route path="achievement/update/:id" element={<AchievementCreator />} />
+        <Route path="achievements" element={<AchievementDashBoard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile/:id" element={<UserProfile />} />
