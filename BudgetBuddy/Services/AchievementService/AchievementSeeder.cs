@@ -3,7 +3,7 @@ using BudgetBuddy.Model;
 
 namespace BudgetBuddy.Services.AchievementService;
 
-public class AchievementSeeder
+public class AchievementSeeder : IAchievementSeeder
 {
     private readonly BudgetBuddyContext _dbContext;
     
