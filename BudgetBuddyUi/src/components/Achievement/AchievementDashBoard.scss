@@ -1,0 +1,40 @@
+@import "../../Style/variables";
+
+.achievement-container {
+    display: flex;
+    flex-direction: column;
+}
+ .achievement-content {
+    position: relative;
+     background-color: $background-color;
+     color: $text-color;
+ }
+
+ .achievement-content .border {
+    border: 1px solid $secondary-color;
+    border-radius: 5px;
+    margin: 10px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $primary-color;
+    font-family: $regular-font-1;
+    font-size: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+.achievement-content .border:hover {
+    background-color: $secondary-color;
+}
+
+.achievement-content .progress {
+    margin-bottom: 10px;
+}
+
+.achievement-content .progress .progress-bar {
+    background-color: $secondary-color;
+}

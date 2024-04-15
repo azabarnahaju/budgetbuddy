@@ -33,6 +33,24 @@ public class AchievementController : ControllerBase
             return NotFound(new { message = "Can't find achievements." });
         }
     }
+    
+    [HttpGet("/Achievement/user/{userId}"), Authorize(Roles = "Admin, User")]
+    public async Task<ActionResult<IEnumerable<Achievement>>> GetAllByUserId(string userId)
+    {
+        try
+        {
+            return Ok(new
+            {
+                message = "Achievements found successfully.",
+                data = await _achievementRepository.GetAllAchievementsByUserId(userId)
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Can't find achievements.");
+            return NotFound(new { message = "Can't find achievements." });
+        }
+    }
 
     [HttpGet("/Achievement/{achievementId}"), Authorize(Roles = "Admin, User")]
     public async Task<ActionResult<Achievement>> Get(int achievementId)

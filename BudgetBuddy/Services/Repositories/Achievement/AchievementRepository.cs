@@ -30,6 +30,12 @@ public class AchievementRepository : IAchievementRepository
             : await _database.Achievements.FirstAsync(a => a.Id == id);
     }
 
+    public async Task<IEnumerable<Achievement>> GetAllAchievementsByUserId(string userId)
+    {
+        return await _database.Users.Where(a => a.Id == userId)
+            .SelectMany(a => a.Achievements)
+            .ToListAsync();
+    }
 
     public async Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements)
     {

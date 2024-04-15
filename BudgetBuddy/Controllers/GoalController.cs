@@ -1,4 +1,6 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
 
 namespace BudgetBuddy.Controllers;
 
@@ -12,11 +14,15 @@ public class GoalController : ControllerBase
 {
     private readonly IGoalRepository _goalRepository;
     private readonly ILogger<AccountController> _logger;
+    private readonly IAchievementService _achievementService;
+    private readonly BudgetBuddyContext _dbContext;
     
-    public GoalController(ILogger<AccountController> logger, IGoalRepository goalRepository)
+    public GoalController(ILogger<AccountController> logger, IGoalRepository goalRepository, IAchievementService achievementService, BudgetBuddyContext dbContext)
     {
         _goalRepository = goalRepository;
         _logger = logger;
+        _achievementService = achievementService;
+        _dbContext = dbContext;
     }
 
     [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
@@ -25,6 +31,8 @@ public class GoalController : ControllerBase
         try
         {
             var result = await _goalRepository.GetAllGoalsByAccountId(accountId);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == result[0].UserId);
+            await _achievementService.UpdateGoalAchievements(user);
             return Ok(new { message = "Goals retrieved successfully", data = result });
         }
         catch (Exception e)
@@ -40,6 +48,8 @@ public class GoalController : ControllerBase
         try
         {
             var result = await _goalRepository.CreateGoal(goal);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == result.UserId);
+            await _achievementService.UpdateGoalAchievements(user);
             return Ok(new { message = "Goal created successfully", data = result });
         }
         catch (Exception e)

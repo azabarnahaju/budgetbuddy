@@ -2,6 +2,7 @@ using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.ReportServices;
@@ -60,6 +61,9 @@ var authenticationSeeder = scope.ServiceProvider.GetRequiredService<IAuthenticat
 authenticationSeeder.AddRoles();
 authenticationSeeder.AddAdmin();
 
+var achievementSeeder = scope.ServiceProvider.GetRequiredService<AchievementSeeder>();
+await achievementSeeder.SeedAchievementsAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -104,6 +108,8 @@ void AddServices(){
     builder.Services.AddTransient<IReportService, ReportService>();
     builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
     builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
+    builder.Services.AddScoped<IAchievementService, AchievementService>();
+    builder.Services.AddScoped<AchievementSeeder>();
     builder.Services.AddTransient<IReportRepository, ReportRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
