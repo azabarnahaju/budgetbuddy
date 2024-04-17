@@ -9,7 +9,7 @@ using Model;
 
 public interface ITransactionRepository
 {
-    Task<IEnumerable<Transaction>> GetAllTransactions();
+    Task<IEnumerable<Transaction>> GetAllTransactions(DateTime? startDate = null, DateTime? endDate = null);
     Task<Transaction> GetTransaction(int id);
     Task<Transaction> AddTransaction(TransactionCreateRequest transaction);
     Task<Transaction> UpdateTransaction(TransactionUpdateRequest transaction);

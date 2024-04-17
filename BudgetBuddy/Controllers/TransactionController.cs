@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using BudgetBuddy.Data;
 using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
@@ -64,11 +65,11 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("transactions"), Authorize(Roles = "Admin, User")]
-    public async Task<ActionResult<Transaction>> GetAll()
+    public async Task<ActionResult<Transaction>> GetAll([Optional] DateTime startDate, [Optional] DateTime endDate)
     {
         try
         {
-            var transactions = await _transactionRepository.GetAllTransactions();
+            var transactions = await _transactionRepository.GetAllTransactions(startDate.Date, endDate.Date);
             return Ok(new { message = "Transactions retrieved.", data = transactions });
         }
         catch (Exception e)
