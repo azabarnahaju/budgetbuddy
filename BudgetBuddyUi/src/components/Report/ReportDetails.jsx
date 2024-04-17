@@ -7,22 +7,104 @@ import { stringToDate } from "../../utils/helperFunctions";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import "./ReportDetails.scss";
+import ChartComponent from "./ChartComponent";
 
 const ReportDetails = () => {
   const { reportId } = useParams();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [chartData, setChartData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
     const fetchReport = async () => {
       const report = await fetchData(null, `/report/${reportId}`, "GET");
+      const startDate = report.data.data.startDate.split("T")[0];
+      const endDateString = report.data.data.endDate.split("T")[0];
+      let endDate = new Date(endDateString);
+      endDate.setDate(endDate.getDate() + 1);
+      endDate = endDate.toISOString().split("T")[0];
+      const fetchedTransactions = await fetchData(
+        null,
+        `/transaction/transactions?startDate=${startDate}&endDate=${endDate}`,
+        "GET"
+      );
+      const transactionData = fetchedTransactions.data.data["$values"];
+      const extractedData = extractTransactionData(transactionData);
+      setChartData(prepareChartData(extractedData, startDate, endDate));
       setReport(report.data.data);
     };
     fetchReport();
     setLoading(false);
   }, []);
+
+  const extractTransactionData = (data) => {
+    const extractedData = [];
+    data.forEach((element) => {
+      extractedData.push({
+        amount: element.amount,
+        type: element.type,
+        date: element.date.split("T")[0],
+      });
+    });
+
+    return extractedData;
+  };
+
+  const prepareChartData = (data, startDate, endDate) => {
+    const chartData = {
+      labels: [],
+      datasets: [
+        {
+          label: "Income",
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(75, 192, 192, 0.8)",
+          hoverBorderColor: "rgba(75, 192, 192, 1)",
+          data: [],
+        },
+        {
+          label: "Expense",
+          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(255, 99, 132, 0.8)",
+          hoverBorderColor: "rgba(255, 99, 132, 1)",
+          data: [],
+        },
+      ],
+    };
+
+    for (
+      let date = new Date(startDate);
+      date <= new Date(endDate);
+      date.setDate(date.getDate() + 1)
+    ) {
+      const dateString = date.toISOString().split("T")[0];
+      chartData.labels.push(dateString);
+
+      let totalIncome = 0;
+      let totalExpense = 0;
+
+      data.forEach((entry) => {
+        if (entry.date === dateString) {
+          if (entry.type === "Income") {
+            totalIncome += entry.amount;
+          } else {
+            totalExpense += entry.amount;
+          }
+        }
+      });
+
+      // Add data to datasets
+      chartData.datasets[0].data.push(totalIncome);
+      chartData.datasets[1].data.push(totalExpense);
+    }
+
+    return chartData;
+  };
 
   if (loading) {
     return <>LOADING</>;
@@ -108,6 +190,9 @@ const ReportDetails = () => {
                 </table>
               </div>
               <div>Report created at {stringToDate(report.createdAt)}</div>
+              <div className="mt-5">
+              <ChartComponent data={chartData} />
+              </div>
               <button
                 className="btn btn-outline-light m-5"
                 onClick={() => navigate("/reports")}

@@ -11,7 +11,6 @@ import {
 
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.scss";
-import { TbPigMoney } from "react-icons/tb";
 
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -39,7 +38,6 @@ const Navbar = () => {
       return;
     }
   };
-  console.log(currentUser);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-container">
