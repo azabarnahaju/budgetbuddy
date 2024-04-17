@@ -20,14 +20,15 @@ const ReportDetails = () => {
     setLoading(true);
     const fetchReport = async () => {
       const report = await fetchData(null, `/report/${reportId}`, "GET");
-      const startDate = report.data.data.startDate.split("T")[0];
-      const endDateString = report.data.data.endDate.split("T")[0];
+      const reportData = report.data.data;
+      const startDate = reportData.startDate.split("T")[0];
+      const endDateString = reportData.endDate.split("T")[0];
       let endDate = new Date(endDateString);
       endDate.setDate(endDate.getDate() + 1);
       endDate = endDate.toISOString().split("T")[0];
       const fetchedTransactions = await fetchData(
         null,
-        `/transaction/transactions?startDate=${startDate}&endDate=${endDate}`,
+        `/transaction/transactions/account/${reportData.accountId}?startDate=${startDate}&endDate=${endDate}`,
         "GET"
       );
       const transactionData = fetchedTransactions.data.data["$values"];
@@ -57,21 +58,21 @@ const ReportDetails = () => {
       labels: [],
       datasets: [
         {
-          label: "Income",
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-          hoverBackgroundColor: "rgba(75, 192, 192, 0.8)",
-          hoverBorderColor: "rgba(75, 192, 192, 1)",
-          data: [],
-        },
-        {
           label: "Expense",
           backgroundColor: "rgba(255, 99, 132, 0.6)",
           borderColor: "rgba(255, 99, 132, 1)",
           borderWidth: 1,
           hoverBackgroundColor: "rgba(255, 99, 132, 0.8)",
           hoverBorderColor: "rgba(255, 99, 132, 1)",
+          data: [],
+        },
+        {
+          label: "Income",
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+          hoverBackgroundColor: "rgba(75, 192, 192, 0.8)",
+          hoverBorderColor: "rgba(75, 192, 192, 1)",
           data: [],
         },
       ],
@@ -99,8 +100,8 @@ const ReportDetails = () => {
       });
 
       // Add data to datasets
-      chartData.datasets[0].data.push(totalIncome);
-      chartData.datasets[1].data.push(totalExpense);
+      chartData.datasets[0].data.push(-totalExpense);
+      chartData.datasets[1].data.push(totalIncome);
     }
 
     return chartData;
