@@ -26,7 +26,56 @@ ChartJS.register(
 );
 
 const ChartComponent = ({ data }) => {
-  return <Bar data={data} />;
+  const config = {
+    type: "bar",
+    data: data,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Chart.js Bar Chart - Stacked",
+          font: {
+            size: 18,
+          },
+        },
+      },
+      responsive: true,
+      scales: {
+        x: {
+          stacked: true,
+          grid: {
+            color: "rgba(95, 95, 205, 0.3)",
+            borderColor: "rgba(95, 95, 205, 0.6)",
+            borderWidth: 1,
+          },
+          ticks: {
+            font: {
+              size: 14,
+              weight: "bold",
+            },
+            color: "rgba(255, 255, 255, 0.8)",
+          },
+        },
+        y: {
+          stacked: true,
+          grid: {
+            color: "rgba(95, 95, 205, 0.3)",
+            borderColor: "rgba(95, 95, 205, 0.6)",
+            borderWidth: 1,
+          },
+          ticks: {
+            font: {
+              size: 14,
+              weight: "bold",
+            },
+            color: "rgba(255, 255, 255, 0.8)",
+          },
+        },
+      },
+    },
+  };
+
+  return <Bar {...config} />;
 };
 
 export default ChartComponent;
