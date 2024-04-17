@@ -5,7 +5,7 @@ const Loading = ({ message = "Loading..." }) => {
     <>
       <div className="container text-center py-5">
         <div>{message}</div>
-        <img className="w-25" src="assets/loading.gif" alt="Loading" />
+        <img className="w-25" src="/assets/loading.gif" alt="Loading" />
       </div>
     </>
   );

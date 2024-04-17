@@ -14,7 +14,7 @@ import ReportCreator from "./components/Create/ReportCreator/ReportCreator";
 import Goal from "./components/Goals/Goal";
 import TransactionAccount from "./components/TransactionAccount/TransactionAccount";
 import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
-
+import Transactions from "./components/TransactionAccount/Transactions";
 
 const App = () => {
   return (
@@ -25,6 +25,7 @@ const App = () => {
         <Route path="/transaction/:id" element={<Transaction />} />
         <Route path="/achievement/:id" element={<Achievement />} />
         <Route path="/account" element={<TransactionAccount />} />
+        <Route path="/account/transactions/:id" element={<Transactions />} />
         <Route path="/achievement/create" element={<AchievementCreator />} />
         <Route path="account/update/:id" element={<AccountCreator />} />
         <Route path="transaction/update/:id" element={<TransactionCreator />} />
