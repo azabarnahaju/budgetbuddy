@@ -1,13 +1,25 @@
 import TransactionCreator from "../Create/TransactionCreator/TransactionCreator";
 
 /* eslint-disable react/prop-types */
-const TransactionSelector = ({ selectedAccountIndex, setSelectedAccountIndex, accounts, setAccounts }) => {
-
+const TransactionSelector = ({
+  selectedAccountIndex,
+  setSelectedAccountIndex,
+  accounts,
+  setAccounts,
+  navigate,
+}) => {
   const handleSetAccount = (e) => {
     const id = e.target.value;
     console.log(id);
     setSelectedAccountIndex(id);
-  }
+  };
+
+  const handleShowTransactions = () => {
+    const account = accounts[selectedAccountIndex];
+    const accountId = account.id;
+    const name = account.name;
+    navigate(`/account/transactions/${accountId}?name=${name}`);
+  };
 
   return (
     <div className="container mt-5">
@@ -33,18 +45,30 @@ const TransactionSelector = ({ selectedAccountIndex, setSelectedAccountIndex, ac
           <div>
             <h4 className="my-4">Details:</h4>
             <h3>
-              {accounts[selectedAccountIndex].name} - <span className="lead fs-4">{accounts[selectedAccountIndex].type}</span>
+              {accounts[selectedAccountIndex].name} -{" "}
+              <span className="lead fs-4">
+                {accounts[selectedAccountIndex].type}
+              </span>
             </h3>
             <h5>Balance: {accounts[selectedAccountIndex].balance}$</h5>
+            <button
+              onClick={handleShowTransactions}
+              className="btn btn-outline-light"
+            >
+              Show transactions
+            </button>
           </div>
-          
         </div>
       </div>
       <div className="row my-5">
-            <div className="col-md-6">
-              <TransactionCreator selectedAccountIndex={selectedAccountIndex} accounts={accounts} setAccounts={setAccounts} />
-            </div>
-          </div>
+        <div className="col-md-6">
+          <TransactionCreator
+            selectedAccountIndex={selectedAccountIndex}
+            accounts={accounts}
+            setAccounts={setAccounts}
+          />
+        </div>
+      </div>
     </div>
   );
 };

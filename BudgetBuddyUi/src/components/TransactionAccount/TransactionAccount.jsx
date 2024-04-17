@@ -54,6 +54,7 @@ const TransactionAccount = () => {
             setSelectedAccountIndex={setSelectedAccountIndex}
             accounts={accounts}
             setAccounts={setAccounts}
+            navigate={navigate}
           />
         ) : (
           <></>
