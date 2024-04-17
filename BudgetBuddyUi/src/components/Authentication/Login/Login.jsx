@@ -8,6 +8,7 @@ import "./Login.scss";
 import InputComponent from "../../FormElements/InputComponent";
 import Navbar from "../../Navbar/Navbar";
 import Footer from "../../Footer/Footer";
+import { jwtDecode } from "jwt-decode";
 
 const authParams = { email: "", password: "" };
 

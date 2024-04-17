@@ -7,10 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInfoCircle,
   faHouse,
-
+  faPen
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.scss";
-import { TbPigMoney } from "react-icons/tb";
 
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -69,6 +68,14 @@ const Navbar = () => {
                 About <FontAwesomeIcon icon={faInfoCircle} />
               </Link>
             </li>
+            {currentUser && currentUser.role === "Admin" ? 
+            (<li className="nav-item">
+              <Link className="nav-link ms-4 fs-3" to="/admin">
+                 Admin Panel <FontAwesomeIcon icon={faPen} />
+              </Link>
+            </li>) : 
+            <></>
+            }
           </ul>
           <div className="me-2 mb-2">
             {currentUser ? (

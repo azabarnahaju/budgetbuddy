@@ -1,0 +1,109 @@
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { UserContext } from '../../../context/userContext';
+import { useContext } from 'react';
+import { SnackbarContext } from "../../../context/snackbarContext";
+
+const AdminNavbar = () => {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { setSnackbar } = useContext(SnackbarContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const isLoggedOut = await logoutUser();
+    if (isLoggedOut) {
+      setSnackbar({
+        open: true,
+        message: "Successfully logged out.",
+        type: "info",
+      });
+      setCurrentUser(null);
+      navigate("/");
+      return;
+    } else {
+      setSnackbar({
+        open: true,
+        message: "Failed to log out.",
+        type: "info",
+      });
+      navigate("/");
+      return;
+    }
+  };
+
+  return (
+    <nav className="navbar navbar-expand-lg navbar-container">
+      <div className="container-fluid">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarTogglerDemo03"
+          aria-controls="navbarTogglerDemo03"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <Link className="navbar-brand ms-3 me-3 fs-3" to="/admin">
+          <img className="logo-img" src="assets/logo.svg" />{" "}
+          <span className="logo-text">BudgetBuddy Admin</span>
+        </Link>
+        <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link ms-5 fs-3" to="/">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item dropdown ms-5 fs-3">
+              <Link
+                className="nav-link dropdown-toggle"
+                to="/achievements"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Achievements
+              </Link>
+              <ul className="dropdown-menu">
+                <li>
+                  <Link className="dropdown-item" to="/achievements/create">
+                    Create new
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/achievements">
+                    See all
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div className="me-2 mb-2">
+            {currentUser ? (
+              <span className="nav-item">
+                <button className="nav-link ms-4 fs-3" onClick={handleLogout}>
+                  Logout
+                </button>
+              </span>
+            ) : (
+              <div className="d-flex nav-item">
+                <Link to="/login" className="fs-3 nav-link">
+                  Login
+                </Link>
+                <span className="fs-3 mx-2">or</span>
+                <Link to="/register" className="fs-3 nav-link">
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default AdminNavbar

@@ -24,6 +24,7 @@ export const UserProvider = ({ children }) => {
         logoutUser();
         setCurrentUser(null);
       } else {
+        console.log(userAuth.data.data);
         setCurrentUser(userAuth.data.data);
       }
     } catch (error) {

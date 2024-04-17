@@ -1,0 +1,56 @@
+@import "../../../../Style/variables";
+
+.achievement-list-container {
+    margin-left: 10em;
+    margin-right: 10em;
+    margin-top: 5em;
+}
+
+.admin-title {
+    text-align: center;
+    font-size: 2em;
+    font-family: $secondary-font;
+    color: $text-color;
+     margin: 2em;
+}
+
+.achievement-content {
+    display: flex;
+    flex-direction: column;
+    margin: 2em;
+    margin-left: 10em;
+    margin-right: 10em;
+    align-items: center;
+}
+
+.new-achievement-btn {
+    background-color: $secondary-color;
+    color: $text-color;
+    border-radius: 1rem;
+    font-family: $secondary-font;
+}
+
+.admin-page {
+    background-color: $background-color;
+    height: 100vh;
+}
+
+tbody > tr > td.text-center {
+  background-color: $background-color;
+  padding: 1rem;
+  color: $text-color;
+}
+
+tbody > tr > th {
+  background-color: $background-color;
+  padding: 1rem;
+}
+
+table > thead > tr > th {
+  background-color: $background-color;
+}
+
+table > thead > tr > th {
+  background-color: $background-color;
+  font-family: $regular-font-1;
+}
