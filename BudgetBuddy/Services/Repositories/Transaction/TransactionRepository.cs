@@ -17,14 +17,18 @@ public class TransactionRepository : ITransactionRepository
         _budgetBuddyContext = budgetBuddyContext;
     }
 
-    public async Task<IEnumerable<Transaction>> GetAllTransactions(DateTime? startDate = null, DateTime? endDate = null)
+    public async Task<IEnumerable<Transaction>> GetAllTransactions()
+    {
+        return await _budgetBuddyContext.Transactions.ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Transaction>> GetTransactionsByAccount(int accountId, DateTime? startDate = null, DateTime? endDate = null)
     {
         if (startDate != null && endDate != null)
         {
-            Console.WriteLine(endDate);
-            return _budgetBuddyContext.Transactions.Where(t => t.Date > startDate && t.Date < endDate);
+            return _budgetBuddyContext.Transactions.Where(t => t.AccountId == accountId && t.Date > startDate && t.Date < endDate);
         }
-        return await _budgetBuddyContext.Transactions.ToListAsync();
+        return _budgetBuddyContext.Transactions.Where(t => t.AccountId == accountId);
     }
     
     public async Task<Transaction> GetTransaction(int id)
