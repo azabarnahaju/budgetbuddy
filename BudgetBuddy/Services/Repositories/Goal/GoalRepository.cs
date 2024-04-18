@@ -18,15 +18,32 @@ public class GoalRepository : IGoalRepository
     {
         try
         {
-            var result = _database.Goals
-                .Where(goal => goal.AccountId == accountId)
-                .ToArray();
-            if (result == null)
+            if (completed is null)
             {
-                throw new KeyNotFoundException("Goals not found.");
-            }
+                var result = await _database.Goals
+                    .Where(goal => goal.AccountId == accountId)
+                    .ToArrayAsync();
+                
+                if (result == null)
+                {
+                    throw new KeyNotFoundException("Goals not found.");
+                }
 
-            return result;
+                return result;
+            }
+            else
+            {
+                var result = await _database.Goals
+                    .Where(goal => goal.AccountId == accountId && goal.Completed == completed)
+                    .ToArrayAsync();
+                if (result == null)
+                {
+                    throw new KeyNotFoundException("Goals not found.");
+                }
+
+                return result;
+            }
+            
         }
         catch (KeyNotFoundException e)
         {
