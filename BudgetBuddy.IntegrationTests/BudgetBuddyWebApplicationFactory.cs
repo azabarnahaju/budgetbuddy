@@ -69,7 +69,42 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             Id = 1, AccountId = 1, Amount = 1400, Date = new DateTime(2022, 02, 02), Name = "Test",
             Tag = TransactionCategoryTag.Clothing, Type = TransactionType.Expense
         });
-        context.Achievements.Add(new Achievement() { Id = 1, Description = "Test", Name = "Test" });
+        context.Achievements.AddRange(new List<Achievement>
+            {
+                new Achievement
+                    { Name = "Pioneer", Description = "You've recorded your first expense transaction!" },
+                new Achievement
+                    { Name = "Big Spender", Description = "You've recorded 5 expense transactions!" },
+                new Achievement
+                    { Name = "Money Bags", Description = "You've recorded 10 expense transactions!" },
+
+                new Achievement
+                    { Name = "Money Maker", Description = "You've recorded your first income transaction!" },
+                new Achievement
+                    { Name = "Wealth Builder", Description = "You've recorded 5 income transactions!" },
+                new Achievement
+                    { Name = "Financial Wizard", Description = "You've recorded 10 income transactions!" },
+
+                new Achievement { Name = "Account Holder", Description = "You've created your first account!" },
+
+                new Achievement
+                    { Name = "Penny Pincher", Description = "You've saved up $500 in your account!" },
+                new Achievement { Name = "Frugal", Description = "You've saved up $1000 in your account!" },
+                new Achievement { Name = "Thrifty", Description = "You've saved up $1500 in your account!" },
+
+                new Achievement { Name = "Goal Setter", Description = "You've set your first goal!" },
+                new Achievement { Name = "Goal Achiever", Description = "You've set 3 goals!" },
+                new Achievement { Name = "Master of Goals", Description = "You've set 5 goals!" },
+                
+                new Achievement { Name = "Goal Getter", Description = "You've completed your first goal!" },
+                new Achievement { Name = "Goal Digger", Description = "You've completed 3 goals!" },
+                new Achievement { Name = "Goal Crusher", Description = "You've completed 5 goals!" },
+
+                new Achievement
+                    { Name = "Five-Star Dabbler", Description = "You've used 5 different categories!" },
+                new Achievement { Name = "Jack of All Trades", Description = "You've used 10 categories!" },
+                new Achievement { Name = "Master of All", Description = "You've used ALL categories!" }
+            });
         context.Goals.Add(new Goal()
         {
             AccountId = 1, UserId = "1", Id = 1, Completed = false, CurrentProgress = 0, StartDate = new DateTime(2022, 02, 02),
@@ -84,6 +119,7 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
             SumIncome = 100, Categories = new HashSet<TransactionCategoryTag>(),
             SpendingByTags = new Dictionary<TransactionCategoryTag, decimal>()
         });
+        context.Users.Add(new ApplicationUser { Id = "1", Email = "test@test.com", UserName = "testuser" });
         await context.SaveChangesAsync();
     }
 }
