@@ -51,9 +51,41 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_AllAchievements_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        var expectedResult = new List<Achievement>()
+        var expectedResult = new List<Achievement>
         {
-            new () { Id = 1, Description = "Test", Name = "Test" }
+            new Achievement
+                { Id = 1, Name = "Pioneer", Description = "You've recorded your first expense transaction!" },
+            new Achievement
+                { Id = 2, Name = "Big Spender", Description = "You've recorded 5 expense transactions!" },
+            new Achievement
+                { Id = 3, Name = "Money Bags", Description = "You've recorded 10 expense transactions!" },
+
+            new Achievement
+                { Id = 4, Name = "Money Maker", Description = "You've recorded your first income transaction!" },
+            new Achievement
+                { Id = 5, Name = "Wealth Builder", Description = "You've recorded 5 income transactions!" },
+            new Achievement
+                { Id = 6, Name = "Financial Wizard", Description = "You've recorded 10 income transactions!" },
+
+            new Achievement { Id = 7, Name = "Account Holder", Description = "You've created your first account!" },
+
+            new Achievement
+                { Id = 8, Name = "Penny Pincher", Description = "You've saved up $500 in your account!" },
+            new Achievement { Id = 9, Name = "Frugal", Description = "You've saved up $1000 in your account!" },
+            new Achievement { Id = 10, Name = "Thrifty", Description = "You've saved up $1500 in your account!" },
+
+            new Achievement { Id = 11, Name = "Goal Setter", Description = "You've set your first goal!" },
+            new Achievement { Id = 12, Name = "Goal Achiever", Description = "You've set 3 goals!" },
+            new Achievement { Id = 13, Name = "Master of Goals", Description = "You've set 5 goals!" },
+
+            new Achievement { Id = 14, Name = "Goal Getter", Description = "You've completed your first goal!" },
+            new Achievement { Id = 15, Name = "Goal Digger", Description = "You've completed 3 goals!" },
+            new Achievement { Id = 16, Name = "Goal Crusher", Description = "You've completed 5 goals!" },
+
+            new Achievement
+                { Id = 17, Name = "Five-Star Dabbler", Description = "You've used 5 different categories!" },
+            new Achievement { Id = 18, Name = "Jack of All Trades", Description = "You've used 10 categories!" },
+            new Achievement { Id = 19, Name = "Master of All", Description = "You've used ALL categories!" }
         };
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
@@ -69,7 +101,8 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_AchievementById_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        var expectedResult = new Achievement() { Id = 1, Description = "Test", Name = "Test" };
+        var expectedResult = new Achievement
+            { Id = 1, Name = "Pioneer", Description = "You've recorded your first expense transaction!" };
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -80,7 +113,7 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     }
     
     [Theory]
-    [InlineData("/achievement/3")]
+    [InlineData("/achievement/50")]
     public async Task Get_AchievementById_Returns_Not_Found(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
@@ -115,17 +148,17 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     }
     
     [Theory]
-    [InlineData("/goal/3")]
+    [InlineData("/goal/20")]
     public async Task Get_GoalByAccountId_Returns_Empty_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var expected = new List<Goal>();
+        var expected = Array.Empty<Goal>();
         var response = await client.GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        List<Goal> actualResult = await ConvertResponseData<List<Goal>>(response);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var actualResult = await ConvertResponseData<List<Goal>>(response);
         Assert.Equivalent(expected, actualResult);
     }
     

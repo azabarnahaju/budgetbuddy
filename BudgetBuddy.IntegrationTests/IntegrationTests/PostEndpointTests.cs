@@ -42,7 +42,7 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var expectedResult = new List<Achievement>()
-            { new () { Id = 2, Name = "Test2", Description = "Test" } };
+            { new () { Id = 20, Name = "Test2", Description = "Test" } };
         var achievementToCreate = new List<AchievementCreateRequest> {new ("Test2", "Test")};
         
         var content = new StringContent(JsonConvert.SerializeObject(achievementToCreate), Encoding.UTF8, "application/json");
