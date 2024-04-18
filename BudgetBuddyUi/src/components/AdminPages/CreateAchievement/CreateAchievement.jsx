@@ -45,7 +45,7 @@ const CreateAchievement = () => {
     }
     setLocalLoading(false);
     setAchievementsToAdd([]);
-    navigate("/achievements")
+    navigate("/admin")
   };
 
   if (localLoading) {

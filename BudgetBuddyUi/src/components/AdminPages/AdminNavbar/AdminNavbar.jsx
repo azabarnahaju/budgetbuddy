@@ -60,7 +60,7 @@ const AdminNavbar = () => {
             <li className="nav-item dropdown ms-5 fs-3">
               <Link
                 className="nav-link dropdown-toggle"
-                to="/achievements"
+                to="/admin"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -74,7 +74,7 @@ const AdminNavbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/achievements">
+                  <Link className="dropdown-item" to="/admin">
                     See all
                   </Link>
                 </li>

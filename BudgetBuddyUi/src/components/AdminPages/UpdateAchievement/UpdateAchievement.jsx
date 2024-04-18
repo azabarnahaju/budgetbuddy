@@ -51,7 +51,7 @@ const UpdateAchievement = () => {
     }
     setLocalLoading(false);
     setAchievement("");
-    navigate("/achievements");
+    navigate("/admin");
   };
 
   if (localLoading){
