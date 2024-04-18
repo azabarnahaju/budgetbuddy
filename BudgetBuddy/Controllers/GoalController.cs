@@ -1,6 +1,7 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Data;
 using BudgetBuddy.Services.AchievementService;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Controllers;
 
@@ -31,7 +32,7 @@ public class GoalController : ControllerBase
         try
         {
             var result = await _goalRepository.GetAllGoalsByAccountId(accountId);
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == result[0].UserId);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == result[0].UserId);
             await _achievementService.UpdateGoalAchievements(user);
             return Ok(new { message = "Goals retrieved successfully", data = result });
         }
