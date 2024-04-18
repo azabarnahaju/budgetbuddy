@@ -1,12 +1,16 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
+using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.Repositories.Transaction;
 using BudgetBuddy.Services.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -19,6 +23,9 @@ public class TransactionControllerTest
     private Mock<ITransactionRepository> _transactionDataProviderMock;
     private Mock<IGoalService> _goalServiceMock;
     private Mock<ITransactionService> _transactionServiceMock;
+    private Mock<IAchievementService> _achievementServiceMock;
+    private DbContextOptions<BudgetBuddyContext> _contextOptions;
+    private BudgetBuddyContext _dbContext;
     private TransactionController _controller;
 
     [SetUp]
@@ -28,8 +35,18 @@ public class TransactionControllerTest
         _transactionDataProviderMock = new Mock<ITransactionRepository>();
         _goalServiceMock = new Mock<IGoalService>();
         _transactionServiceMock = new Mock<ITransactionService>();
+        _achievementServiceMock = new Mock<IAchievementService>();
+        
+        _contextOptions = new DbContextOptionsBuilder<BudgetBuddyContext>()
+            .UseInMemoryDatabase("BloggingControllerTest")
+            .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            .Options;
 
-        _controller = new TransactionController(_loggerMock.Object, _transactionDataProviderMock.Object, _goalServiceMock.Object, _transactionServiceMock.Object);
+        _dbContext = new BudgetBuddyContext(_contextOptions);
+
+        _controller = new TransactionController(_loggerMock.Object, _transactionDataProviderMock.Object,
+            _goalServiceMock.Object, _transactionServiceMock.Object, _achievementServiceMock.Object,
+            _dbContext);
     }
     
     //AddTransaction
@@ -53,7 +70,7 @@ public class TransactionControllerTest
     public async Task AddTransaction_ReturnsOkResultIfTransactionDataIsValid()
     {
         // Arrange
-        _transactionDataProviderMock.Setup(x => x.AddTransaction(It.IsAny<TransactionCreateRequest>()));
+        _transactionDataProviderMock.Setup(x => x.AddTransaction(It.IsAny<TransactionCreateRequest>())).ReturnsAsync(It.IsAny<Transaction>());
         
         // Act
         var result = await _controller.AddTransaction(It.IsAny<TransactionCreateRequest>());
