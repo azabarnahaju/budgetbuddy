@@ -136,19 +136,19 @@ public class AchievementService : IAchievementService
 
         if (totalSavings >= 1500 && user.Achievements.All(a => a.Name != "Thrifty"))
         {
-            var thrifty = _context.Achievements.FirstOrDefault(a => a.Name == "Thrifty");
+            var thrifty = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Thrifty");
             user.Achievements.Add(thrifty);
             await _context.SaveChangesAsync();
         }
         else if (totalSavings >= 1000 && user.Achievements.All(a => a.Name != "Frugal"))
         {
-            var frugal = _context.Achievements.FirstOrDefault(a => a.Name == "Frugal");
+            var frugal = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Frugal");
             user.Achievements.Add(frugal);
             await _context.SaveChangesAsync();
         }
         else if (totalSavings >= 500 && user.Achievements.All(a => a.Name != "Penny Pincher"))
         {
-            var pennyPincher = _context.Achievements.FirstOrDefault(a => a.Name == "Penny Pincher");
+            var pennyPincher = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Penny Pincher");
             user.Achievements.Add(pennyPincher);
             await _context.SaveChangesAsync();
         }
@@ -163,17 +163,17 @@ public class AchievementService : IAchievementService
         switch (goals)
         {
             case 1:
-                var goalSetter = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Setter");
+                var goalSetter = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Goal Setter");
                 user.Achievements.Add(goalSetter);
                 await _context.SaveChangesAsync();
                 break;
             case 3:
-                var goalAchiever = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Achiever");
+                var goalAchiever = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Goal Achiever");
                 user.Achievements.Add(goalAchiever);
                 await _context.SaveChangesAsync();
                 break;
             case 5:
-                var masterOfGoals = _context.Achievements.FirstOrDefault(a => a.Name == "Master of Goals");
+                var masterOfGoals = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Master of Goals");
                 user.Achievements.Add(masterOfGoals);
                 await _context.SaveChangesAsync();
                 break;
@@ -190,17 +190,17 @@ public class AchievementService : IAchievementService
         switch (completedGoals)
         {
             case 1:
-                var goalGetter = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Getter");
+                var goalGetter = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Goal Getter");
                 user.Achievements.Add(goalGetter);
                 await _context.SaveChangesAsync();
                 break;
             case 3:
-                var goalDigger = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Digger");
+                var goalDigger = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Goal Digger");
                 user.Achievements.Add(goalDigger);
                 await _context.SaveChangesAsync();
                 break;
             case 5:
-                var goalCrusher = _context.Achievements.FirstOrDefault(a => a.Name == "Goal Crusher");
+                var goalCrusher = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Goal Crusher");
                 user.Achievements.Add(goalCrusher);
                 await _context.SaveChangesAsync();
                 break;
@@ -217,17 +217,17 @@ public class AchievementService : IAchievementService
         switch (numberOfCategories)
         {
             case 5:
-                var fiveStarDabbler = _context.Achievements.FirstOrDefault(a => a.Name == "Five-Star Dabbler");
+                var fiveStarDabbler = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Five-Star Dabbler");
                 user.Achievements.Add(fiveStarDabbler);
                 await _context.SaveChangesAsync();
                 break;
             case 10:
-                var jackOfAllTrades = _context.Achievements.FirstOrDefault(a => a.Name == "Jack of All Trades");
+                var jackOfAllTrades = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Jack of All Trades");
                 user.Achievements.Add(jackOfAllTrades);
                 await _context.SaveChangesAsync();
                 break;
             case var _ when numberOfCategories == allCategories:
-                var masterOfAll = _context.Achievements.FirstOrDefault(a => a.Name == "Master of All");
+                var masterOfAll = await _context.Achievements.FirstOrDefaultAsync(a => a.Name == "Master of All");
                 user.Achievements.Add(masterOfAll);
                 await _context.SaveChangesAsync();
                 break;
