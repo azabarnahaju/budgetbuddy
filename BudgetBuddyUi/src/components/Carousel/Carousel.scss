@@ -1,9 +1,9 @@
 @import "../../Style/variables";
 
 .carousel {
-    width: 50%;
-    margin: auto;
-    margin-bottom: 30px;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 30px;
 }
 
 .carousel-inner {
@@ -17,9 +17,16 @@
   margin: auto;
 }
 
-.c-image {
-  height: 100%;
-  object-fit: cover;
+.c-item {
+  background-size: cover;
+  background-position: center;
+  justify-content: center;
+}
+
+.carousel-text-content {
+  font-size: large;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .carousel-control-next:hover,
