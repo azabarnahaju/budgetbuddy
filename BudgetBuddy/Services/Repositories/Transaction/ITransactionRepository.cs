@@ -1,5 +1,4 @@
-
-﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 
 namespace BudgetBuddy.Services.Repositories.Transaction;
@@ -11,6 +10,9 @@ public interface ITransactionRepository
 {
     Task<IEnumerable<Transaction>> GetAllTransactions();
     Task<Transaction> GetTransaction(int id);
+
+    Task<IEnumerable<Transaction>> GetTransactionsByAccount(int accountId, DateTime? startDate = null,
+        DateTime? endDate = null);
     Task<Transaction> AddTransaction(TransactionCreateRequest transaction);
     Task<Transaction> UpdateTransaction(TransactionUpdateRequest transaction);
     Task DeleteTransaction(int id);

@@ -18,7 +18,7 @@ import AchievementList from "./components/AdminPages/Achievements/AchievementLis
 import CreateAchievement from "./components/AdminPages/CreateAchievement/CreateAchievement";
 import UpdateAchievement from "./components/AdminPages/UpdateAchievement/UpdateAchievement";
 import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
-
+import Transactions from "./components/TransactionAccount/Transactions";
 
 
 const App = () => {
@@ -30,6 +30,7 @@ const App = () => {
         <Route path="/transaction/:id" element={<Transaction />} />
         <Route path="/achievement/:id" element={<Achievement />} />
         <Route path="/account" element={<TransactionAccount />} />
+        <Route path="/account/transactions/:id" element={<Transactions />} />
         <Route path="account/update/:id" element={<AccountCreator />} />
         <Route path="transaction/update/:id" element={<TransactionCreator />} />
         <Route path="achievements" element={<AchievementDashBoard />} />

@@ -9,7 +9,6 @@ import {
   faHouse,
   faPen,
   faTrophy,
-
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.scss";
 
@@ -17,7 +16,7 @@ const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { setSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
-  
+
   const handleLogout = async () => {
     const isLoggedOut = await logoutUser();
     if (isLoggedOut) {
@@ -39,7 +38,6 @@ const Navbar = () => {
       return;
     }
   };
-  console.log(currentUser);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-container">
@@ -56,7 +54,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <Link className="navbar-brand ms-3 me-3 fs-3" to="/">
-          <img className="logo-img" src="assets/logo.svg" />{" "}
+          <img className="logo-img" src="/assets/logo.svg" />{" "}
           <span className="logo-text">BudgetBuddy</span>
         </Link>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
@@ -96,9 +94,13 @@ const Navbar = () => {
               </span>
             ) : (
               <div className="d-flex nav-item">
-                <Link to="/login" className="fs-3 nav-link">Login</Link>
+                <Link to="/login" className="fs-3 nav-link">
+                  Login
+                </Link>
                 <span className="fs-3 mx-2">or</span>
-                <Link to="/register" className="fs-3 nav-link">Register</Link>
+                <Link to="/register" className="fs-3 nav-link">
+                  Register
+                </Link>
               </div>
             )}
           </div>

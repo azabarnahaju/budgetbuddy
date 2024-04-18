@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using BudgetBuddy.Data;
 using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
@@ -91,6 +92,22 @@ public class TransactionController : ControllerBase
         {
             _logger.LogError(e, "Transaction not found.");
             return NotFound(new { message = "Transaction not found." });
+        }
+    }
+
+    [HttpGet("transactions/account/{accountId}"), Authorize(Roles = "Admin, User")]
+    public async Task<ActionResult<List<Transaction>>> GetTransactionsByAccountId(int accountId,
+        DateTime? startDate = null, DateTime? endDate = null)
+    {
+        try
+        {
+            var transactions = await _transactionRepository.GetTransactionsByAccount(accountId, startDate, endDate);
+            return Ok(new { message = "Transactions retrieved.", data = transactions });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Transactions not found.");
+            return NotFound(new { message = "Transactions not found." });
         }
     }
     
