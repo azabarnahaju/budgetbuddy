@@ -5,7 +5,6 @@ import "./Carousel.scss";
 
 const Carousel = () => {
   const [news, setNews] = useState([]);
-  //const [currentSlide, setCurrentSlide] = useState(0);
 
   const fetchNews = async () => {
     try {
@@ -82,14 +81,6 @@ const Carousel = () => {
     //     site: "Financial Modeling Prep",
     //   },
     // ]);
-    //  const intervalId = setInterval(() => {
-    //    setCurrentSlide((prevSlide) => {
-    //      prevSlide >= news.length - 1  ? 0 : prevSlide + 1;
-    //      console.log(prevSlide);
-    //    });
-    // }, 5000);
-
-    //return () => clearInterval(intervalId);
     fetchNews();
   }, []);
 
@@ -97,74 +88,6 @@ const Carousel = () => {
     const match = htmlString.match(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/);
     return match ? match[2] : "";
   };
-
-  // const prevSlide = () => {
-  //   setCurrentSlide((prevSlide) =>
-  //     prevSlide === 0 ? news.length - 1 : prevSlide - 1
-  //   );
-  // };
-
-  // const nextSlide = () => {
-  //   setCurrentSlide((prevSlide) => (prevSlide === news.length - 1 ? 0 : prevSlide + 1));
-  // };
-
-  // return (
-  //   <div className="container mt-1" style={{ borderRadius: "10px", marginBottom: "40px" }}>
-  //     <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-  //       <ol className="carousel-indicators">
-  //         {news.map((item, index) => (
-  //           <li
-  //             key={index}
-  //             data-target="#carouselExampleIndicators"
-  //             data-slide-to={index}
-  //             className={index === currentSlide ? "active" : ""}
-  //           ></li>
-  //         ))}
-  //       </ol>
-  //       <div className="carousel-inner">
-  //         {news.map((item, index) => (
-  //           <div
-  //             key={index}
-  //             className={`carousel-item ${index === currentSlide ? "active" : ""} c-item`}
-  //             data-bs-interval="5000"
-  //           >
-  //             <img
-  //               src={item.image}
-  //               alt={item.title}
-  //               className="d-block w-100 c-image"
-  //             />
-  //             <div className="carousel-caption d-none d-md-block" style={{border: "solid 1px"}}>
-  //               <h5>{item.title}</h5>
-  //               <a href={extractLinkFromHTML(item.content)}>Read More</a>
-  //             </div>
-  //           </div>
-  //         ))}
-  //       </div>
-  //       <a
-  //         className="carousel-control-prev"
-  //         role="button"
-  //         onClick={prevSlide}
-  //       >
-  //         <span
-  //           className="carousel-control-prev-icon"
-  //           aria-hidden="true"
-  //         ></span>
-  //         <span className="sr-only">Previous</span>
-  //       </a>
-  //       <a
-  //         className="carousel-control-next"
-  //         role="button"
-  //         onClick={nextSlide}
-  //       >
-  //         <span
-  //           className="carousel-control-next-icon"
-  //           aria-hidden="true"
-  //         ></span>
-  //         <span className="sr-only">Next</span>
-  //       </a>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <div
@@ -174,8 +97,18 @@ const Carousel = () => {
     >
       <div className="carousel-inner">
         {news.map((n, i) => (
-          <div className={`carousel-item ${i === 0 ? "active" : ""} c-item`} data-bs-interval="5000">
-            <img src={n.image} className="d-block w-100 c-image" alt="..." />
+          <div
+            className={`carousel-item ${
+              i === 0 ? "active" : ""
+            } c-item text-center`}
+            data-bs-interval="5000"
+            style={{ backgroundImage: `url(${n.image})` }}
+            key={i}
+          >
+            <div className="carousel-text-content p-2">
+              <p>{n.title}</p>
+              <a className="nav-link" href={extractLinkFromHTML(n.content)}>Learn more</a>
+            </div>
           </div>
         ))}
       </div>
