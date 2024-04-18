@@ -3,8 +3,10 @@ using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.Repositories.Transaction;
+using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.TransactionServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,8 @@ public class TransactionControllerTest
     private Mock<ITransactionRepository> _transactionDataProviderMock;
     private Mock<IGoalService> _goalServiceMock;
     private Mock<ITransactionService> _transactionServiceMock;
+    private Mock<IAchievementService> _achievementServiceMock;
+    private Mock<IUserRepository> _userRepositoryMock;
     private TransactionController _controller;
 
     [SetUp]
@@ -28,8 +32,9 @@ public class TransactionControllerTest
         _transactionDataProviderMock = new Mock<ITransactionRepository>();
         _goalServiceMock = new Mock<IGoalService>();
         _transactionServiceMock = new Mock<ITransactionService>();
-
-        _controller = new TransactionController(_loggerMock.Object, _transactionDataProviderMock.Object, _goalServiceMock.Object, _transactionServiceMock.Object);
+        _achievementServiceMock = new Mock<IAchievementService>();
+        _userRepositoryMock = new Mock<IUserRepository>();
+        _controller = new TransactionController(_loggerMock.Object, _transactionDataProviderMock.Object, _goalServiceMock.Object, _transactionServiceMock.Object, _achievementServiceMock.Object, _userRepositoryMock.Object);
     }
     
     //AddTransaction
@@ -50,10 +55,26 @@ public class TransactionControllerTest
     }
     
     [Test]
-    public async Task AddTransaction_ReturnsOkResultIfTransactionDataIsValid()
+    public async Task AddTransaction_ReturnsExceptionWhenUserNotFound()
     {
         // Arrange
         _transactionDataProviderMock.Setup(x => x.AddTransaction(It.IsAny<TransactionCreateRequest>()));
+        _userRepositoryMock.Setup(x => x.GetUserByAccountId(It.IsAny<int>())).Throws(new Exception());
+        // Act
+        var result = await _controller.AddTransaction(It.IsAny<TransactionCreateRequest>());
+        var resultMessage = (BadRequestObjectResult?)result.Result;
+        
+        // Assert
+        Assert.IsInstanceOf(typeof(BadRequestObjectResult), result.Result);
+        Assert.That(GetMessageFromResult(resultMessage.Value), Is.EqualTo("Transaction already exists."));
+    }
+    
+    [Test]
+    public async Task AddTransaction_ReturnsOkResultIfTransactionDataIsValid()
+    {
+        // Arrange
+        _transactionDataProviderMock.Setup(x => x.AddTransaction(It.IsAny<TransactionCreateRequest>())).ReturnsAsync(new Transaction());
+        _userRepositoryMock.Setup(x => x.GetUserByAccountId(It.IsAny<int>())).ReturnsAsync(new ApplicationUser());
         
         // Act
         var result = await _controller.AddTransaction(It.IsAny<TransactionCreateRequest>());

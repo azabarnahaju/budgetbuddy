@@ -12,6 +12,7 @@ using BudgetBuddy.Services.Repositories.Goal;
 using BudgetBuddy.Services.Repositories.Report;
 // using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.TransactionServices;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -113,6 +114,7 @@ void AddServices(){
     builder.Services.AddTransient<IReportRepository, ReportRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+    builder.Services.AddTransient<IUserRepository, UserRepository>();
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
     builder.Services.AddTransient<IGoalService, GoalService>();
     builder.Services.AddTransient<ITransactionService, TransactionService>();
