@@ -28,6 +28,33 @@ public class Report
     public decimal SumIncome { get; set; }
     [Precision(14, 2)]
     public decimal BiggestExpense { get; set; }
-   
-    // include goals as well once they have a date of setting them
+
+    public override string ToString()
+    {
+        return
+            $"Id: {Id}, AccountId: {AccountId}, CreatedAt: {CreatedAt}, ReportType: {ReportType}, StartDate: {StartDate}, EndDate: {EndDate}, Transactions: {Transactions}, Categories: {Categories}, SpendingByTags: {SpendingByTags}, AverageSpendingDaily: {AverageSpendingDaily}, AverageSpendingTransaction: {AverageSpendingTransaction}, MostSpendingTag: {MostSpendingTag}, MostSpendingDay: {MostSpendingDay}, SumExpense: {SumExpense}, SumIncome: {SumIncome}, BiggestExpense: {BiggestExpense}";
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        
+        Report other = (Report)obj;
+
+        return Id == other.Id &&
+               AccountId == other.AccountId &&
+               ReportType == other.ReportType &&
+               StartDate == other.StartDate &&
+               EndDate == other.EndDate &&
+               AverageSpendingDaily == other.AverageSpendingDaily &&
+               AverageSpendingTransaction == other.AverageSpendingTransaction &&
+               MostSpendingTag == other.MostSpendingTag &&
+               MostSpendingDay == other.MostSpendingDay &&
+               SumExpense == other.SumExpense &&
+               SumIncome == other.SumIncome &&
+               BiggestExpense == other.BiggestExpense;
+    }
 }

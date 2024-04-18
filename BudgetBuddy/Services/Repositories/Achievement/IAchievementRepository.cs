@@ -9,6 +9,7 @@ public interface IAchievementRepository
 {
     Task<IEnumerable<Achievement>> GetAllAchievements();
     Task<Achievement> GetAchievement(int id);
+    Task<IEnumerable<Achievement>> GetAllAchievementsByUserId(string userId);
     Task<IEnumerable<Achievement>> AddAchievement(IEnumerable<AchievementCreateRequest> achievements);
     Task DeleteAchievement(int id);
     Task<Achievement> UpdateAchievement(AchievementUpdateRequest achievement);

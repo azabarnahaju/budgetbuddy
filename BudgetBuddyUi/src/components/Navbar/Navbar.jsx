@@ -8,6 +8,8 @@ import {
   faInfoCircle,
   faHouse,
   faPen
+  faTrophy,
+
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.scss";
 
@@ -15,7 +17,7 @@ const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { setSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
-
+  
   const handleLogout = async () => {
     const isLoggedOut = await logoutUser();
     if (isLoggedOut) {
@@ -37,6 +39,7 @@ const Navbar = () => {
       return;
     }
   };
+  console.log(currentUser);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-container">
@@ -68,6 +71,13 @@ const Navbar = () => {
                 About <FontAwesomeIcon icon={faInfoCircle} />
               </Link>
             </li>
+            {currentUser && (
+              <li className="nav-item">
+                <Link className="nav-link ms-4 fs-3" to="/achievements">
+                  Achievements <FontAwesomeIcon icon={faTrophy} />
+                </Link>
+              </li>
+            )}
             {currentUser && currentUser.role === "Admin" ? 
             (<li className="nav-item">
               <Link className="nav-link ms-4 fs-3" to="/admin">

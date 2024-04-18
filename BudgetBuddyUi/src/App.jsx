@@ -17,6 +17,8 @@ import AdminHome from "./components/AdminPages/AdminHome/AdminHome";
 import AchievementList from "./components/AdminPages/Achievements/AchievementList/AchievementList";
 import CreateAchievement from "./components/AdminPages/CreateAchievement/CreateAchievement";
 import UpdateAchievement from "./components/AdminPages/UpdateAchievement/UpdateAchievement";
+import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
+
 
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
         <Route path="/account" element={<TransactionAccount />} />
         <Route path="account/update/:id" element={<AccountCreator />} />
         <Route path="transaction/update/:id" element={<TransactionCreator />} />
+        <Route path="achievements" element={<AchievementDashBoard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile/:id" element={<UserProfile />} />
@@ -37,7 +40,6 @@ const App = () => {
         <Route path="/reports/:reportId" element={<ReportDetails />} />
         <Route path="/reports/add" element={<ReportCreator />} />
         <Route path="/admin" element={<AdminHome />} />
-        <Route path="/achievements" element={<AchievementList />} />
         <Route path="/achievements/create/" element={<CreateAchievement />} />
         <Route path="/achievements/update/:achievementId" element={<UpdateAchievement />}/>
       </Routes>

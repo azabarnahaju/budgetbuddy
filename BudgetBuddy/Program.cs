@@ -2,6 +2,7 @@ using System.Text;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
 using BudgetBuddy.Services;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.Authentication;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.ReportServices;
@@ -11,6 +12,7 @@ using BudgetBuddy.Services.Repositories.Goal;
 using BudgetBuddy.Services.Repositories.Report;
 // using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
+using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.TransactionServices;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -56,9 +58,12 @@ var app = builder.Build();
 
 
 using var scope = app.Services.CreateScope();
-var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+var authenticationSeeder = scope.ServiceProvider.GetRequiredService<IAuthenticationSeeder>();
 authenticationSeeder.AddRoles();
 authenticationSeeder.AddAdmin();
+
+var achievementSeeder = scope.ServiceProvider.GetRequiredService<AchievementSeeder>();
+await achievementSeeder.SeedAchievementsAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -104,13 +109,16 @@ void AddServices(){
     builder.Services.AddTransient<IReportService, ReportService>();
     builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
     builder.Services.AddTransient<IAchievementRepository, AchievementRepository>();
+    builder.Services.AddScoped<IAchievementService, AchievementService>();
+    builder.Services.AddScoped<AchievementSeeder>();
     builder.Services.AddTransient<IReportRepository, ReportRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+    builder.Services.AddTransient<IUserRepository, UserRepository>();
     builder.Services.AddTransient<IGoalRepository, GoalRepository>();
     builder.Services.AddTransient<IGoalService, GoalService>();
     builder.Services.AddTransient<ITransactionService, TransactionService>();
-    builder.Services.AddScoped<AuthenticationSeeder>(provider =>
+    builder.Services.AddScoped<IAuthenticationSeeder, AuthenticationSeeder>(provider =>
     {
         var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();

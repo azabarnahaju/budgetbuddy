@@ -1,3 +1,8 @@
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
+using BudgetBuddy.Services.Repositories.User;
+using Microsoft.Identity.Client;
+
 namespace BudgetBuddy.Controllers;
 
 using Model;
@@ -13,11 +18,16 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountController> _logger;
+    private readonly IAchievementService _achievementService;
+    private readonly IUserRepository _userRepository;
+    private BudgetBuddyContext _dbContext;
 
-    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository)
+    public AccountController(ILogger<AccountController> logger, IAccountRepository accountRepository, IAchievementService achievementService, IUserRepository userRepository)
     {
         _accountRepository = accountRepository;
         _logger = logger;
+        _achievementService = achievementService;
+        _userRepository = userRepository;
     }
 
     [HttpGet("{userId}"), Authorize(Roles = "Admin, User")]
@@ -41,6 +51,9 @@ public class AccountController : ControllerBase
         try
         {
             var result = await _accountRepository.CreateAccount(account);
+            var user = await _userRepository.GetUserById(result.UserId);
+            if (user is null) throw new Exception("User not found"); 
+            await _achievementService.UpdateAccountAchievements(user);
             return Ok(new { message = "Account created successfully", data = result });
         }
         catch (Exception e)

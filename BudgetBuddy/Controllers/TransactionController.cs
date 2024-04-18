@@ -1,5 +1,9 @@
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
+using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.TransactionServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Controllers;
 
@@ -21,13 +25,18 @@ public class TransactionController : ControllerBase
     private readonly ILogger<TransactionController> _logger;
     private readonly IGoalService _goalService;
     private readonly ITransactionService _transactionService;
+    private readonly IAchievementService _achievementService;
+    private readonly IUserRepository _userRepository;
     
-    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository, IGoalService goalService, ITransactionService transactionService)
+    public TransactionController(ILogger<TransactionController> logger, ITransactionRepository transactionRepository,
+        IGoalService goalService, ITransactionService transactionService, IAchievementService achievementService, IUserRepository userRepository)
     {
         _logger = logger;
         _transactionRepository = transactionRepository;
         _goalService = goalService;
         _transactionService = transactionService;
+        _achievementService = achievementService;
+        _userRepository = userRepository;
     }
     
     [HttpPost("add"), Authorize(Roles = "Admin, User")]
@@ -37,6 +46,9 @@ public class TransactionController : ControllerBase
         {
             await _transactionService.HandleAccountBalance(transaction);
             var result = await _transactionRepository.AddTransaction(transaction);
+            var user = await _userRepository.GetUserByAccountId(result.AccountId);
+            await _achievementService.UpdateTransactionAchievements(user);
+            await _achievementService.UpdateGoalAchievements(user);
             await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }

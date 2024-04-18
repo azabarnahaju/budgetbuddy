@@ -1,4 +1,7 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Data;
+using BudgetBuddy.Services.AchievementService;
+using BudgetBuddy.Services.Repositories.User;
 
 namespace BudgetBuddy.Controllers;
 
@@ -12,11 +15,15 @@ public class GoalController : ControllerBase
 {
     private readonly IGoalRepository _goalRepository;
     private readonly ILogger<AccountController> _logger;
+    private readonly IAchievementService _achievementService;
+    private readonly IUserRepository _userRepository;
     
-    public GoalController(ILogger<AccountController> logger, IGoalRepository goalRepository)
+    public GoalController(ILogger<AccountController> logger, IGoalRepository goalRepository, IAchievementService achievementService, IUserRepository userRepository)
     {
         _goalRepository = goalRepository;
         _logger = logger;
+        _achievementService = achievementService;
+        _userRepository = userRepository;
     }
 
     [HttpGet("{accountId}"), Authorize(Roles = "Admin, User")]
@@ -24,8 +31,21 @@ public class GoalController : ControllerBase
     {
         try
         {
-            var result = await _goalRepository.GetAllGoalsByAccountId(accountId);
+            var result = await _goalRepository.GetAllGoalsByAccountId(accountId, false);
+            if (result.Length > 0)
+            {
+                var user = await _userRepository.GetUserById(result[0].UserId);
+                if (user is null) throw new Exception("User not found");
+                await _achievementService.UpdateGoalAchievements(user);
+            }
+            
             return Ok(new { message = "Goals retrieved successfully", data = result });
+
+        }
+        catch (KeyNotFoundException e)
+        {
+            _logger.LogError("Account not found");
+            return NotFound("Account not found");
         }
         catch (Exception e)
         {
@@ -40,6 +60,9 @@ public class GoalController : ControllerBase
         try
         {
             var result = await _goalRepository.CreateGoal(goal);
+            var user = await _userRepository.GetUserById(result.UserId);
+            if (user is null) throw new Exception("User not found"); 
+            await _achievementService.UpdateGoalAchievements(user);
             return Ok(new { message = "Goal created successfully", data = result });
         }
         catch (Exception e)
