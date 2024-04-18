@@ -6,6 +6,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
+import Carousel from "../Carousel/Carousel";
 
 const Home = () => {
   const { snackbar, setSnackbar } = useContext(SnackbarContext);
@@ -153,6 +154,7 @@ const Home = () => {
               )}
             </div>
           </div>
+          <Carousel />
         </div>
       </div>
       <Footer />
