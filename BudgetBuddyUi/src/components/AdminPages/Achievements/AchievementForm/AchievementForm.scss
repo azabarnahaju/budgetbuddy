@@ -1,0 +1,41 @@
+@import "../../../../Style/_variables.scss";
+
+.ach-form-container {
+    border: 1px white solid;
+    border-radius: 1em;
+    margin: 10em;
+    margin-left: 30vw;
+    margin-right: 30vw;
+    padding: 5em;
+    align-items: center;
+}
+
+.form-label {
+    color: $text-color;
+    font-family: $regular-font-1;
+}
+
+.ach-form-btn {
+    border: 1px white solid;
+    border-radius: 1em;
+    padding: 1em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    margin-left: 1em;
+    margin-right: 1em;
+    background-color: $background-color;
+    color: $text-color;
+    font-family: $regular-font-1;
+
+}
+
+.ach-form-btn:hover {
+    color: $background-color;
+    background-color: $accent-color;
+}
+
+.btn-container {
+    display: flex; 
+    justify-content: center;
+    
+}

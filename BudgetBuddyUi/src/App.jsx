@@ -13,7 +13,12 @@ import ReportDetails from "./components/Report/ReportDetails";
 import ReportCreator from "./components/Create/ReportCreator/ReportCreator";
 import Goal from "./components/Goals/Goal";
 import TransactionAccount from "./components/TransactionAccount/TransactionAccount";
+import AdminHome from "./components/AdminPages/AdminHome/AdminHome";
+import AchievementList from "./components/AdminPages/Achievements/AchievementList/AchievementList";
+import CreateAchievement from "./components/AdminPages/CreateAchievement/CreateAchievement";
+import UpdateAchievement from "./components/AdminPages/UpdateAchievement/UpdateAchievement";
 import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
+
 
 
 const App = () => {
@@ -25,10 +30,8 @@ const App = () => {
         <Route path="/transaction/:id" element={<Transaction />} />
         <Route path="/achievement/:id" element={<Achievement />} />
         <Route path="/account" element={<TransactionAccount />} />
-        <Route path="/achievement/create" element={<AchievementCreator />} />
         <Route path="account/update/:id" element={<AccountCreator />} />
         <Route path="transaction/update/:id" element={<TransactionCreator />} />
-        <Route path="achievement/update/:id" element={<AchievementCreator />} />
         <Route path="achievements" element={<AchievementDashBoard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -36,6 +39,9 @@ const App = () => {
         <Route path="/reports/" element={<Reports />} />
         <Route path="/reports/:reportId" element={<ReportDetails />} />
         <Route path="/reports/add" element={<ReportCreator />} />
+        <Route path="/admin" element={<AdminHome />} />
+        <Route path="/achievements/create/" element={<CreateAchievement />} />
+        <Route path="/achievements/update/:achievementId" element={<UpdateAchievement />}/>
       </Routes>
     </div>
   );
