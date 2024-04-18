@@ -18,9 +18,9 @@ public class GoalRepository : IGoalRepository
     {
         try
         {
-            var result = _database.Goals
+            var result = await _database.Goals
                 .Where(goal => goal.AccountId == accountId)
-                .ToArray();
+                .ToArrayAsync();
             if (result == null)
             {
                 throw new KeyNotFoundException("Goals not found.");
