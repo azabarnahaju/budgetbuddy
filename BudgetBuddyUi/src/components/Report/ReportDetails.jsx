@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchData } from "../../service/connectionService";
 import { useState } from "react";
-import { stringToDate } from "../../utils/helperFunctions";
+import { prepareChartData, stringToDate } from "../../utils/helperFunctions";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import "./ReportDetails.scss";
@@ -32,80 +32,12 @@ const ReportDetails = () => {
         "GET"
       );
       const transactionData = fetchedTransactions.data.data["$values"];
-      const extractedData = extractTransactionData(transactionData);
-      setChartData(prepareChartData(extractedData, startDate, endDate));
+      setChartData(prepareChartData(transactionData, startDate, endDate));
       setReport(report.data.data);
     };
     fetchReport();
     setLoading(false);
   }, []);
-
-  const extractTransactionData = (data) => {
-    const extractedData = [];
-    data.forEach((element) => {
-      extractedData.push({
-        amount: element.amount,
-        type: element.type,
-        date: element.date.split("T")[0],
-      });
-    });
-
-    return extractedData;
-  };
-
-  const prepareChartData = (data, startDate, endDate) => {
-    const chartData = {
-      labels: [],
-      datasets: [
-        {
-          label: "Expense",
-          backgroundColor: "rgba(255, 99, 132, 0.6)",
-          borderColor: "rgba(255, 99, 132, 1)",
-          borderWidth: 1,
-          hoverBackgroundColor: "rgba(255, 99, 132, 0.8)",
-          hoverBorderColor: "rgba(255, 99, 132, 1)",
-          data: [],
-        },
-        {
-          label: "Income",
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-          hoverBackgroundColor: "rgba(75, 192, 192, 0.8)",
-          hoverBorderColor: "rgba(75, 192, 192, 1)",
-          data: [],
-        },
-      ],
-    };
-
-    for (
-      let date = new Date(startDate);
-      date <= new Date(endDate);
-      date.setDate(date.getDate() + 1)
-    ) {
-      const dateString = date.toISOString().split("T")[0];
-      chartData.labels.push(dateString);
-
-      let totalIncome = 0;
-      let totalExpense = 0;
-
-      data.forEach((entry) => {
-        if (entry.date === dateString) {
-          if (entry.type === "Income") {
-            totalIncome += entry.amount;
-          } else {
-            totalExpense += entry.amount;
-          }
-        }
-      });
-
-      // Add data to datasets
-      chartData.datasets[0].data.push(-totalExpense);
-      chartData.datasets[1].data.push(totalIncome);
-    }
-
-    return chartData;
-  };
 
   if (loading) {
     return <>LOADING</>;

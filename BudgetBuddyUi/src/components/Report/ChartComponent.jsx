@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Bar } from "react-chartjs-2";
+import "chartjs-adapter-moment";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,7 +34,7 @@ const ChartComponent = ({ data }) => {
       plugins: {
         title: {
           display: true,
-          text: "Chart.js Bar Chart - Stacked",
+          text: "Expenses and Incomes Per Day",
           font: {
             size: 18,
           },
@@ -42,6 +43,13 @@ const ChartComponent = ({ data }) => {
       responsive: true,
       scales: {
         x: {
+          type: "time",
+          time: {
+            unit: "day",
+            displayFormats: {
+              day: "YYYY-MM-DD",
+            },
+          },
           stacked: true,
           grid: {
             color: "rgba(95, 95, 205, 0.3)",
