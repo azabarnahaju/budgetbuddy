@@ -36,7 +36,6 @@ public class GoalController : ControllerBase
             {
                 var user = await _userRepository.GetUserById(result[0].UserId);
                 if (user is null) throw new Exception("User not found");
-                await _achievementService.UpdateGoalAchievements(user);
             }
             
             return Ok(new { message = "Goals retrieved successfully", data = result });
