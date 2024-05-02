@@ -3,8 +3,11 @@ using System.Net.Http.Headers;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using FluentAssertions;
 using Newtonsoft.Json;
+using Xunit.Abstractions;
 
 namespace BudgetBuddy.IntegrationTests.IntegrationTests;
 
@@ -52,41 +55,37 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
         var expectedResult = new List<Achievement>
-        {
-            new Achievement
-                { Id = 1, Name = "Pioneer", Description = "You've recorded your first expense transaction!" },
-            new Achievement
-                { Id = 2, Name = "Big Spender", Description = "You've recorded 5 expense transactions!" },
-            new Achievement
-                { Id = 3, Name = "Money Bags", Description = "You've recorded 10 expense transactions!" },
-
-            new Achievement
-                { Id = 4, Name = "Money Maker", Description = "You've recorded your first income transaction!" },
-            new Achievement
-                { Id = 5, Name = "Wealth Builder", Description = "You've recorded 5 income transactions!" },
-            new Achievement
-                { Id = 6, Name = "Financial Wizard", Description = "You've recorded 10 income transactions!" },
-
-            new Achievement { Id = 7, Name = "Account Holder", Description = "You've created your first account!" },
-
-            new Achievement
-                { Id = 8, Name = "Penny Pincher", Description = "You've saved up $500 in your account!" },
-            new Achievement { Id = 9, Name = "Frugal", Description = "You've saved up $1000 in your account!" },
-            new Achievement { Id = 10, Name = "Thrifty", Description = "You've saved up $1500 in your account!" },
-
-            new Achievement { Id = 11, Name = "Goal Setter", Description = "You've set your first goal!" },
-            new Achievement { Id = 12, Name = "Goal Achiever", Description = "You've set 3 goals!" },
-            new Achievement { Id = 13, Name = "Master of Goals", Description = "You've set 5 goals!" },
-
-            new Achievement { Id = 14, Name = "Goal Getter", Description = "You've completed your first goal!" },
-            new Achievement { Id = 15, Name = "Goal Digger", Description = "You've completed 3 goals!" },
-            new Achievement { Id = 16, Name = "Goal Crusher", Description = "You've completed 5 goals!" },
-
-            new Achievement
-                { Id = 17, Name = "Five-Star Dabbler", Description = "You've used 5 different categories!" },
-            new Achievement { Id = 18, Name = "Jack of All Trades", Description = "You've used 10 categories!" },
-            new Achievement { Id = 19, Name = "Master of All", Description = "You've used ALL categories!" }
-        };
+            {
+                new Achievement("Pioneer", AchievementType.Exploration, 1, AchievementObjectiveType.Transaction) { Id = 1, Users = new HashSet<ApplicationUser>()},
+                new Achievement("Money Tracker", AchievementType.Exploration, 10, AchievementObjectiveType.Transaction){ Id = 2,Users = new HashSet<ApplicationUser>()},
+                new Achievement("Transaction Pro", AchievementType.Exploration, 25, AchievementObjectiveType.Transaction) { Id = 3,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Account Starter", AchievementType.Exploration, 1, AchievementObjectiveType.Account){ Id = 4,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Multi-Account Holder", AchievementType.Exploration, 3, AchievementObjectiveType.Account){ Id = 5,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Master of Accounts", AchievementType.Exploration, 5, AchievementObjectiveType.Account){ Id = 6,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Income Beginner", AchievementType.Exploration, 1, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 7,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Income Earner", AchievementType.Exploration, 10, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 8,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Income Guru", AchievementType.Exploration, 25, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 9,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Master of Income", AchievementType.Exploration, 50, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 10,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Expense Beginner", AchievementType.Exploration, 1, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 11,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Expense Proficient", AchievementType.Exploration, 10, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 12,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Big Spender", AchievementType.Exploration, 25, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 13,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Master of Expenses", AchievementType.Exploration, 50, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 14,Users = new HashSet<ApplicationUser>() },
+                new Achievement ("Goal Getter", AchievementType.Exploration, 1, AchievementObjectiveType.Goal){ Id = 15,Users = new HashSet<ApplicationUser>() },
+                new Achievement ("Goal Digger", AchievementType.Exploration, 3, AchievementObjectiveType.Goal){ Id = 16,Users = new HashSet<ApplicationUser>() },
+                new Achievement ("Goal Crusher", AchievementType.Exploration, 5, AchievementObjectiveType.Goal){ Id = 17,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Penny Pincher", AchievementType.AmountBased, 100, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 18,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Budget Boss", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 19,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Financial Guru", AchievementType.AmountBased, 2000, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 20,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Money Master", AchievementType.AmountBased, 5000, AchievementObjectiveType.TransactionType, TransactionType.Expense){ Id = 21,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Money Maker", AchievementType.AmountBased, 100, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 22,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Cash Flow Captain", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 23,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Income Innovator", AchievementType.AmountBased, 2000, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 24,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Wealth Wizard", AchievementType.AmountBased, 5000, AchievementObjectiveType.TransactionType, TransactionType.Income){ Id = 25,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Entertainment Explorer", AchievementType.AmountBased, 50, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment){ Id = 26,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Leisure Luminary", AchievementType.AmountBased, 150, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment){ Id = 27,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Fun Fund Fancier", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment){ Id = 28,Users = new HashSet<ApplicationUser>() },
+                new Achievement("Entertainment Enthusiast", AchievementType.AmountBased, 1000, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment){ Id = 29,Users = new HashSet<ApplicationUser>() },
+            };
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -101,8 +100,9 @@ public class GetEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<P
     public async Task Get_AchievementById_Return_Correct_Object(string url)
     {
         var token = new TestJwtToken().WithRole("Admin").WithName("testadmin").Build();
-        var expectedResult = new Achievement
-            { Id = 1, Name = "Pioneer", Description = "You've recorded your first expense transaction!" };
+        var expectedResult =
+            new Achievement("Pioneer", AchievementType.Exploration, 1, AchievementObjectiveType.Transaction)
+                { Id = 1, Description = $"You have created 1 Transaction!", Users = new HashSet<ApplicationUser>()};
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

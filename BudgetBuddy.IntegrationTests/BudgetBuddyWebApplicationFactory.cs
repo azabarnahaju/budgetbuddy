@@ -3,6 +3,8 @@ using BudgetBuddy.Data;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -71,39 +73,35 @@ public class BudgetBuddyWebApplicationFactory<TProgram> : WebApplicationFactory<
         });
         context.Achievements.AddRange(new List<Achievement>
             {
-                new Achievement
-                    { Name = "Pioneer", Description = "You've recorded your first expense transaction!" },
-                new Achievement
-                    { Name = "Big Spender", Description = "You've recorded 5 expense transactions!" },
-                new Achievement
-                    { Name = "Money Bags", Description = "You've recorded 10 expense transactions!" },
-
-                new Achievement
-                    { Name = "Money Maker", Description = "You've recorded your first income transaction!" },
-                new Achievement
-                    { Name = "Wealth Builder", Description = "You've recorded 5 income transactions!" },
-                new Achievement
-                    { Name = "Financial Wizard", Description = "You've recorded 10 income transactions!" },
-
-                new Achievement { Name = "Account Holder", Description = "You've created your first account!" },
-
-                new Achievement
-                    { Name = "Penny Pincher", Description = "You've saved up $500 in your account!" },
-                new Achievement { Name = "Frugal", Description = "You've saved up $1000 in your account!" },
-                new Achievement { Name = "Thrifty", Description = "You've saved up $1500 in your account!" },
-
-                new Achievement { Name = "Goal Setter", Description = "You've set your first goal!" },
-                new Achievement { Name = "Goal Achiever", Description = "You've set 3 goals!" },
-                new Achievement { Name = "Master of Goals", Description = "You've set 5 goals!" },
-                
-                new Achievement { Name = "Goal Getter", Description = "You've completed your first goal!" },
-                new Achievement { Name = "Goal Digger", Description = "You've completed 3 goals!" },
-                new Achievement { Name = "Goal Crusher", Description = "You've completed 5 goals!" },
-
-                new Achievement
-                    { Name = "Five-Star Dabbler", Description = "You've used 5 different categories!" },
-                new Achievement { Name = "Jack of All Trades", Description = "You've used 10 categories!" },
-                new Achievement { Name = "Master of All", Description = "You've used ALL categories!" }
+                new Achievement("Pioneer", AchievementType.Exploration, 1, AchievementObjectiveType.Transaction),
+                new Achievement("Money Tracker", AchievementType.Exploration, 10, AchievementObjectiveType.Transaction),
+                new Achievement("Transaction Pro", AchievementType.Exploration, 25, AchievementObjectiveType.Transaction),
+                new Achievement("Account Starter", AchievementType.Exploration, 1, AchievementObjectiveType.Account),
+                new Achievement("Multi-Account Holder", AchievementType.Exploration, 3, AchievementObjectiveType.Account),
+                new Achievement("Master of Accounts", AchievementType.Exploration, 5, AchievementObjectiveType.Account),
+                new Achievement("Income Beginner", AchievementType.Exploration, 1, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Income Earner", AchievementType.Exploration, 10, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Income Guru", AchievementType.Exploration, 25, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Master of Income", AchievementType.Exploration, 50, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Expense Beginner", AchievementType.Exploration, 1, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Expense Proficient", AchievementType.Exploration, 10, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Big Spender", AchievementType.Exploration, 25, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Master of Expenses", AchievementType.Exploration, 50, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement ("Goal Getter", AchievementType.Exploration, 1, AchievementObjectiveType.Goal),
+                new Achievement ("Goal Digger", AchievementType.Exploration, 3, AchievementObjectiveType.Goal),
+                new Achievement ("Goal Crusher", AchievementType.Exploration, 5, AchievementObjectiveType.Goal),
+                new Achievement("Penny Pincher", AchievementType.AmountBased, 100, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Budget Boss", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Financial Guru", AchievementType.AmountBased, 2000, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Money Master", AchievementType.AmountBased, 5000, AchievementObjectiveType.TransactionType, TransactionType.Expense),
+                new Achievement("Money Maker", AchievementType.AmountBased, 100, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Cash Flow Captain", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Income Innovator", AchievementType.AmountBased, 2000, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Wealth Wizard", AchievementType.AmountBased, 5000, AchievementObjectiveType.TransactionType, TransactionType.Income),
+                new Achievement("Entertainment Explorer", AchievementType.AmountBased, 50, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment),
+                new Achievement("Leisure Luminary", AchievementType.AmountBased, 150, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment),
+                new Achievement("Fun Fund Fancier", AchievementType.AmountBased, 500, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment),
+                new Achievement("Entertainment Enthusiast", AchievementType.AmountBased, 1000, AchievementObjectiveType.TransactionTag, null, TransactionCategoryTag.Entertainment),
             });
         context.Goals.Add(new Goal()
         {

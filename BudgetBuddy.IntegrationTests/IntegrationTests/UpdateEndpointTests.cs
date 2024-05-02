@@ -4,6 +4,8 @@ using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using Newtonsoft.Json;
 
 namespace BudgetBuddy.IntegrationTests.IntegrationTests;
@@ -38,7 +40,7 @@ public class UpdateEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
         var factory = new BudgetBuddyWebApplicationFactory<Program>();
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var expectedResult = new Achievement() { Id = 1, Name = "NewName", Description = "NewDescription"};
+        var expectedResult = new Achievement("UpdatedName", AchievementType.Exploration, 30, AchievementObjectiveType.Account) { Id = 1, Description = "UpdatedDescription"};
         var achievementToUpdate = new AchievementUpdateRequest(expectedResult.Id, expectedResult.Name, expectedResult.Description);
         var content = new StringContent(JsonConvert.SerializeObject(achievementToUpdate), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync(url, content);
