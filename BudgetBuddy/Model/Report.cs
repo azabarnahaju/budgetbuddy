@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Model;

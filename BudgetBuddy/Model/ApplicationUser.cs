@@ -6,5 +6,5 @@ namespace BudgetBuddy.Model;
 public class ApplicationUser : IdentityUser
 {
     public virtual List<Account> Accounts { get; set; }
-    public virtual List<Achievement> Achievements { get; set; }
+    public virtual HashSet<Achievement> Achievements { get; set; }
 }
