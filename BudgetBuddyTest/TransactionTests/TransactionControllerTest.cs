@@ -3,6 +3,7 @@ using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.Repositories.Transaction;
