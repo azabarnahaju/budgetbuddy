@@ -2,8 +2,11 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.ReportServices;
+using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Report;
+using BudgetBuddy.Services.Repositories.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +19,16 @@ public class ReportController : ControllerBase
     private readonly ILogger<ReportController> _logger;
     private readonly IReportRepository _reportRepository;
     private readonly IReportService _reportService;
+    private readonly IAchievementService _achievementService;
+    private readonly IUserRepository _userRepository;
 
-    public ReportController(ILogger<ReportController> logger, IReportRepository reportRepository, IReportService reportService)
+    public ReportController(ILogger<ReportController> logger, IReportRepository reportRepository, IReportService reportService, IAchievementService achievementService, IUserRepository userRepository)
     {
         _logger = logger;
         _reportRepository = reportRepository;
         _reportService = reportService;
+        _achievementService = achievementService;
+        _userRepository = userRepository;
     }
 
     [HttpGet, Authorize(Roles = "Admin")]
@@ -99,10 +106,13 @@ public class ReportController : ControllerBase
         try
         {
             var report = await _reportService.CreateReport(createRequest);
+            var user = await _userRepository.GetUserByAccountId(createRequest.AccountId);
+            var reportAdded = await _reportRepository.AddReport(report);
+            await _achievementService.UpdateRecordAchievements(user);
             return Ok(new
             {
                 message = "Report successfully created and added.",
-                data = await _reportRepository.AddReport(report)
+                data = reportAdded
             });
         }
         catch (Exception e)
