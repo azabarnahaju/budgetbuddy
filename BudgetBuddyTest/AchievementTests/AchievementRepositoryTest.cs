@@ -1,7 +1,9 @@
 ﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model;
+using BudgetBuddy.Model.Enums.AchievementEnums;
 using BudgetBuddy.Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,10 +49,10 @@ public class AchievementRepositoryTest
     [Test]
     public async Task GetAllAchievements_ReturnsOneWhenHasOneAchievement()
     {
-        await _context.AddAsync(new Achievement { Id = 1, Name = "a", Description = "abc", Users = new List<ApplicationUser>() });
+        await _context.AddAsync(new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 });
         await _context.SaveChangesAsync();
         
-        var expectedResult = new Achievement[] { new Achievement { Id = 1, Name = "a", Description = "abc", Users = new List<ApplicationUser>() } };
+        var expectedResult = new Achievement[] { new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 } };
         var actualResult = await _repository.GetAllAchievements();
     
         Console.WriteLine($"ID: {expectedResult[0].Id}, Title: {expectedResult[0].Name}, Desc: {expectedResult[0].Description}");
@@ -66,9 +68,9 @@ public class AchievementRepositoryTest
     {
         var achievements = new List<Achievement>
         {
-            new Achievement { Id = 1, Name = "b", Description = "bca", Users = new List<ApplicationUser>() },
-            new Achievement { Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>() },
-            new Achievement { Id = 3, Name = "d", Description = "ddd", Users = new List<ApplicationUser>() }
+            new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 },
+            new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
+            new Achievement ("Test3", AchievementType.Exploration, 5, AchievementObjectiveType.Account) { Id = 3 }
         };
          await _context.AddRangeAsync(achievements);
         await _context.SaveChangesAsync();
@@ -94,7 +96,7 @@ public class AchievementRepositoryTest
     [Test]
     public async Task GetAchievement_ReturnsCorrectAchievementForId()
     {
-        var achievement = new Achievement { Id = 1, Name = "a", Description = "abc", Users = new List<ApplicationUser>() };
+        var achievement = new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 };
         await _context.AddAsync(achievement);
         await _context.SaveChangesAsync();
         
@@ -108,8 +110,8 @@ public class AchievementRepositoryTest
     {
         var achievementsToAdd = new List<AchievementCreateRequest>
         {
-            new ("a", "abc"),
-            new ("a", "abc")
+            new ("Test1", AchievementType.Exploration, 1, AchievementObjectiveType.Account),
+            new ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account)
         };
         var result = await _repository.AddAchievement(achievementsToAdd);
         foreach (var VARIABLE in result)
@@ -126,16 +128,16 @@ public class AchievementRepositoryTest
     {
         var achievements = new List<Achievement>
         {
-            new Achievement { Id = 1, Name = "b", Description = "bca" },
-            new Achievement { Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>() },
+            new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 },
+            new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
         };
         var expectedAchievements = new List<Achievement>
         {
-            new Achievement(){Id = 3, Name = "d", Description = "ddd", Users = new List<ApplicationUser>()}
+            new Achievement ("Test3", AchievementType.Exploration, 5, AchievementObjectiveType.Account) { Id = 3, Users = new HashSet<ApplicationUser>() }
         };
         var achievementToAdd = new List<AchievementCreateRequest>
         {
-            new AchievementCreateRequest("d","ddd"),
+            new AchievementCreateRequest("Test3", AchievementType.Exploration, 5, AchievementObjectiveType.Account),
         };
         
         await _context.AddRangeAsync(achievements);
@@ -166,8 +168,8 @@ public class AchievementRepositoryTest
     {
         var achievements = new List<Achievement>
         {
-            new Achievement { Id = 1, Name = "b", Description = "bca", Users = new List<ApplicationUser>() },
-            new Achievement { Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>() },
+            new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 },
+            new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
         };
 
         await _context.AddRangeAsync(achievements);
@@ -191,8 +193,8 @@ public class AchievementRepositoryTest
     {
         var achievements = new List<Achievement>
         {
-            new Achievement { Id = 1, Name = "b", Description = "bca", Users = new List<ApplicationUser>() },
-            new Achievement { Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>() },
+            new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 },
+            new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
         };
 
         await _context.AddRangeAsync(achievements);
@@ -206,7 +208,7 @@ public class AchievementRepositoryTest
         {
             Assert.That(repositoryAfter.Count(), Is.EqualTo(achievements.Count() - 1));
             Assert.That(repositoryAfter.Count(), Is.EqualTo(repositoryBefore.Count() - 1));
-            Assert.That(repositoryAfter, Does.Not.Contain(new Achievement { Id = 1}));
+            Assert.That(repositoryAfter, Does.Not.Contain(new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 }));
         });
     }
     
@@ -215,31 +217,32 @@ public class AchievementRepositoryTest
     {
         var achievements = new List<Achievement>
         {
-            new(){Id = 1, Name = "b", Description = "bca", Users = new List<ApplicationUser>()},
-            new(){Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>()},
+            new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 },
+            new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
         };
 
         var achievementToUpdate = new AchievementUpdateRequest(3, "d", "ddd");
         await _context.AddRangeAsync(achievements);
         await _context.SaveChangesAsync();
 
-        var ex = Assert.ThrowsAsync<ArgumentNullException>(() => _repository.UpdateAchievement(achievementToUpdate));
+        var ex = Assert.ThrowsAsync<Exception>(() => _repository.UpdateAchievement(achievementToUpdate));
         Assert.That(ex, Is.InstanceOf<Exception>());
-        Assert.That(ex.Message, Is.EqualTo($"Value cannot be null. (Parameter 'entity')"));
+        Assert.That(ex.Message, Is.EqualTo($"Achievement not found."));
     }
     
     [Test]
     public async Task UpdateAchievement_UpdatesCorrectAchievement()
     {
-        var achievement1 = new Achievement { Id = 1, Name = "b", Description = "bca", Users = new List<ApplicationUser>() };
-        var achievement2 = new Achievement { Id = 2, Name = "c", Description = "cba", Users = new List<ApplicationUser>() };
+        var achievement1 = new Achievement ("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1 };
+        var achievement2 = new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 };
         var achievements = new Achievement[] { achievement1, achievement2 };
         
         await _context.AddRangeAsync(achievements);
         await _context.SaveChangesAsync();
-        
-        var expectedAchievement = new Achievement { Id = 1, Name = "asdasdasd", Description = "asdasdasd", Users = new List<ApplicationUser>() };
-        var achievementToUpdate = new AchievementUpdateRequest(1, "asdasdasd", "asdasdasd");
+
+        var expectedAchievement =
+            new Achievement("TestUpdated", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1, Description = "TestUpdatedDescription"};
+        var achievementToUpdate = new AchievementUpdateRequest(1, "TestUpdated", "TestUpdatedDescription");
         await _repository.UpdateAchievement(achievementToUpdate);
         
         var updatedAchievement = await _repository.GetAchievement(1);

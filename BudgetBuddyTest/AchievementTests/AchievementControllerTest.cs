@@ -1,7 +1,10 @@
 ﻿using BudgetBuddy.Contracts.ModelRequest;
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
 using BudgetBuddy.Controllers;
 using BudgetBuddy.Model;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.Repositories.Achievement;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,7 +47,7 @@ public class AchievementControllerTest
     [Test]
     public async Task GetAll_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var achievements = new List<Achievement> { new Achievement()};
+        var achievements = new List<Achievement> { new Achievement("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account)};
         _achievementRepositoryMock.Setup(x => x.GetAllAchievements()).ReturnsAsync(achievements);
 
         var result = await _controller.GetAll();
@@ -74,7 +77,7 @@ public class AchievementControllerTest
     [Test]
     public async Task Get_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var achievement = new Achievement();
+        var achievement = new Achievement("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account);
         _achievementRepositoryMock.Setup(x => x.GetAchievement(It.IsAny<int>())).ReturnsAsync(achievement);
 
         var result = await _controller.Get(It.IsAny<int>());
@@ -165,7 +168,7 @@ public class AchievementControllerTest
     [Test]
     public async Task Update_ReturnsOkIfRepositoryReturnsValidData()
     {
-        var achievement = new Achievement(){Id = 1, Name = "Test", Description = "Test"};
+        var achievement = new Achievement("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account){ Id = 1};
         _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<AchievementUpdateRequest>())).ReturnsAsync(achievement);
         var achievementToUpdate = new AchievementUpdateRequest(1, "Test", "Test");
         var result = await _controller.Update(achievementToUpdate);
