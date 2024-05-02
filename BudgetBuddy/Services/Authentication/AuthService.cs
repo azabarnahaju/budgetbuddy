@@ -19,7 +19,7 @@ public class AuthService : IAuthService
     {
         var user = new ApplicationUser
         {
-            UserName = username, Email = email, Accounts = new List<Account>(), Achievements = new List<Achievement>()
+            UserName = username, Email = email, Accounts = new List<Account>(), Achievements = new HashSet<Achievement>()
         };
         var result =
             await _userManager.CreateAsync(user, password);
