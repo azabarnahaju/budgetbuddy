@@ -1,4 +1,5 @@
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 
 namespace BudgetBuddy.Contracts.ModelRequest.CreateModels;
 
