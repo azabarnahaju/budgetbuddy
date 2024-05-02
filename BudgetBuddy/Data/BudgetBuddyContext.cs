@@ -1,5 +1,6 @@
 ﻿using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -43,6 +44,13 @@ public class BudgetBuddyContext : IdentityDbContext<ApplicationUser, IdentityRol
             .HasOne(a => a.User)
             .WithMany(a => a.Accounts)
             .HasForeignKey(a => a.UserId)
+            .IsRequired();
+        
+        modelBuilder.Entity<Goal>()
+            .HasOne(g => g.Account)
+            .WithMany(a => a.Goals)
+            .HasForeignKey(g => g.AccountId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
         modelBuilder.Entity<Report>()
