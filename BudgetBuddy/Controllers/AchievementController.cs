@@ -1,3 +1,5 @@
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+
 namespace BudgetBuddy.Controllers;
 
 using Contracts.ModelRequest;
@@ -89,7 +91,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin, User")]
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
