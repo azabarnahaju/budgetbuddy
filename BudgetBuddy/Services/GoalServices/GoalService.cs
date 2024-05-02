@@ -1,5 +1,6 @@
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.Repositories.Goal;
 
 namespace BudgetBuddy.Services.GoalServices;
