@@ -6,6 +6,7 @@ import SnackBar from '../../../Snackbar/Snackbar';
 import AdminNavbar from '../../AdminNavbar/AdminNavbar';
 import Loading from '../../../Loading/Loading';
 import "./AchievementList.scss";
+import Footer from "../../../Footer/Footer";
 
 const AchievementList = () => {
     const [achievements, setAchievements] = useState("");
@@ -126,6 +127,7 @@ const AchievementList = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

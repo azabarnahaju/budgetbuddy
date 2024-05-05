@@ -68,14 +68,22 @@ const CreateAchievement = () => {
             <thead className="table-success">
               <tr>
                 <th>Name</th>
-                <th>Description</th>
+                <th>Achievement Type</th>
+                <th>Achievement Objective</th>
+                <th>Criteria</th>
+                <th>Transaction Tag</th>
+                <th>Transaction Type</th>
               </tr>
             </thead>
             <tbody>
               {achievementsToAdd.map((a) => (
                 <tr>
                   <td className="text-center">{a.name}</td>
-                  <td className="text-center">{a.description}</td>
+                  <td className="text-center">{a.type}</td>
+                  <td className="text-center">{a.objective}</td>
+                  <td className="text-center">{a.criteria}</td>
+                  <td className="text-center">{a.transactionTag}</td>
+                  <td className="text-center">{a.transactionType}</td>
                 </tr>
               ))}
             </tbody>
