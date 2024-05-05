@@ -1,3 +1,7 @@
-﻿namespace BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+﻿using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 
-public record AchievementUpdateRequest(int Id, string Name, string Description);
+namespace BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+
+public record AchievementUpdateRequest(int Id, string Name, AchievementType Type, int Criteria, AchievementObjectiveType Objective, string Description, 
+    TransactionType? TransactionType = null, TransactionCategoryTag? TransactionTag = null);

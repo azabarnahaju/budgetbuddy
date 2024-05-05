@@ -4,4 +4,5 @@ using BudgetBuddy.Model.Enums.TransactionEnums;
 
 namespace BudgetBuddy.Contracts.ModelRequest.CreateModels;
 
-public record AchievementCreateRequest(string Name, AchievementType Type, int Criteria, AchievementObjectiveType Objective, TransactionType? TransactionType = null, TransactionCategoryTag? TransactionTag = null);
+public record AchievementCreateRequest(string Name, AchievementType Type, int Criteria, AchievementObjectiveType Objective, 
+    TransactionType? TransactionType = null, TransactionCategoryTag? TransactionTag = null);
