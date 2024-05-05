@@ -1,3 +1,6 @@
+using BudgetBuddy.Contracts.ModelRequest.CreateModels;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+
 namespace BudgetBuddy.Controllers;
 
 using Contracts.ModelRequest;
@@ -89,7 +92,7 @@ public class AchievementController : ControllerBase
     }
     
     // admin functionality
-    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin, User")]
+    [HttpDelete("delete/{achievementId}"), Authorize(Roles = "Admin")]
     public async Task<ActionResult<string>> Delete(int achievementId)
     {
         try
@@ -120,6 +123,38 @@ public class AchievementController : ControllerBase
         {
             _logger.LogError(e, "Updating achievement has failed.");
             return BadRequest(new { message = e.Message });
+        }
+    }
+    
+    // admin functionality
+    [HttpGet("achievementtypes"), Authorize(Roles = "Admin")]
+    public ActionResult<string[]> GetAchievementTypes()
+    {
+        try
+        {
+            var data = Enum.GetNames(typeof(AchievementType));
+            return Ok(new { message = "Retrieving achievement types was successful.", data });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound("Achievement types were not found.");
+        }
+    }
+    
+    // admin functionality
+    [HttpGet("achievementobjectives"), Authorize(Roles = "Admin")]
+    public ActionResult<string[]> GetAchievementObjectives()
+    {
+        try
+        {
+            var data = Enum.GetNames(typeof(AchievementObjectiveType));
+            return Ok(new { message = "Retrieving achievement objectives was successful.", data });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound("Achievement objectives were not found.");
         }
     }
 }

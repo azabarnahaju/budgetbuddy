@@ -6,8 +6,10 @@ namespace BudgetBuddy.Model;
 public class Goal
 {
     public int Id { get; init; }
+    public ApplicationUser User { get; set; }
     public string UserId { get; set; }
     public int AccountId { get; set; }
+    public Account Account { get; set; }
     public GoalType Type { get; set; }
     [Precision(14, 2)]
     public decimal Target { get; set; }

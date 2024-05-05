@@ -5,6 +5,8 @@ using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.IntegrationTests.JwtAuthenticationTest;
 using BudgetBuddy.Model;
 using BudgetBuddy.Model.Enums;
+using BudgetBuddy.Model.Enums.AchievementEnums;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using Newtonsoft.Json;
 
 namespace BudgetBuddy.IntegrationTests.IntegrationTests;
@@ -42,8 +44,8 @@ public class PostEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactory<
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var expectedResult = new List<Achievement>()
-            { new () { Id = 20, Name = "Test2", Description = "Test" } };
-        var achievementToCreate = new List<AchievementCreateRequest> {new ("Test2", "Test")};
+            { new ("Test2", AchievementType.Exploration, 30, AchievementObjectiveType.Account) { Id = 30 } };
+        var achievementToCreate = new List<AchievementCreateRequest> {new ("Test2", AchievementType.Exploration, 30, AchievementObjectiveType.Account)};
         
         var content = new StringContent(JsonConvert.SerializeObject(achievementToCreate), Encoding.UTF8, "application/json");
         var response = await client.PostAsync(url, content);

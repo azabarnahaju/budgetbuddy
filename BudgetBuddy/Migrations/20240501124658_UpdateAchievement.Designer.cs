@@ -4,6 +4,7 @@ using BudgetBuddy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BudgetBuddy.Migrations
 {
     [DbContext(typeof(BudgetBuddyContext))]
-    partial class BudgetBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20240501124658_UpdateAchievement")]
+    partial class UpdateAchievement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -492,15 +495,15 @@ namespace BudgetBuddy.Migrations
             modelBuilder.Entity("BudgetBuddy.Model.Goal", b =>
                 {
                     b.HasOne("BudgetBuddy.Model.Account", "Account")
-                        .WithMany("Goals")
+                        .WithMany()
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BudgetBuddy.Model.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Goals")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -598,8 +601,6 @@ namespace BudgetBuddy.Migrations
 
             modelBuilder.Entity("BudgetBuddy.Model.Account", b =>
                 {
-                    b.Navigation("Goals");
-
                     b.Navigation("Reports");
 
                     b.Navigation("Transactions");
@@ -608,6 +609,8 @@ namespace BudgetBuddy.Migrations
             modelBuilder.Entity("BudgetBuddy.Model.ApplicationUser", b =>
                 {
                     b.Navigation("Accounts");
+
+                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

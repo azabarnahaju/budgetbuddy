@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using BudgetBuddy.Data;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.AchievementService;
 using BudgetBuddy.Services.GoalServices;
 using BudgetBuddy.Services.Repositories.User;
@@ -49,7 +50,6 @@ public class TransactionController : ControllerBase
             var result = await _transactionRepository.AddTransaction(transaction);
             var user = await _userRepository.GetUserByAccountId(result.AccountId);
             await _achievementService.UpdateTransactionAchievements(user);
-            await _achievementService.UpdateGoalAchievements(user);
             await _goalService.UpdateGoalProcess(result);
             return Ok(new { message = "Transaction added.", data = transaction });
         }
@@ -168,6 +168,38 @@ public class TransactionController : ControllerBase
         {
             _logger.LogError(e, $"Error filtering transactions by {tag} tag.");
             return NotFound(new { message = $"Error filtering transactions by {tag} tag." });
+        }
+    }
+    
+    // admin functionality
+    [HttpGet("transactiontags"), Authorize(Roles = "Admin")]
+    public ActionResult<string[]> GetTransactionTags()
+    {
+        try
+        {
+            var data = Enum.GetNames(typeof(TransactionCategoryTag));
+            return Ok(new { message = "Retrieving transaction tags was successful.", data });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound("Transaction tags were not found.");
+        }
+    }
+    
+    // admin functionality
+    [HttpGet("transactiontypes"), Authorize(Roles = "Admin")]
+    public ActionResult<string[]> GetTransactionTypes()
+    {
+        try
+        {
+            var data = Enum.GetNames(typeof(TransactionType));
+            return Ok(new { message = "Retrieving transaction types was successful.", data });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return NotFound("Transaction types were not found.");
         }
     }
 }

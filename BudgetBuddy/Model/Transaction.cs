@@ -1,3 +1,4 @@
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetBuddy.Model;

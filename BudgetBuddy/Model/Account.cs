@@ -15,6 +15,7 @@ public class Account
     public string UserId { get; init; }
     public List<Transaction> Transactions { get; init; } 
     public List<Report> Reports { get; init; }
+    public List<Goal> Goals { get; init; } 
     
     public override bool Equals(object obj)
     {

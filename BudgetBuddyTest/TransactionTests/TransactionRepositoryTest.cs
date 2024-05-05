@@ -1,5 +1,6 @@
 using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.Repositories.Achievement;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
