@@ -58,25 +58,36 @@ public class Achievement
     private string GetDescription()
     {
         var description = "";
+        var objective = Criteria > 1 ? $"{Objective}s" : $"{Objective}";
+        
         switch (Type)
         {
             case AchievementType.Exploration:
             {
-                description = Objective == AchievementObjectiveType.Goal ? $"You have set {Criteria} {Objective}" : $"You have created {Criteria} {Objective}";
-                
-                if (Criteria > 1)
+                if (TransactionType is null && TransactionTag is null)
                 {
-                    description += "s!";
+                    description = Objective == AchievementObjectiveType.Goal ? $"You have set {Criteria} {objective}!" : $"You have created {Criteria} {objective}!";
                 }
                 else
                 {
-                    description += "!";
+                    description = TransactionTag is null
+                        ? $"You have created {Criteria} {TransactionType} {objective}!"
+                        : $"You have created {Criteria} {objective} with the tag {TransactionTag}!";
                 }
-                
                 break;
             }
             case AchievementType.AmountBased:
-                description = $"You have reached ${Criteria} in your {Objective}(s)!";
+                if (TransactionType is null && TransactionTag is null)
+                {
+                    description = $"You have reached ${Criteria} in your {Objective}(s)!";
+                }
+                else
+                {
+                    description = TransactionTag is null
+                        ? $"You have reached ${Criteria} within your {TransactionType} transactions!"
+                        : $"You have reached ${Criteria} within transactions with the tag {TransactionTag}!";
+                }
+
                 break;
         } 
         
