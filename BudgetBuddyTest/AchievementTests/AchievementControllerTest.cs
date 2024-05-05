@@ -170,7 +170,7 @@ public class AchievementControllerTest
     {
         var achievement = new Achievement("Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account){ Id = 1};
         _achievementRepositoryMock.Setup(x => x.UpdateAchievement(It.IsAny<AchievementUpdateRequest>())).ReturnsAsync(achievement);
-        var achievementToUpdate = new AchievementUpdateRequest(1, "Test", "Test");
+        var achievementToUpdate = new AchievementUpdateRequest(1, "Test", AchievementType.Exploration, 1, AchievementObjectiveType.Account, "TestDescription");
         var result = await _controller.Update(achievementToUpdate);
         
         Assert.IsInstanceOf(typeof(OkObjectResult), result.Result);

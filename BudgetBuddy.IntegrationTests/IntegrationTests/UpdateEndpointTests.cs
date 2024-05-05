@@ -41,7 +41,7 @@ public class UpdateEndpointTests : IClassFixture<BudgetBuddyWebApplicationFactor
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var expectedResult = new Achievement("UpdatedName", AchievementType.Exploration, 30, AchievementObjectiveType.Account) { Id = 1, Description = "UpdatedDescription"};
-        var achievementToUpdate = new AchievementUpdateRequest(expectedResult.Id, expectedResult.Name, expectedResult.Description);
+        var achievementToUpdate = new AchievementUpdateRequest(expectedResult.Id, expectedResult.Name, expectedResult.Type, expectedResult.Criteria, expectedResult.Objective, expectedResult.Description);
         var content = new StringContent(JsonConvert.SerializeObject(achievementToUpdate), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync(url, content);
 

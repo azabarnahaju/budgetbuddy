@@ -221,7 +221,7 @@ public class AchievementRepositoryTest
             new Achievement ("Test2", AchievementType.Exploration, 3, AchievementObjectiveType.Account) { Id = 2 },
         };
 
-        var achievementToUpdate = new AchievementUpdateRequest(3, "d", "ddd");
+        var achievementToUpdate = new AchievementUpdateRequest(3, "TestUpdated", AchievementType.Exploration, 2, AchievementObjectiveType.Goal, "TestDescription");
         await _context.AddRangeAsync(achievements);
         await _context.SaveChangesAsync();
 
@@ -242,7 +242,7 @@ public class AchievementRepositoryTest
 
         var expectedAchievement =
             new Achievement("TestUpdated", AchievementType.Exploration, 1, AchievementObjectiveType.Account) { Id = 1, Description = "TestUpdatedDescription"};
-        var achievementToUpdate = new AchievementUpdateRequest(1, "TestUpdated", "TestUpdatedDescription");
+        var achievementToUpdate = new AchievementUpdateRequest(1, "TestUpdated", AchievementType.Exploration, 1, AchievementObjectiveType.Account, "TestUpdatedDescription");
         await _repository.UpdateAchievement(achievementToUpdate);
         
         var updatedAchievement = await _repository.GetAchievement(1);
