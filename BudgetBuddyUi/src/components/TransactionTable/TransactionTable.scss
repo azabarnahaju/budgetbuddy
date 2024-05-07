@@ -1,0 +1,15 @@
+@import "../../Style/designVariables.scss";
+
+.latest-transaction-table-container {
+    margin-top: 1em;
+}
+
+.latest-transaction-table-container > table > tbody > tr > th {
+    background-color: white !important;
+    color: $text-color;
+}
+
+.latest-transaction-table-container > table > tbody > tr > td {
+    background-color: white !important;
+    color: $text-color;
+}

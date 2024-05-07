@@ -1,4 +1,4 @@
-@import "../../Style/variables";
+@import "../../Style/designVariables";
 
 .achievement-container {
     display: flex;
@@ -6,21 +6,22 @@
 }
  .achievement-content {
     position: relative;
-     background-color: $background-color;
+     background-color: white;
      color: $text-color;
  }
 
  .achievement-content .border {
-    border: 1px solid $secondary-color;
-    border-radius: 5px;
-    margin: 10px;
-    height: 150px;
+    border: 2px solid $secondary-color;
+    border-radius: 1rem;
+    margin: 0.3em;
+    height: 9em;
+    width: 9em;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: $primary-color;
-    font-family: $regular-font-1;
+    font-family: $primary-font;
     font-size: 1.5rem;
     text-align: center;
     cursor: pointer;
@@ -37,4 +38,13 @@
 
 .achievement-content .progress .progress-bar {
     background-color: $secondary-color;
+}
+
+.user-achievement-container {
+    margin-left: 5em;
+    margin-right: 5em;
+}
+
+.achievement-title {
+    font-family: $primary-font;
 }

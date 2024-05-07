@@ -61,7 +61,7 @@ const ChartComponent = ({ data }) => {
               size: 14,
               weight: "bold",
             },
-            color: "rgba(255, 255, 255, 0.8)",
+            color: "rgba(0, 0, 0, 0.8)",
           },
         },
         y: {
@@ -76,7 +76,7 @@ const ChartComponent = ({ data }) => {
               size: 14,
               weight: "bold",
             },
-            color: "rgba(255, 255, 255, 0.8)",
+            color: "rgba(0, 0, 0, 0.8)",
           },
         },
       },

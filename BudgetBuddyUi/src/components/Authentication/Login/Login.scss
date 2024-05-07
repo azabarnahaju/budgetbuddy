@@ -1,14 +1,26 @@
-@import "../../../Style/variables";
+@import "../../../Style/designVariables";
 
 .login-container {
   display: flex;
   flex-direction: column;
   overflow: auto;
   min-height: 100%;
+  padding-top: 5em;
 }
 
 .login-content {
   background-color: $background-color;
   flex: 1;
   color: $text-color;
+}
+
+.login-form {
+  border: 2px solid $border-color;
+  border-radius: 1em;
+  box-shadow: 0.5em 0.5em 5px $shadow-color;
+}
+
+.login-title {
+  font-family: $primary-font;
+  margin-bottom: 2em;
 }

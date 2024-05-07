@@ -10,6 +10,7 @@ import SnackBar from "../../Snackbar/Snackbar";
 import SelectComponent from "../../FormElements/SelectComponent";
 import Navbar from "../../Navbar/Navbar";
 import Footer from "../../Footer/Footer";
+import SideBar from "../../SideBar/SideBar";
 import "./ReportCreator.scss";
 
 const sampleReport = {
@@ -118,15 +119,15 @@ const ReportCreator = () => {
 
   return (
     <div className="report-detail-container vh-100">
-      <Navbar />
+      <SideBar />
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
       <div className="report-creator-content d-flex justify-content-center py-5 text-center">
-        <div className="col-md-6 border rounded p-5">
+        <div className="report-form-container col-md-6 p-5">
           <form onSubmit={handleSubmit}>
-            <h2>Choose an account</h2>
+            <h3 className="report-creator-form-title">Choose an account</h3>
             <select
               onChange={handleSetAccount}
               className="form-control mb-3"
@@ -141,7 +142,7 @@ const ReportCreator = () => {
                 </option>
               ))}
             </select>
-            <h2>Choose a type</h2>
+            <h3 className="report-creator-form-title">Choose a type</h3>
             <SelectComponent
               text="Select Report Type"
               id="reportType"
@@ -167,13 +168,13 @@ const ReportCreator = () => {
               type="date"
               onChange={handleChange}
             />
-            <button type="submit" className="btn btn-info">
+            <button type="submit" className="btn report-creator-submit-btn">
               Create report
             </button>
           </form>
           <div>
             <button
-              className="btn btn-outline-light m-2"
+              className="btn report-creator-back-btn m-2"
               onClick={() => navigate("/reports")}
             >
               Go back
@@ -181,7 +182,6 @@ const ReportCreator = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

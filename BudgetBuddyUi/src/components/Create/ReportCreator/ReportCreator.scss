@@ -1,7 +1,7 @@
-@import "../../../Style/variables";
+@import "../../../Style/designVariables";
 
 .report-creator-container {
-    display: flex;
+  display: flex;
   flex-direction: column;
   overflow: auto;
   min-height: 100%;
@@ -9,6 +9,39 @@
 
 .report-creator-content {
     flex: 1;
-    background-color: $background-color;
+    background-color: white;
     color: $text-color;
+}
+
+.report-form-container {
+  border: 2px solid $primary-color;
+  border-radius: 1em;
+  box-shadow: 0.5em 0.5em 5px $shadow-color;
+  margin-top: 4em;
+  padding-left: 3em;
+  padding-right: 3em;
+  font-family: $primary-font;
+}
+
+.report-creator-form-title {
+  margin-bottom: 0.6em;
+}
+
+form > .report-creator-submit-btn {
+  border: 2px solid $secondary-color;
+  background-color: $secondary-color;
+}
+
+form > .report-creator-submit-btn:hover {
+  border: 2px solid $secondary-color;
+}
+
+div > .report-creator-back-btn {
+  border: 2px solid $primary-color;
+  background-color: $primary-color;
+}
+
+div > .report-creator-back-btn:hover {
+  border: 2px solid $primary-color;
+  background-color: white;
 }

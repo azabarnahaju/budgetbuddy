@@ -1,0 +1,40 @@
+@import "../../../Style/designVariables.scss";
+
+.account-creator-container {
+    border: 2px solid $secondary-color;
+    font-family: $primary-font;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3em;
+    margin-top: 3em;
+    padding: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    border-radius: 1em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
+    flex: 1;
+}
+
+.acc-creator-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.acc-creator-form > button {
+    width: 5em;
+}
+
+form > .acc-creator-form-btn {
+    border: 1px solid $primary-color !important;
+    border-radius: 0.4em;
+    color: $text-color;
+}
+
+form > .acc-creator-form-btn:hover {
+    background-color: $primary-color;
+    color: white;
+}

@@ -7,6 +7,7 @@ import AdminNavbar from '../../AdminNavbar/AdminNavbar';
 import Loading from '../../../Loading/Loading';
 import "./AchievementList.scss";
 import Footer from "../../../Footer/Footer";
+import SideBar from "../../../SideBar/SideBar";
 
 const AchievementList = () => {
     const [achievements, setAchievements] = useState("");
@@ -67,16 +68,25 @@ const AchievementList = () => {
 
   return (
     <div className="admin-page">
-      <AdminNavbar />
+      <SideBar />
       <div className="achievement-list-container">
         <div className="admin-title">All achievements</div>
+        <div className='admin-create-new-btn-container d-flex justify-content-center align-items-center'>
+          <button
+            className="btn admin-ach-create-btn"
+            onClick={() => navigate("/achievements/create")}
+          >
+            Create new
+          </button>
+        </div>
+
         <SnackBar
           {...localSnackbar}
           setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
         />
         <div className="achievement-content">
           {achievements.length >= 1 ? (
-            <table className="table table-dark align-middle table-hover achievements-table">
+            <table className="table table-dark align-middle achievements-table">
               <thead className="table-success">
                 <tr>
                   <th scope="col">#</th>
@@ -93,12 +103,12 @@ const AchievementList = () => {
               <tbody className="table-group-divider">
                 {achievements.map((a) => (
                   <tr>
-                    <th className="table-info">{a.id}</th>
+                    <th>{a.id}</th>
                     <td className="text-center">{a.name}</td>
                     <td className="text-center">{a.description}</td>
                     <td className="text-center">
                       <button
-                        className="btn btn-outline-light me-5"
+                        className="btn admin-ach-btn me-5"
                         onClick={() => navigate(`/achievements/update/${a.id}`)}
                       >
                         Edit
@@ -106,7 +116,7 @@ const AchievementList = () => {
                     </td>
                     <td className="text-center">
                       <button
-                        className="btn btn-outline-light me-5"
+                        className="btn admin-ach-btn me-5"
                         onClick={() => handleDeleteAchievement(a.id)}
                       >
                         Delete
@@ -119,15 +129,8 @@ const AchievementList = () => {
           ) : (
             <div>No achievements added yet.</div>
           )}
-          <button
-            className="btn btn-outline-light me-5"
-            onClick={() => navigate("/achievements/create")}
-          >
-            Create new
-          </button>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

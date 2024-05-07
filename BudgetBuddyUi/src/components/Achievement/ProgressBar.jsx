@@ -1,6 +1,6 @@
 const ProgressBar = ({ userAchievements, allAchievements }) => {
   return (
-    <div class="progress">
+    <div className="progress">
       <div
         className="progress-bar"
         role="progressbar"

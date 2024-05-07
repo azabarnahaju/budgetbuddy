@@ -5,12 +5,13 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import SnackBar from "../Snackbar/Snackbar";
 import Loading from "../Loading/Loading";
+import SideBar from "../SideBar/SideBar";
 
 import "./AchievementDashBoard.scss";
 import ProgressBar from "./ProgressBar";
 
 const AchievementDashBoard = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, loading } = useContext(UserContext);
   const [allAchievements, setAllAchievements] = useState([]);
   const [userAchievements, setUserAchievements] = useState([]);
   const [pageLoading, setPageLoading] = useState(false);
@@ -39,6 +40,9 @@ const AchievementDashBoard = () => {
   };
 
   const fetchUserAchievements = async () => {
+    setPageLoading(true);
+    console.log(loading)
+    console.log(currentUser)
     const response = await fetchData(
       null,
       `/Achievement/user/${currentUser.userId}`,
@@ -48,14 +52,17 @@ const AchievementDashBoard = () => {
       const achievements = response.data.data["$values"];
       setUserAchievements(achievements);
     }
+    setPageLoading(false);
   };
 
   useEffect(() => {
     fetchAllAchievements();
-    fetchUserAchievements();
-  }, []);
+    if (currentUser) {
+      fetchUserAchievements();
+    }
+  }, [currentUser]);
 
-  if (pageLoading) {
+  if (loading || pageLoading) {
     return <Loading />;
   }
 
@@ -65,12 +72,12 @@ const AchievementDashBoard = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <Navbar />
+      <SideBar />
       <div className="achievement-content">
-        <div className="text-center mt-5">
+        <div className="achievement-title text-center mt-5">
           <h1>Achievements</h1>
         </div>
-        <div className="container my-5">
+        <div className="achievement-title user-achievement-container my-5">
           <h3>
             Your Achievements: {userAchievements.length}/
             {allAchievements.length}
@@ -132,7 +139,6 @@ const AchievementDashBoard = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

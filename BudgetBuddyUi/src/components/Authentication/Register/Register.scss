@@ -1,10 +1,11 @@
-@import "../../../Style/variables";
+@import "../../../Style/designVariables";
 
 .register-container {
     display: flex;
     flex-direction: column;
     overflow: auto;
     min-height: 100%;
+    padding-top: 3em;
   }
 
 .register-content {
@@ -12,3 +13,19 @@
     flex: 1;
     color: $text-color;
   }
+
+div > .auth-btn {
+    border: 1px solid $primary-color;
+    border-radius: 0.4em;
+}
+
+div > .auth-btn:hover {
+    background-color: $primary-color;
+    color: white;
+}
+
+.reg-form {
+  border: 2px solid $border-color;
+  border-radius: 1em;
+  box-shadow: 0.5em 0.5em 5px $shadow-color;
+}

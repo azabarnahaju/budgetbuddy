@@ -13,6 +13,7 @@ import AccountSelectComponent from "../FormElements/AccountSelectComponent";
 import { useNavigate } from "react-router";
 import SnackBar from "../Snackbar/Snackbar";
 import GoalList from "./GoalList";
+import SideBar from "../SideBar/SideBar";
 
 const sampleGoal = {
   userId: "",
@@ -123,26 +124,24 @@ const Goal = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <Navbar />
+      <SideBar />
       <div className="goal-content">
         <div className="text-center mt-5">
-          <h1>Goals</h1>
+          <h1 className="goals-title">Goals</h1>
         </div>
-        <div className="container mt-5">
-          <h3>Select your account</h3>
-          <div className="row">
-            <div className="col-md-4">
-              <AccountSelectComponent
-                account={account}
-                id="account"
-                text=""
-                array={accounts}
-                handleSetAccount={handleSetAccount}
-              />
-            </div>
+        <div className="d-flex justify-content-around">
+          <div className="account-selector mt-5">
+            <h3 className="account-selector-title">Select your account</h3>
+            <AccountSelectComponent
+              account={account}
+              id="account"
+              text=""
+              array={accounts}
+              handleSetAccount={handleSetAccount}
+            />
           </div>
+          <GoalList account={account} goalList={goalList} />
         </div>
-        <GoalList account={account} goalList={goalList} />
         <div className="text-end me-5 add-goals">
           <div className="add-goal-container">
             <FontAwesomeIcon
@@ -165,7 +164,6 @@ const Goal = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

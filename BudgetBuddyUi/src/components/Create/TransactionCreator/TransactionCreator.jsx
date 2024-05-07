@@ -7,6 +7,7 @@ import Loading from "../../Loading/Loading";
 import { tags, types } from "../../../utils/categories";
 import InputComponent from "../../FormElements/InputComponent";
 import SelectComponent from "../../FormElements/SelectComponent";
+import "./TransactionCreator.scss";
 
 const sampleTransaction = {
   date: new Date(),
@@ -17,9 +18,8 @@ const sampleTransaction = {
   accountId: "",
 };
 
-const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => {
+const TransactionCreator = ({ pageLoading, setPageLoading, selectedAccountIndex, accounts, setAccounts, setAddingNewTransaction }) => {
   const [transaction, setTransaction] = useState(sampleTransaction);
-  const [loading, setLoading] = useState(false);
   const [localSnackbar, setLocalSnackbar] = useState({
     open: false,
     message: "",
@@ -35,8 +35,10 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
   const handleCreateTransaction = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setPageLoading(true);
       transaction.accountId = accounts[selectedAccountIndex].id;
+      transaction.date = new Date();
+      console.log(transaction);
       const response = await fetchData(transaction, "/Transaction/add", "POST");
       if (response.ok) {
         setLocalSnackbar({
@@ -76,23 +78,31 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
         type: "error",
       });
     }
-    setLoading(false);
+    setPageLoading(false);
     setTransaction(sampleTransaction);
+    setAddingNewTransaction(false);
   };
 
-  if (loading) {
+  if (pageLoading) {
     return <Loading />;
   }
 
+  if (!accounts.length) {
+    return;
+  }
+
   return (
-    <div className="container mt-1">
+    <div className="transaction-creator-container">
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <form onSubmit={handleCreateTransaction} className="rounded border p-4">
-        <h3 className="my-2">New transaction on {accounts[selectedAccountIndex].name}</h3>
-        <div className="mb-3">
+      <form
+        onSubmit={handleCreateTransaction}
+        className="transaction-creator-form"
+      >
+        <h4 className="mb-4">New transaction</h4>
+        <div>
           <InputComponent
             text="Name"
             name="name"
@@ -101,7 +111,7 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
             onChange={handleTransactionChange}
           />
         </div>
-        <div className="mb-3">
+        <div>
           <InputComponent
             text="Amount"
             name="amount"
@@ -110,7 +120,7 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
             onChange={handleTransactionChange}
           />
         </div>
-        <div className="my-4">
+        <div>
           <SelectComponent
             text="Select Tag"
             id="tag"
@@ -119,7 +129,7 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
             onchange={handleTransactionChange}
           />
         </div>
-        <div className="my-4">
+        <div>
           <SelectComponent
             text="Select Type"
             id="type"
@@ -128,13 +138,12 @@ const TransactionCreator = ({ selectedAccountIndex, accounts, setAccounts }) => 
             onchange={handleTransactionChange}
           />
         </div>
-        <div>
-          <div className="mb-3">
-            <button className="btn btn-lg btn-outline-light" type="submit">
-              Submit
-            </button>
-          </div>
-        </div>
+        <button
+          className="btn btn-lg transaction-creator-form-btn"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-@import "../../Style/variables";
+@import "../../Style/designVariables";
 
 .home-container {
   display: flex;
@@ -15,7 +15,7 @@
 
 .feature-item {
   font-family: $primary-font;
-  background-color: $transparent-div;
+  background-color: $border-color;
   padding: 2rem;
   border-radius: 15px;
 }
@@ -25,7 +25,12 @@
   font-size: larger;
 }
 
-div .btn-outline-light:hover {
-  border-color: $accent-color;
-  background-color: $accent-color;
+div .home-btn:hover {
+  border-color: $primary-color;
+  background-color: $primary-color;
+  color: white;
+}
+
+div > .home-btn {
+  border: 2px solid $primary-color;
 }

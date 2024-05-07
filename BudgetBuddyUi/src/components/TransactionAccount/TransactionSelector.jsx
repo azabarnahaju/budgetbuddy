@@ -51,22 +51,7 @@ const TransactionSelector = ({
               </span>
             </h3>
             <h5>Balance: {accounts[selectedAccountIndex].balance}$</h5>
-            <button
-              onClick={handleShowTransactions}
-              className="btn btn-outline-light"
-            >
-              Show transactions
-            </button>
           </div>
-        </div>
-      </div>
-      <div className="row my-5">
-        <div className="col-md-6">
-          <TransactionCreator
-            selectedAccountIndex={selectedAccountIndex}
-            accounts={accounts}
-            setAccounts={setAccounts}
-          />
         </div>
       </div>
     </div>
@@ -74,3 +59,13 @@ const TransactionSelector = ({
 };
 
 export default TransactionSelector;
+
+{/* <div className="row my-5">
+  <div className="col-md-6">
+    <TransactionCreator
+      selectedAccountIndex={selectedAccountIndex}
+      accounts={accounts}
+      setAccounts={setAccounts}
+    />
+  </div>
+</div>; */}

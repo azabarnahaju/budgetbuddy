@@ -1,0 +1,88 @@
+@import "../../Style/designVariables.scss";
+
+.dashboard {
+    width: 100vw;
+}
+
+.dashboard-content {
+    flex-grow: 1;
+    padding: 1em;
+    padding-right: 4em;
+    padding-left: 4em;
+    padding-top: 1.8em;
+}
+
+// .dashboard-title
+.balance-container {
+    border: 2px solid $border-color;
+    border-radius: 1em;
+    background-color: linear-gradient($primary-color, $third-color);
+    padding: 1em;
+    margin-bottom: 1.5em;
+    margin-top: 1em;
+    box-shadow: 0.5rem 0.5rem 5px $shadow-color;
+    transition: 0.2s ease-in-out;
+}
+
+.balance-container:hover {
+    transform: scale(1.01);
+    transition: 0.2s ease-in-out;
+}
+
+.welcome-msg {
+    text-align: end;
+}
+
+.income-container {
+    border-radius: 1em;
+    border: 2px solid $border-color;
+    padding: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    box-shadow: 0.5rem 0.5rem 5px $shadow-color;
+}
+
+.income-container:hover {
+    transform: scale(1.01);
+    transition: 0.2s ease-in-out;
+}
+
+.expenses-container {
+    border-radius: 1em;
+    border: 2px solid $border-color;
+    padding: 1.5em;
+    margin-top: 1.5em;
+    margin-bottom: 1em;
+    box-shadow: 0.5rem 0.5rem 5px $shadow-color;
+}
+
+.expense-container:hover {
+    transform: scale(1.01);
+    transition: 0.2s ease-in-out;
+}
+
+.latest-transactions-container {
+    border-radius:  1em;
+    border: 2px solid $border-color;
+    padding: 1.5em;
+    padding-bottom: 1em;
+    box-shadow: 0.5rem 0.5rem 5px $shadow-color;
+    color: $text-color;
+    font-family: $primary-font;
+}
+
+.latest-transactions-container:hover {
+    transform: scale(1.01);
+    transition: 0.2s ease-in-out;
+}
+
+.db-chart-title {
+    margin-left: 1em;
+    font-family: $primary-font;
+    color: $text-color;
+}
+
+.dashboard-title, .welcome-msg {
+    font-family: $primary-font;
+    color: $text-color;
+}

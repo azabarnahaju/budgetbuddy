@@ -1,17 +1,17 @@
-@import "../../../../Style/variables";
+@import "../../../../Style/designVariables";
 
 .achievement-list-container {
     margin-left: 10em;
     margin-right: 10em;
-    margin-top: 5em;
+    margin-top: 2em;
 }
 
 .admin-title {
     text-align: center;
     font-size: 2em;
-    font-family: $secondary-font;
+    font-family: $primary-font;
     color: $text-color;
-     margin: 2em;
+    margin-top: 2em;
 }
 
 .achievement-content {
@@ -31,19 +31,21 @@
 }
 
 .admin-page {
-    background-color: $background-color;
     height: 100vh;
+    overflow: auto;
 }
 
 tbody > tr > td.text-center {
-  background-color: $background-color;
+  background-color: white;
   padding: 1rem;
   color: $text-color;
+  font-family: $primary-font;
 }
 
-tbody > tr > th {
-  background-color: $background-color;
+.achievements-table > tbody > tr > th {
   padding: 1rem;
+  background-color: $third-color;
+  color: $text-color;
 }
 
 table > thead > tr > th {
@@ -53,4 +55,26 @@ table > thead > tr > th {
 table > thead > tr > th {
   background-color: $background-color;
   font-family: $regular-font-1;
+}
+
+td > .admin-ach-btn {
+  border: 2px solid $primary-color;
+}
+
+td > .admin-ach-btn:hover {
+  background-color: $primary-color;
+
+}
+
+div > .admin-ach-create-btn {
+  background-color: $primary-color;
+  margin-top: 1em;
+}
+
+div > .admin-ach-create-btn:hover {
+  background-color: $secondary-color;
+}
+
+.admin-create-new-btn-container {
+
 }
