@@ -1,4 +1,4 @@
-@import "../../Style/variables";
+@import "../../Style/designVariables";
 
 .goal-container {
     display: flex;
@@ -8,8 +8,7 @@
 }
 
 .goal-content {
-    position: relative;
-    background-color: $background-color;
+    background-color: white;
     flex: 1;
     color: $text-color;
 }
@@ -26,4 +25,42 @@
 
 .goal-icon:hover{
     color: $accent-color;
+}
+
+.goals-title {
+    font-family: $primary-font;
+}
+
+.account-selector {
+    padding: 2em;
+    margin-left: 10vw;
+    width: 50vw;
+    height: 20vh;
+    margin-right: 8vw;
+    padding-right: 5em;
+    padding-left: 5em;
+    border: 2px solid $border-color;
+    border-radius: 1em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
+}
+
+.account-selector-title {
+    font-family: $primary-font;
+    margin-bottom: 1em;
+}
+
+.goal-list-container  {
+    border: 2px solid $border-color;
+    border-radius: 1em;
+    margin-right: 8em;
+    padding: 2em;
+    width: 80vw;
+    margin-top: 3em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
+    text-align:center;
+}
+
+.goal-item {
+    border: 1px solid $secondary-color;
+    border-radius: 1em;
 }

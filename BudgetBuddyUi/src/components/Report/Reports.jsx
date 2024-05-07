@@ -1,4 +1,3 @@
-import Navbar from "../Navbar/Navbar";
 import Loading from "../Loading/Loading";
 import { useContext, useEffect, useState } from "react";
 import { fetchData } from "../../service/connectionService";
@@ -6,6 +5,7 @@ import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import { stringToDate } from "../../utils/helperFunctions";
 import Footer from "../Footer/Footer";
+import SideBar from "../SideBar/SideBar";
 import "./Reports.scss";
 
 const Reports = () => {
@@ -36,11 +36,17 @@ const Reports = () => {
 
   return (
     <div className="reports-container vh-100">
-      <Navbar />
-      <div className="report-content p-5 pb-0">
+      <SideBar />
+      <h2 className="reports-title">
+        Your reports{" "}
+        <button className="btn new-report-btn" onClick={() => navigate("/reports/add")}>
+          Generate new report
+        </button>
+      </h2>
+      <div className="report-content">
         {reports ? (
           <div className="d-flex justify-content-center m-5 mt-0 table-responsive">
-            <table className="table table-dark align-middle table-hover">
+            <table className="reports-table table table-success align-middle">
               <thead className="table-success">
                 <tr>
                   <th scope="col">Created</th>
@@ -74,7 +80,7 @@ const Reports = () => {
                       <td className="text-center">{stringToDate(r.endDate)}</td>
                       <td className="text-center">
                         <button
-                          className="btn btn-outline-light"
+                          className="btn report-detail-btn"
                           onClick={() => navigate(`/reports/${r.id}`)}
                         >
                           View details
@@ -89,16 +95,8 @@ const Reports = () => {
         ) : (
           <div>You have no reports yet!</div>
         )}
-        <div className="d-flex justify-content-end">
-          <button
-            className="btn btn-outline-light me-5"
-            onClick={() => navigate("/reports/add")}
-          >
-            Generate new report
-          </button>
-        </div>
+        <div className="d-flex justify-content-end"></div>
       </div>
-      <Footer />
     </div>
   );
 };

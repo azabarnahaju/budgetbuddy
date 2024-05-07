@@ -3,14 +3,14 @@ import { formatDate, calculatePercentage } from "../../utils/helperFunctions";
 
 const GoalList = ({ account, goalList }) => {
   return (
-    <div className="container my-5">
+    <div className="goal-list-container">
       <h3 className="mb-5">Your Goals in your {account.name} account</h3>
       <div className="row">
-        <div className="col-md-9">
+        <div className="col-md-12">
           <div className="row">
             {goalList.map((goal) => (
               <div key={goal.id} className="col-md-6">
-                <div className="border rounded p-3 mb-3">
+                <div className="goal-item p-3 mb-3">
                   <h5>
                     Goal type: {goal.type}
                     {" | "}

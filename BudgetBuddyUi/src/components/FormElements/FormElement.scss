@@ -1,0 +1,20 @@
+@import "../../Style/designVariables.scss";
+
+.form-label {
+    color: $text-color;
+    font-weight: 400;
+}
+
+div > .form-label, div > .form-control {
+    font-family: $primary-font;
+    color: $text-color;
+}
+
+form > .form-label, form > .form-control {
+    font-family: $primary-font;
+    color: $text-color;
+}
+
+.reg-form-title {
+    font-family: $primary-font;
+}

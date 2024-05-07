@@ -37,7 +37,6 @@ const Home = () => {
         {...snackbar}
         setOpen={() => setSnackbar({ ...snackbar, open: false })}
       />
-      <Navbar />
       <div className="home-content">
         <div className="container mt-5">
           <div className="text-center">
@@ -97,61 +96,33 @@ const Home = () => {
                 </div>
               </div>
               <hr className="my-5" />
-              {currentUser ? (
-                <div className="row d-flex justify-content-center text-center mb-5">
-                  <div className="col-md-4 mb-3">
-                    <button
-                      onClick={() => handleNavigate("/account")}
-                      className="btn btn-lg btn-outline-light"
-                    >
-                      Manage your accounts
-                    </button>
-                  </div>
-                  <div className="col-md-4 mb-3">
-                    <Link to="/reports/">
-                      <button className="btn btn-lg btn-outline-light">
-                        Show reports
-                      </button>
-                    </Link>
-                  </div>
-                  <div className="col-md-4 mb-3">
-                    <button
-                      onClick={() => handleNavigate("/goal")}
-                      className="btn btn-lg btn-outline-light"
-                    >
-                      Look at your goals
-                    </button>
-                  </div>
+
+              <div className="mb-5 row text-center">
+                <div className="col-md-6">
+                  <h3>Welcome back!</h3>
+                  <p>
+                    Log in to your account to access your financial dashboard.
+                  </p>
+                  <button
+                    onClick={() => handleNavigateTo("/login")}
+                    className="btn btn-lg home-btn mx-3"
+                  >
+                    Log In
+                  </button>
                 </div>
-              ) : (
-                <div className="mb-5 row text-center">
-                  <div className="col-md-6">
-                    <h3>Welcome back!</h3>
-                    <p>
-                      Log in to your account to access your financial dashboard.
-                    </p>
-                    <button
-                      onClick={() => handleNavigateTo("/login")}
-                      className="btn btn-outline-light mx-3"
-                    >
-                      Log In
-                    </button>
-                  </div>
-                  <div className="col-md-6">
-                    <h3>New here?</h3>
-                    <p>
-                      Create an account to start managing your finances with
-                      ease.
-                    </p>
-                    <button
-                      onClick={() => handleNavigateTo("/register")}
-                      className="btn btn-outline-light mx-3"
-                    >
-                      Register
-                    </button>
-                  </div>
+                <div className="col-md-6">
+                  <h3>New here?</h3>
+                  <p>
+                    Create an account to start managing your finances with ease.
+                  </p>
+                  <button
+                    onClick={() => handleNavigateTo("/register")}
+                    className="btn btn-lg home-btn mx-3"
+                  >
+                    Register
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           </div>
           <Carousel />

@@ -19,6 +19,8 @@ import CreateAchievement from "./components/AdminPages/CreateAchievement/CreateA
 import UpdateAchievement from "./components/AdminPages/UpdateAchievement/UpdateAchievement";
 import AchievementDashBoard from "./components/Achievement/AchievementDashBoard";
 import Transactions from "./components/TransactionAccount/Transactions";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Accounts from "./pages/Accounts/Accounts";
 
 
 const App = () => {
@@ -43,6 +45,9 @@ const App = () => {
         <Route path="/admin" element={<AdminHome />} />
         <Route path="/achievements/create/" element={<CreateAchievement />} />
         <Route path="/achievements/update/:achievementId" element={<UpdateAchievement />}/>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/accounts" element={<Accounts/>}/>
+        <Route path="/goals" element={<Goal/>}/>
       </Routes>
     </div>
   );

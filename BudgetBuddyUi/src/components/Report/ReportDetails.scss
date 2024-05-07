@@ -1,6 +1,6 @@
-@import "../../Style/variables";
+@import "../../Style/designVariables";
 
-.report-detail-container {
+.report-details {
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -9,6 +9,51 @@
 
 .report-content {
   flex: 1;
-  background-color: $background-color;
+  background-color: white;
   color: $text-color;
+  padding-left: 5em;
+  padding-right: 5em;
+  padding-top: 1em;
+}
+
+.report-details-container {
+  border: 2px solid $border-color;
+  border-radius: 1em;
+  padding: 2em;
+  padding-left: 4em;
+  padding-right: 4em;
+  box-shadow: 0.5em 0.5em 5px $shadow-color;
+}
+
+.report-details-table > tbody > tr > td {
+  background-color: white;
+  font-family: $primary-font;
+}
+
+.report-details-table > tbody > tr > .detail-category {
+  font-weight: 500;
+}
+
+div > .report-details-back-btn {
+  border: 2px solid $primary-color;
+  background-color: $primary-color;
+  font-family: $primary-font;
+  margin-bottom: 1em;
+}
+
+div > .report-details-back-btn:hover {
+  background-color: $secondary-color;
+}
+
+.report-detail-title {
+  font-family: $primary-font;
+}
+
+.highlight-date {
+  color: $primary-color;
+}
+
+.tags-table > thead > tr > th, .tags-table > tbody > tr > td {
+  font-family: $primary-font;
+  background-color: white;
 }

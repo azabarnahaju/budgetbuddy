@@ -1,13 +1,11 @@
-@import "../../../../Style/_variables.scss";
+@import "../../../../Style/designVariables";
 
 .ach-form-container {
-    border: 1px white solid;
-    border-radius: 1em;
-    margin: 10em;
-    margin-left: 30vw;
-    margin-right: 30vw;
+    width: 40vw;
     padding: 5em;
     align-items: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 .form-label {
@@ -16,26 +14,36 @@
 }
 
 .ach-form-btn {
-    border: 1px white solid;
+    border: 2px $primary-color solid;
     border-radius: 1em;
-    padding: 1em;
+    padding: 0.7em;
     padding-left: 1.5em;
     padding-right: 1.5em;
     margin-left: 1em;
     margin-right: 1em;
-    background-color: $background-color;
+    background-color: white;
     color: $text-color;
     font-family: $regular-font-1;
-
 }
 
 .ach-form-btn:hover {
-    color: $background-color;
-    background-color: $accent-color;
+    color: $text-color;
+    background-color: $third-color;
 }
 
 .btn-container {
     display: flex; 
     justify-content: center;
-    
+}
+
+.create-ach-title {
+    font-family: $primary-font;
+    padding-top: 2em;
+}
+
+.ach-form-content {
+    padding: 1.5em;
+    border: 2px solid $border-color;
+    border-radius: 1em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
 }

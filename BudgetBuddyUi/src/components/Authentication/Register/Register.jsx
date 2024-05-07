@@ -93,17 +93,16 @@ const Register = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <Navbar />
       <div className="register-content">
         <div className="container mt-5">
-          <div className="text-center">
+          <div className="reg-form-title text-center">
             <h4>New Here? Join Us Today!</h4>
             <h1>Register</h1>
           </div>
           <div className="form-container">
             <form onSubmit={registerUser}>
               <div className="row d-flex justify-content-center mb-5">
-                <div className="mb-3 col-md-4 border rounded p-4 my-3">
+                <div className="reg-form mb-3 col-md-4 p-4 my-3">
                   <div className="mb-3">
                     <InputComponent
                       text="Email"
@@ -143,7 +142,7 @@ const Register = () => {
                   <div className="text-center">
                     <button
                       type="submit"
-                      className="btn btn-lg btn-outline-light"
+                      className="btn btn-lg auth-btn"
                     >
                       Register
                     </button>

@@ -54,7 +54,7 @@ const Login = () => {
           type: "success",
         });
 
-        navigate("/");
+        navigate("/dashboard");
         return;
       } else {
         setSnackbar({
@@ -98,16 +98,15 @@ const Login = () => {
         {...snackbar}
         setOpen={() => setSnackbar({ ...snackbar, open: false })}
       />
-      <Navbar />
       <div className="login-content">
         <div className="container mt-5">
-          <div className="text-center">
+          <div className="login-title text-center">
             <h4>Already a Member? Login Here:</h4>
             <h1>Login</h1>
           </div>
           <form onSubmit={handleLogin}>
             <div className="row d-flex justify-content-center">
-              <div className="mb-3 col-md-4 border rounded p-4 my-3">
+              <div className="login-form mb-3 col-md-4 p-4 my-3">
                 <div className="mb-3">
                   <InputComponent
                     text="Email"
@@ -126,12 +125,12 @@ const Login = () => {
                     onChange={handleSetUserInfo}
                   />
                 </div>
+                <div className="container d-flex justify-content-center align-items-center">
+                  <button type="submit" className="btn btn-lg auth-btn">
+                    Login
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="container d-flex justify-content-center align-items-center">
-              <button type="submit" className="btn btn-lg btn-outline-light">
-                Login
-              </button>
             </div>
           </form>
         </div>

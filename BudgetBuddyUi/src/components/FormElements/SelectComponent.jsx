@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import "./FormElement.scss";
+
 const SelectComponent = ({value, text, array, id, onchange, className}) => {
   return (
     <select

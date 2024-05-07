@@ -1,15 +1,36 @@
-@import "../../../Style/_variables.scss";
+@import "../../../Style/designVariables";
 
 .create-ach-container {
-    background-color: $background-color;
     height: 100vh;
 }
 
 .add-ach-container {
-    margin: 4em;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     color: $text-color;
+    width: 55vw;
+    margin-bottom: 4em;
+    margin-top: 2em;
+    font-family: $primary-font;
+}
+
+.create-ach-content {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+td > .add-ach-remove-btn {
+    border: 2px solid $primary-color;
+    color: $text-color;
+}
+
+td > .add-ach-remove-btn:hover {
+    background-color: $primary-color;
 }

@@ -83,13 +83,13 @@ const GoalCreator = ({
   }
 
   return (
-    <div className="border rounded p-3 text-center goal-form-container">
+    <div className="p-3 text-center goal-form-container">
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
       <form onSubmit={handleSubmitGoal}>
-        <h2>Set a goal</h2>
+        <h2 className="goal-creator-title">Set a goal</h2>
         <SelectComponent
           text="Select Goal Type"
           id="type"
@@ -111,7 +111,7 @@ const GoalCreator = ({
           value={goal.target}
           onChange={handleSetGoal}
         />
-        <button type="submit" className="btn btn-info mt-4">
+        <button type="submit" className="btn goal-creator-submit-btn mt-4">
           Set Goal
         </button>
       </form>

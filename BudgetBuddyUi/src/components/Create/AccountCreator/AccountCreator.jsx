@@ -5,6 +5,7 @@ import { fetchData } from "../../../service/connectionService";
 import SnackBar from "../../Snackbar/Snackbar";
 import Loading from "../../Loading/Loading";
 import InputComponent from "../../FormElements/InputComponent";
+import "./AccountCreator.scss";
 
 const sampleAccount = {
   balance: 0,
@@ -13,7 +14,7 @@ const sampleAccount = {
   userId: "",
 };
 
-const AccountCreator = ({ currentUser }) => {
+const AccountCreator = ({ currentUser, setAddingNewAcc }) => {
   const [account, setAccount] = useState(sampleAccount);
   const [loading, setLoading] = useState(false);
 
@@ -60,6 +61,7 @@ const AccountCreator = ({ currentUser }) => {
     }
     setLoading(false);
     setAccount(sampleAccount);
+    setAddingNewAcc(false)
   };
 
   if (loading) {
@@ -67,14 +69,14 @@ const AccountCreator = ({ currentUser }) => {
   }
 
   return (
-    <div className="container my-5">
+    <div className="account-creator-container">
       <SnackBar
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <form onSubmit={handleCreateAccount} className="border p-4 rounded">
-        <h4>Create a new account</h4>
-        <div className="mb-3">
+      <form onSubmit={handleCreateAccount} className="acc-creator-form">
+        <h4 className="mb-4">New account</h4>
+        <div>
           <InputComponent
             text="Balance"
             name="balance"
@@ -101,13 +103,9 @@ const AccountCreator = ({ currentUser }) => {
             onChange={handleAccountChange}
           />
         </div>
-        <div>
-          <div className="mb-5">
-            <button className="btn btn-lg btn-outline-light" type="submit">
-              Submit
-            </button>
-          </div>
-        </div>
+        <button className="btn btn-lg acc-creator-form-btn" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );

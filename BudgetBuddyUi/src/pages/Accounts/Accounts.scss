@@ -1,0 +1,46 @@
+@import "../../Style/designVariables.scss";
+
+.accounts-content {
+    margin-left: 5em;
+}
+
+.accounts-title {
+    padding-top: 1em;
+    margin-left: 3em;
+}
+
+.accounts-left-container {
+    width: 50vw;
+}
+
+.account-right-container {
+    width: 45vw;
+}
+
+.creator-btn-container {
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-right: 2em;
+    padding-left: 2em;
+}
+
+.creator-btn-container > button {
+    background-color: $primary-color;
+    color: white;
+    transition: 0.2s ease-in-out;
+}
+
+.creator-btn-container > button:hover {
+    background-color: $third-color;
+    color: $text-color;
+    transform: scale(1.1);
+    transition: 0.2s ease-in-out;
+}
+
+.creator-container {
+    display: flex;
+    flex: 1;
+}

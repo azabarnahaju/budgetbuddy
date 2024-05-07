@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../service/connectionService";
 import Loading from "../../Loading/Loading";
 import SnackBar from "../../Snackbar/Snackbar";
+import SideBar from "../../SideBar/SideBar";
 import "./UpdateAchievement.scss";
 
 const UpdateAchievement = () => {
@@ -64,13 +65,20 @@ const UpdateAchievement = () => {
         {...localSnackbar}
         setOpen={() => setLocalSnackbar({ ...localSnackbar, open: false })}
       />
-      <AdminNavbar />
-      <div>Updating Achievement #{achievementId}</div>
-      <AchievementForm
-        handleSubmit={handleSubmit}
-        setAchievementsToAdd={null}
-        achievementsToAdd={null}
-      />
+      <SideBar />
+      <div className="ach-update-container">
+        <h3 className="update-ach-title">
+          Updating Achievement #{achievementId}
+        </h3>
+        <AchievementForm
+          handleSubmit={handleSubmit}
+          setAchievementsToAdd={null}
+          achievementsToAdd={null}
+        />
+        <button type="submit" form="new-ach-form" className="ach-form-btn">
+          Submit
+        </button>
+      </div>
     </div>
   );
 };

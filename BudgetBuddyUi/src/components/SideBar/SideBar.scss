@@ -1,0 +1,12 @@
+@import "../../Style/designVariables.scss";
+.sidebar {
+    height:100vh;
+}
+
+.sidebar-icon {
+    color: $primary-color;
+}
+
+.sidebar-icon:hover {
+    color: $accent-color;
+}

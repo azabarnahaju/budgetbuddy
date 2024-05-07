@@ -1,0 +1,44 @@
+@import "../../Style/designVariables.scss";
+
+.selector {
+    border: 2px solid $secondary-color;
+    padding: 1em;
+    border-radius: 1em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
+}
+
+.selector {
+    font-family: $primary-font;
+}
+
+.table-acc-details {
+    font-size: 1.3em;
+    width: 40vw;
+}
+
+.table-acc-details > tbody > tr > td, .table-acc-details > tbody > tr > th {
+    background-color: white;
+}
+
+.table-acc-details > tbody > tr > td {
+    text-align: end;
+    padding-right: 3em;
+}
+
+.table-acc-details > tbody > tr > th {
+    text-align: start;
+    padding-left: 1em;
+}
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid $secondary-color;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border-radius: 1em;
+    padding: 1em;
+    box-shadow: 0.5em 0.5em 5px $shadow-color;
+    font-family: $primary-font;
+}
