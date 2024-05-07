@@ -1,5 +1,6 @@
 ﻿using BudgetBuddy.Contracts.ModelRequest.CreateModels;
 using BudgetBuddy.Contracts.ModelRequest.UpdateModels;
+using BudgetBuddy.Contracts.ModelResponse;
 using BudgetBuddy.Model.Enums.TransactionEnums;
 
 namespace BudgetBuddy.Services.Repositories.Transaction;
@@ -53,6 +54,17 @@ public class TransactionRepository : ITransactionRepository
         return await _budgetBuddyContext.Transactions.Where(t => t.AccountId == accountId).ToListAsync();
     }
 
+    public async Task<IEnumerable<TransactionView>> GetTransactionsByUser(string userId, int? count = null)
+    {
+        var user = await _budgetBuddyContext.Users
+              .Include(u => u.Accounts)
+                 .ThenInclude(a => a.Transactions)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user is null) throw new Exception($"User not found with userId {userId}");
+        var transactions = user.Accounts.Select(a => a.Transactions).SelectMany(t => t).Select(t => new TransactionView(t.Id, t.Date, t.Name, t.Amount, t.Tag, t.Type, t.AccountId)).OrderByDescending(t => t.Date);
+        return count is null || count > transactions.Count() ? transactions : transactions.Take((int)count);
+    }
+    
     public async Task<Transaction> AddTransaction(TransactionCreateRequest transaction)
     {
         var transactionToAdd = new Transaction()

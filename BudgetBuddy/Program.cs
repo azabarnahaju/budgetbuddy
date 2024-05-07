@@ -11,7 +11,6 @@ using BudgetBuddy.Services.Repositories.Account;
 using BudgetBuddy.Services.Repositories.Achievement;
 using BudgetBuddy.Services.Repositories.Goal;
 using BudgetBuddy.Services.Repositories.Report;
-// using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.Repositories.Transaction;
 using BudgetBuddy.Services.Repositories.User;
 using BudgetBuddy.Services.TransactionServices;
@@ -24,6 +23,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
+using Microsoft.Extensions.DependencyInjection;
 
 Env.TraversePath().Load("../.envs/server.env");
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
@@ -99,13 +99,13 @@ app.MapControllers();
 
 app.Run();
 
-void AddServices(){
-    builder.Services.AddControllers()
-        .AddJsonOptions(options =>
+void AddServices()
+{
+    builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
         });
-
+    
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddTransient<IReportService, ReportService>();
     builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using BudgetBuddy.Contracts.ModelResponse;
 using BudgetBuddy.Data;
 using BudgetBuddy.Model.Enums.TransactionEnums;
 using BudgetBuddy.Services.AchievementService;
@@ -102,6 +103,21 @@ public class TransactionController : ControllerBase
         try
         {
             var transactions = await _transactionRepository.GetTransactionsByAccount(accountId, startDate, endDate);
+            return Ok(new { message = "Transactions retrieved.", data = transactions });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Transactions not found.");
+            return NotFound(new { message = "Transactions not found." });
+        }
+    }
+    
+    [HttpGet("transactions/user/{userId}"), Authorize(Roles = "Admin, User")]
+    public async Task<ActionResult<List<TransactionView>>> GetTransactionsByUserId(string userId, int? count = null)
+    {
+        try
+        {
+            var transactions = await _transactionRepository.GetTransactionsByUser(userId, count);
             return Ok(new { message = "Transactions retrieved.", data = transactions });
         }
         catch (Exception e)
