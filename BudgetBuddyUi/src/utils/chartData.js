@@ -3,7 +3,6 @@ export const getSideChartData = (transactions) => {
     const firstDay = getDateXDaysAgo(6);
     const result = getChartDataFormatForWeek();
 
-    console.log(transactions)
     transactions.forEach((transaction) => {
         if (new Date(transaction.date) > firstDay) {
             const day = daysOfWeek[new Date(transaction.date).getDay()]
@@ -28,14 +27,16 @@ export const getOverviewChartData = (transactions, balance) => {
     const result = getChartDataFormatForWeek();
     result[result.length-1].amount = balance;
     let currBalance = balance;
-    for (let i = result.length-1; i >= 0; i--) {
-        const dayToFind = result[i]["name"];
+    for (let i = result.length-2; i >= 0; i--) {
+        const dayToFind = result[i+1]["name"];
         const filtered = lastWeekTransactions.filter(
-          (t) => daysOfWeek[new Date(t.date).getDate()] === dayToFind
+          (t) => daysOfWeek[new Date(t.date).getDay()] === dayToFind
         );
-        const sum = filtered.reduce((acc, cv) => acc + cv.amount, 0);
-        const obj = result.find((o) => o.name === dayToFind);
-        currBalance -= sum;
+        const sumExpenses = filtered.filter(t => t.type == "Expense").reduce((acc, cv) => acc + cv.amount, 0);
+        const sumIncomes = filtered.filter(t => t.type == "Income").reduce((acc, cv) => acc + cv.amount, 0);
+        const obj = result.find((o) => o.name === result[i]["name"]);
+        currBalance += sumExpenses;
+        currBalance -= sumIncomes
         obj.amount = currBalance;
     }
 
