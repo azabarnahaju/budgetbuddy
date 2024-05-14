@@ -10,7 +10,7 @@
 
 <br />
 <div align="center">
-<h3 align="center">SolarWatch</h3>
+<h3 align="center">BudgetBuddy</h3>
 </div>
 
 
@@ -43,7 +43,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<!--[![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+![Product Name Screen Shot][product-home]
 
 BudgetBuddy is a web application built with ASP.NET and React.js that enables users to take control of their finances, set financial goals, and gain insights into their financial habits. 
 
@@ -140,11 +140,15 @@ BudgetBuddy is a web application built with ASP.NET and React.js that enables us
 * Once you're signed in, navigate to the Accounts page where you can create accounts such as _Credit card, Cash, Savings, etc_.
 * Choosing an account, you can add transactions to it by providing a name, a date of the transactions, choosing a type (_Income / Expense_) and putting a tag on it (e.g. _Bills, Grocieries, Entertainment, etc_)
 
+  ![Product Name Screen Shot][product-dashboard]
+
 ### 3. Create financial reports 
 * Navigate to the Reports page and look at your existing reports' details by clicking on the See details button or create new ones by providing a timeframe (_weekly, monthly, custom, etc._) and an account. 
 
 ### 4. Gain achievements
 * By creating accounts, transactions and creating and / or achieving goals you can earn achievements 
+
+  ![Product Name Screen Shot][product-achievements]
 
 ### 5. Read financial news
 * By clicking on each picture on the bottom of the main page you can read the latest financial news
@@ -202,3 +206,6 @@ Project Link: [https://github.com/azabarnahaju/budgetbuddy](https://github.com/a
 [sql-server-url]: https://www.microsoft.com/en-us/sql-server/sql-server-downloads
 [Docker]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [docker-url]: https://www.docker.com 
+[product-home]: images/budgetbuddy_home.png
+[product-achievements]: images/budgetbuddy_achievements.png
+[product-dashboard]: images/budgetbuddy_dashboard.png
